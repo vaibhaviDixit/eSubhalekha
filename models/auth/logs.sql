@@ -1,3 +1,4 @@
+-- logs Table
 CREATE TABLE logs (
     loginId VARCHAR(255) PRIMARY KEY,
     email VARCHAR(255),
@@ -5,5 +6,6 @@ CREATE TABLE logs (
     ip VARCHAR(255),
     os VARCHAR(255),
     browser VARCHAR(255),
-    loggedOutAt DATETIME
+    loggedOutAt DATETIME,
+    FOREIGN KEY (email) REFERENCES users(email)
 );
