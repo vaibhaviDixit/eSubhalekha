@@ -1,6 +1,7 @@
 -- weddings Table
 CREATE TABLE weddings (
-    weddingID VARCHAR(255) PRIMARY KEY,
+    weddingID VARCHAR(255),
+    lang ENUM('as', 'bn', 'gu', 'hi', 'kn', 'ml', 'mr', 'ne', 'or', 'pa', 'ta', 'te', 'ur', 'en'),
     domain VARCHAR(255),
     weddingName VARCHAR(255),
     from_role ENUM('bride', 'groom'),
@@ -26,6 +27,7 @@ CREATE TABLE weddings (
     manager VARCHAR(255) NOT NULL,
     createdAt DATETIME,
     status ENUM('pending', 'accepted', 'completed'),
+    PRIMARY KEY (weddingID, lang),
     FOREIGN KEY (host) REFERENCES users(email),
     FOREIGN KEY (partner) REFERENCES users(email),
     FOREIGN KEY (manager) REFERENCES users(email)
