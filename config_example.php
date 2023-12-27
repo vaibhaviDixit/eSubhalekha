@@ -29,7 +29,7 @@ $config = [
     'SMTP_PASSWORD' => '',
     'SMTP_ENCRYPTION' => 'tls',
     'OPENAI_API_KEY' => '',
-    'APP_DESC' => 'personalized online invitation & Guest Management tool',
+    'APP_DESC' => 'Personalized online invitation & Guest Management tool',
     'APP_SHORT_TITLE' => 'eSubhalekha',
     'APP_AUTHOR' => 'eSubhalekha.com',
     'APP_ICON' => 'assets/img/GraphenePHPIcon.png',
@@ -39,5 +39,3 @@ $config = [
     'APP_KEYWORDS' => 'eSubhalekha.com, eSubhalekha, subhalekha, wedding, invitation, online invitation, Radhe Shyam Salopanthula',
     'APP_TWITTER_CREATOR' => '@imraadhe',
 ];
-
-return $config;
