@@ -8,7 +8,7 @@
  * It initializes the necessary components and sets up the routing system to
  * handle incoming requests.
  *
- * Author: Radhe Shyam
+ * Author: Radhe Shyam Salopanthula
  * Version: 2.0.0
  *
  * -----------------------------------------------------------------------------
@@ -76,3 +76,5 @@ date_default_timezone_set('Asia/Kolkata');
 // -----------------------------------------------------------------------------
 $router = new Router($_SERVER);
 $router->run();
+
+insertVisitorLog();
