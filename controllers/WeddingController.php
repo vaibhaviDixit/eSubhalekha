@@ -17,7 +17,7 @@ class Wedding
     $lang,
     $domain,
     $weddingName,
-    $fromRole,
+    $from_role,
     $brideName,
     $groomName,
     $brideQualifications,
@@ -44,7 +44,7 @@ class Wedding
     $this->lang = trim(DB::sanitize($lang));
     $this->domain = trim(DB::sanitize($domain));
     $this->weddingName = trim(DB::sanitize($weddingName));
-    $this->fromRole = trim(DB::sanitize($fromRole));
+    $this->from_role = trim(DB::sanitize($from_role));
     $this->brideName = trim(DB::sanitize($brideName));
     $this->groomName = trim(DB::sanitize($groomName));
     $this->brideQualifications = trim(DB::sanitize($brideQualifications));
@@ -100,7 +100,7 @@ class Wedding
         ],
     ],
     'from_role' => [
-        'value' => $this->fromRole,
+        'value' => $this->from_role,
         'rules' => [
             [
                 'type' => 'required',
@@ -145,7 +145,7 @@ class Wedding
             [
                 'type' => 'minLength',
                 'message' => "Groom's qualifications can't exceed 255 characters",
-                'minLength' => 255,
+                'maxLength' => 255,
             ],
         ],
     ],
@@ -289,6 +289,7 @@ class Wedding
 ];
 
 
+
     // Call the Validator::validate function
     $validate = Validator::validate($fields);
 
@@ -296,10 +297,11 @@ class Wedding
         return ['error' => $validate['error'], 'errorMsgs' => $validate['errorMsgs']];
     } else {
         $data = array(
+            'weddingID' => $this->groomName."weds".$this->brideName,
             'lang' => $this->lang,
             'domain' => $this->domain,
             'weddingName' => $this->weddingName,
-            'from_role' => $this->fromRole,
+            'from_role' => $this->from_role,
             'brideName' => $this->brideName,
             'groomName' => $this->groomName,
             'brideQualifications' => $this->brideQualifications,
