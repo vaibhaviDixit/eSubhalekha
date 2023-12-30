@@ -46,7 +46,7 @@
                     <li class="nav-item">
                         <?php if (!App::getSession()) { ?>
                             <a class="nav-link font-heading btn btn-secondary rounded-pill" aria-current="page"
-                                href="<?php echo route('login') . "?back=" . url(); ?>">Login</a>
+                                href="<?php echo route('register') . "?back=" . url(); ?>">Login/Signup</a>
                         <?php } ?>
                     </li>
                 </ul>
