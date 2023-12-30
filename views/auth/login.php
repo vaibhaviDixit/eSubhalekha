@@ -95,7 +95,7 @@ if (isset($_POST['btn-login'])) {
         <strong id="passwordMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
       </div>
 
-      <button class="btn btn-lg btn btn-graphene btn-block" id="btn-login" name="btn-login" type="login">Sign
+      <button class="btn btn-lg btn btn-primary btn-block" id="btn-login" name="btn-login" type="submit">Sign
         in</button>
 
       <p class="mt-3">Don't Have an account? <a href="<?php echo route('register').queryString(); ?>">Create Account</a></p>
