@@ -1,48 +1,181 @@
 @font-face {
-    font-family: Graphene;
-    src: url(../fonts/Graphene.otf) format("truetype");
+  font-family: eSubhalekha;
+  src: url(../fonts/eSubhalekha.otf) format("opentype");
+}
+@font-face {
+  font-family: Garamond;
+  src: url(../fonts/Garamond.ttf) format("truetype");
 }
 
+/* Variables */
+:root {
+  --base-font: "Garamond", sans-serif;
+  --heading-font: "eSubhalekha", sans-serif;
+  --color-primary-1: rgba(134, 54, 59, 1);
+  --color-primary-2: rgba(134, 54, 59, 0.8);
+  --color-primary-3: rgba(134, 54, 59, 0.6);
+  --color-primary-4: rgba(134, 54, 59, 0.4);
+  --color-primary-5: rgba(134, 54, 59, 0.2);
+  --color-secondary-1: rgba(244, 225, 222, 1);
+  --color-secondary-2: rgba(244, 225, 222, 0.8);
+  --color-secondary-3: rgba(244, 225, 222, 0.6);
+  --color-secondary-4: rgba(244, 225, 222, 0.4);
+  --color-secondary-5: rgba(244, 225, 222, 0.2);
+  --color-white: #fff;
+  --color-black: #000;
+}
+
+/* Apply font-family and basic styles to all elements */
 * {
-    font-family: Graphene !important;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  font-family: var(--base-font);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.btn:focus {
-    outline: none !important;
-    box-shadow: none !important;
+/* Set the base font size and line height */
+body {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-img{
-    user-select: none !important;
-    pointer-events:none !important;
-}
-#app img {
-    max-height: 40vh;
-}
-
-.btn-graphene {
-    font-weight: bolder;
-    letter-spacing: 1px;
-    padding: 8px 28px;
-    border-radius: 50px;
-    transition: 0.5s;
-    margin: 10px;
-    background-color: rgba(173, 220, 203);
-    color: #000;
-    border: 2px solid #ADDCCB;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading-font);
 }
 
-.btn-graphene:hover,
-.btn-graphene:active,
-.btn-graphene:focus {
-    background-color: rgba(173, 220, 203, .3);
-    border: 2px solid #ADDCCB;
-    color: #000;
+.font-base {
+  font-family: var(--base-font) !important;
 }
 
-.navbar *{
-    user-select: none !important;
+.font-heading {
+  font-family: var(--heading-font) !important;
+}
+
+/* Container to center content and provide some spacing */
+.container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+/* Basic button styles */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  font-weight: bolder;
+  letter-spacing: 1px;
+  padding: 8px 28px;
+  border-radius: 50px;
+  transition: 0.5s;
+  margin: 10px;
+}
+
+/* Primary button style */
+.btn-primary {
+  color: var(--color-white);
+  background-color: var(--color-primary-1);
+  border: 2px solid var(--color-primary-1);
+}
+
+/* Primary button outline style */
+.btn-primary-outline {
+  color: var(--color-primary-1);
+  background-color: transparent;
+  border-color: var(--color-primary-1);
+}
+
+.btn-block {
+  width: 40%;
+}
+
+/* Hover state for all buttons */
+.btn:hover {
+  transform: translateY(-4px);
+}
+
+/* Active state for all buttons */
+.btn:active,
+.btn:active {
+  outline: none;
+}
+
+.btn-primary:hover {
+  color: var(--color-white);
+  background-color: var(--color-primary-1);
+  border-color: var(--color-primary-1);
+}
+
+.btn-primary:focus,
+.btn-primary:active {
+  color: var(--color-white);
+  background-color: var(--color-primary-1);
+  border-color: var(--color-primary-1);
+  box-shadow: 0 0 0 3px var(--color-primary-3) !important;
+}
+
+.btn-primary-outline:focus,
+.btn-primary-outline:active {
+  color: var(--color-white);
+  background-color: var(--color-primary-1);
+  border-color: var(--color-primary-1);
+  box-shadow: 0 0 0 3px var(--color-primary-3) !important;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  border-radius: var(--border-radius);
+}
+
+.badge-primary {
+  color: var(--color-white);
+  background-color: var(--color-primary-1);
+}
+
+.badge-secondary {
+  color: var(--color-white);
+  background-color: var(--color-secondary-1);
+}
+
+/* Background colors */
+.bg-primary {
+  background-color: var(--color-primary-1) !important;
+  color: var(--color-white);
+}
+
+.bg-secondary {
+  background-color: var(--color-secondary-1);
+  color: var(--color-white);
+}
+
+/* Colored text */
+.text-primary {
+  color: var(--color-primary-1);
+}
+
+.text-secondary {
+  color: var(--color-secondary-1);
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
 }
