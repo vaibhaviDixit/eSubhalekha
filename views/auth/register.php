@@ -122,7 +122,7 @@ if (isset($_REQUEST['btn-register'])) {
       </div>
 
 
-      <button class="btn btn-lg btn-graphene btn-block rounded-pill" id="btn-register" name="btn-register" type="register"
+      <button class="btn btn-lg btn-primary btn-block rounded-pill" id="btn-register" name="btn-register" type="register"
         disabled>Register</button>
 
       <p class="mt-3">Already Have an account? <a href="<?php echo route('login'); ?>">Login Now</a></p>
