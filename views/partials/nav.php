@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <b><a class="navbar-brand" href="<?php echo home();?>">GraphenPHP</a></b>
+        <b><a class="navbar-brand font-heading" href="<?php echo home();?>"><?=$config['APP_NAME']?></a></b>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
         </button>
