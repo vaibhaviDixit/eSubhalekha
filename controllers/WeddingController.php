@@ -11,8 +11,39 @@
 
 class Wedding
 {
-    // Create operation
 
+    protected $lang;
+    protected $domain;
+    protected $weddingName;
+    protected $from_role;
+    protected $brideName;
+    protected $groomName;
+    protected $brideQualifications;
+    protected $groomQualifications;
+    protected $brideBio;
+    protected $groomBio;
+    protected $timeline;
+    protected $hosts;
+    protected $textMessage;
+    protected $template;
+    protected $tier;
+    protected $videoMessage;
+    protected $music;
+    protected $youtube;
+    protected $accommodation;
+    protected $travel;
+    protected $phone;
+    protected $host;
+    protected $partner;
+    protected $manager;
+
+    // Wedding Controller constructor
+    public function __construct()
+    {
+        $this->errors = "";
+    }
+
+    // Create operation
     public function create(
     $lang,
     $domain,

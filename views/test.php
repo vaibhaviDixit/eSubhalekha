@@ -7,14 +7,14 @@ $lang = 'en';
 $domain = 'example.com';
 $weddingName = 'Sample Wedding';
 $from_role = 'groom';
-$brideName = 'Riya';
-$groomName = 'Rakesh';
+$brideName = 'Anaya';
+$groomName = 'Rahul';
 $brideQualifications = 'B.com';
 $groomQualifications = 'MSC';
 $brideBio = 'A brief bio about the bride.';
 $groomBio = 'A brief bio about the groom.';
 
-$timeline = json_encode(array(
+$timeline = array(
     array(
         'Event' => 'Event 1',
         'Time' => '2023-01-01 12:00:00',
@@ -36,16 +36,16 @@ $timeline = json_encode(array(
         'Address' => '789 Oak Lane, Village, Country',
         'Location_url' => 'https://maps.example.com/event3-location'
     ),
-));
+);
 
 
-$hosts = json_encode(array(
+$hosts = array(
     array('Name' => 'Avinash', 'Age' => 25, 'Gender' => 'Male', 'Relation' => 'Friend'),
     array('Name' => 'Bhargavi', 'Age' => 30, 'Gender' => 'Female', 'Relation' => 'Sister'),
     array('Name' => 'Divyansh', 'Age' => 22, 'Gender' => 'Male', 'Relation' => 'Cousin'),
     array('Name' => 'Priya', 'Age' => 28, 'Gender' => 'Female', 'Relation' => 'Colleague'),
 
-    ));
+    );
 
 $textMessage = 'This is a sample text message.';
 $template = 'basic';
@@ -63,7 +63,7 @@ $manager = 'vaibhavidixit511@gmail.com';
   controller("Wedding");
   $event = new Wedding();
   $createEvent = $event->create(
-   $lang,
+    $lang,
     $domain,
     $weddingName,
     $from_role,
@@ -91,7 +91,6 @@ $manager = 'vaibhavidixit511@gmail.com';
 
   print_r($createEvent);
   if ($createEvent){ 
-
     echo "<script> alert('Created!'); </script>";
   	print_r($createEvent);
   }
