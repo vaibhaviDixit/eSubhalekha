@@ -4,9 +4,12 @@ errors();
         $tables = [
             'users' => 'auth/users.sql',
             'logs' => 'auth/logs.sql',
+            'verification' => 'auth/verification.sql',
             'visitors' => 'auth/visitors.sql',
             'weddings' => 'weddings/weddings.sql',
-            'wedding_images' => 'weddings/wedding_images.sql',
+            'gallery' => 'weddings/gallery.sql',
+            'payments' => 'weddings/payments.sql',
+            'guests' => 'weddings/guests.sql',
             // Add more tables as needed
         ];
         
