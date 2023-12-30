@@ -151,6 +151,18 @@ h6 {
   background-color: var(--color-secondary-1);
   border-color: var(--color-secondary-1);
   box-shadow: 0 0 0 3px var(--color-secondary-3) !important;
+  background-color: var(--color-secondary-1);
+  border-color: var(--color-secondary-1);
+  box-shadow: 0 0 0 3px var(--color-secondary-3) !important;
+}
+
+.btn-secondary-outline:focus,
+.btn-secondary-outline:active {
+  color: var(--color-primary-1) !important;
+  background-color: var(--color-secondary-1);
+  border-color: var(--color-secondary-1);
+  box-shadow: 0 0 0 3px var(--color-secondary-3) !important;
+
 }
 
 /* Background colors */
@@ -217,6 +229,7 @@ nav .btn-secondary{
 
 .dropdown-menu *{
   color: var(--color-black) !important;
+
 }
 
 /* --------------- */
@@ -478,4 +491,7 @@ footer .nav a:hover{
   .navbar-brand {
     font-size: 16px !important;
   }
+
 }
+}
+
