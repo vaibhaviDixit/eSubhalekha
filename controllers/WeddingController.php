@@ -97,21 +97,21 @@ class Wedding
         AND COLUMN_NAME = 'tier'")->fetch()[0]);
 
         $hostData = DB::select('users', 'email', "role = 
-       'host'")->fetchAll();
+       'host' OR role = 'user' AND status <> 'deleted'")->fetchAll();
 
         foreach ($hostData as $host) {
             $this->hostList[] = $host['email'];
         }
 
         $partnerData = DB::select('users', 'email', "role = 
-       'partner'")->fetchAll();
+       'partner' AND status <> 'deleted'")->fetchAll();
 
         foreach ($partnerData as $partner) {
             $this->partnerList[] = $partner['email'];
         }
 
         $managerData = DB::select('users', 'email', "role = 
-      'manager'")->fetchAll();
+      'manager' AND status <> 'deleted'")->fetchAll();
 
         foreach ($managerData as $manager) {
             $this->managerList[] = $manager['email'];
