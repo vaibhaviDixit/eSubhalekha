@@ -85,6 +85,11 @@ class Validator
                             $errorMessages[] = $message;
                         }
                         break;
+                    case 'eventID':
+                        if (!preg_match("/^[a-zA-Z0-9_.-]+$/", $value)) {
+                            $errorMessages[] = $message;
+                        }
+                        break;
                     // Add more rule types as needed
                     default:
                         // Custom rule type
@@ -116,7 +121,8 @@ class Validator
         return [
             'error' => $errorCount > 0,
             'errorMsgs' => $errorMsgs,
-            'fields' => 'dg'
+            'fields' => array_map(fn($field) => $field['value'], $fields)
         ];
+
     }
 }
