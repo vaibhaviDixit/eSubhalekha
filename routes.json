@@ -138,6 +138,6 @@
     "path": "views/auth/logout.php"
   },
   "test": {
-    "path": "views/themes/theme.php"
+    "path": "views/test.php"
   }
 }
