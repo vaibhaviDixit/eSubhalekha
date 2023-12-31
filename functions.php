@@ -300,7 +300,7 @@ function insertVisitorLog()
 
     $visitorInfo = getDevice();
     $url = $_SERVER['REQUEST_URI'];
-    $previousVisitTime = time() - 60;
+    $previousVisitTime = time() - 60*30;
     $result = DB::select('visitors', "COUNT(*) as count", "ip = '{$visitorInfo['ip']}' AND url = '$url' AND visitedAt > FROM_UNIXTIME($previousVisitTime)")->fetchAll();
     
     if ($result[0]['count'] == 0) {
