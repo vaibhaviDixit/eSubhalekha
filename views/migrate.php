@@ -7,9 +7,9 @@ errors();
             'verification' => 'auth/verification.sql',
             'visitors' => 'auth/visitors.sql',
             'weddings' => 'weddings/weddings.sql',
-            'gallery' => 'weddings/gallery.sql',
             'payments' => 'weddings/payments.sql',
             'guests' => 'weddings/guests.sql',
+            'gallery' => 'weddings/gallery.sql',
             // Add more tables as needed
         ];
         
