@@ -6,4 +6,4 @@ CREATE TABLE payments(
     paidAt DATETIME,
     FOREIGN KEY (userID) REFERENCES users(userID),
     FOREIGN KEY (weddingID) REFERENCES weddings(weddingID)
-}
+)
