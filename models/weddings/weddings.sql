@@ -29,7 +29,5 @@ CREATE TABLE weddings (
     createdAt DATETIME,
     status ENUM('pending', 'paid', 'live', 'completed') DEFAULT 'pending',
     FOREIGN KEY (host) REFERENCES users(email),
-    FOREIGN KEY (partner) REFERENCES users(email),
-    FOREIGN KEY (manager) REFERENCES users(email),
     PRIMARY KEY (weddingID, lang)
 );
