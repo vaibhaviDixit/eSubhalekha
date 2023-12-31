@@ -1,352 +1,420 @@
 <?php
-
-/**
- * The Wedding class handles wedding creation and management.
- *
- *
- *
- * @package GraphenePHP
- * @version 2.0.0
- */
-
 class Wedding
 {
-    // Create operation
+    public $weddingID;
+    public $lang;
+    public $domain;
+    public $weddingName;
+    public $fromRole;
+    public $brideName;
+    public $groomName;
+    public $brideQualifications;
+    public $groomQualifications;
+    public $brideBio;
+    public $groomBio;
+    public $story;
+    public $timeline;
+    public $hosts;
+    public $invitation;
+    public $template;
+    public $tier;
+    public $music;
+    public $youtube;
+    public $accommodation;
+    public $travel;
+    public $phone;
+    public $whatsappAPIKey;
+    public $host;
+    public $partner;
+    public $manager;
+    public $createdAt;
+    public $status;
+    public $languages;
+    public $fromRoles;
+    public $tiers;
+    public $hostList = ['dummy.com'];
+    public $partnerList = ['dummy.com'];
+    public $managerList = ['dummy.com'];
 
-    public function create(
-    $lang,
-    $domain,
-    $weddingName,
-    $from_role,
-    $brideName,
-    $groomName,
-    $brideQualifications,
-    $groomQualifications,
-    $brideBio,
-    $groomBio,
-    $timeline,
-    $hosts,
-    $textMessage,
-    $template,
-    $tier,
-    $videoMessage,
-    $music,
-    $youtube,
-    $accommodation,
-    $travel,
-    $phone,
-    $host,
-    $partner,
-    $manager
-) {
-    // Sanitize fields
-    DB::connect();
-    $this->lang = trim(DB::sanitize($lang));
-    $this->domain = trim(DB::sanitize($domain));
-    $this->weddingName = trim(DB::sanitize($weddingName));
-    $this->from_role = trim(DB::sanitize($from_role));
-    $this->brideName = trim(DB::sanitize($brideName));
-    $this->groomName = trim(DB::sanitize($groomName));
-    $this->brideQualifications = trim(DB::sanitize($brideQualifications));
-    $this->groomQualifications = trim(DB::sanitize($groomQualifications));
-    $this->brideBio = trim(DB::sanitize($brideBio));
-    $this->groomBio = trim(DB::sanitize($groomBio));
-    $this->timeline = json_encode($timeline); // Assuming $timeline is an array
-    $this->hosts = json_encode($hosts); // Assuming $hosts is an array
-    $this->textMessage = trim(DB::sanitize($textMessage));
-    $this->template = trim(DB::sanitize($template));
-    $this->tier = trim(DB::sanitize($tier));
-    $this->videoMessage = trim(DB::sanitize($videoMessage));
-    $this->music = trim(DB::sanitize($music));
-    $this->youtube = trim(DB::sanitize($youtube));
-    $this->accommodation = trim(DB::sanitize($accommodation));
-    $this->travel = trim(DB::sanitize($travel));
-    $this->phone = trim(DB::sanitize($phone));
-    $this->host = trim(DB::sanitize($host));
-    $this->partner = trim(DB::sanitize($partner));
-    $this->manager = trim(DB::sanitize($manager));
-    DB::close();
-
-    // fields array
-   $fields = [
-    'lang' => [
-        'value' => $this->lang,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "Language can't be empty",
-            ],
-            
-        ],
-    ],
-    'domain' => [
-        'value' => $this->domain,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "Domain can't be empty",
-            ],
-            // You can add more validation rules here if needed
-        ],
-    ],
-    'weddingName' => [
-        'value' => $this->weddingName,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "Wedding name can't be empty",
-            ],
-            // Add other validation rules if needed
-        ],
-    ],
-    'from_role' => [
-        'value' => $this->from_role,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "From role can't be empty",
-            ],
-            
-        ],
-    ],
-    'brideName' => [
-        'value' => $this->brideName,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "Bride's name can't be empty",
-            ],
-            // Add other validation rules if needed
-        ],
-    ],
-    'groomName' => [
-        'value' => $this->groomName,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "Groom's name can't be empty",
-            ],
-            // Add other validation rules if needed
-        ],
-    ],
-    'brideQualifications' => [
-        'value' => $this->brideQualifications,
-        'rules' => [
-            [
-                'type' => 'maxLength',
-                'message' => "Bride's qualifications can't exceed 255 characters",
-                'maxLength' => 255,
-            ],
-        ],
-    ],
-    'groomQualifications' => [
-        'value' => $this->groomQualifications,
-        'rules' => [
-            [
-                'type' => 'minLength',
-                'message' => "Groom's qualifications can't exceed 255 characters",
-                'maxLength' => 255,
-            ],
-        ],
-    ],
-    'brideBio' => [
-        'value' => $this->brideBio,
-        'rules' => [
-            [
-                'type' => 'maxLength',
-                'message' => "Bride's bio can't exceed 255 characters",
-                'maxLength' => 255,
-            ],
-        ],
-    ],
-    'groomBio' => [
-        'value' => $this->groomBio,
-        'rules' => [
-            [
-                'type' => 'maxLength',
-                'message' => "Groom's bio can't exceed 255 characters",
-                'maxLength' => 255,
-            ],
-        ],
-    ],
-    'timeline' => [
-        'value' => $this->timeline,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "Timeline can't be empty",
-            ],
-        ],
-
-    ],
-    'hosts' => [
-        'value' => $this->hosts,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "Hosts can't be empty",
-            ],
-        ],
-    ],
-    'textMessage' => [
-        'value' => $this->textMessage,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "Text message can't be empty",
-            ],
-        ],
-    ],
-    'template' => [
-        'value' => $this->template,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "Template can't be empty",
-            ],
-        ],
-    ],
-    'tier' => [
-        'value' => $this->tier,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "Tier can't be empty",
-            ],
-        ],
-    ],
-    // as following 3 frields are based on tier they choose so i haven't added required validation
-    'videoMessage' => [
-        'value' => $this->videoMessage,
-        'rules' => [
-            // Add validation rules for video message if needed
-        ],
-    ],
-    'music' => [
-        'value' => $this->music,
-        'rules' => [
-            // Add validation rules for music if needed
-        ],
-    ],
-    'youtube' => [
-        'value' => $this->youtube,
-        'rules' => [
-            // Add validation rules for YouTube if needed
-        ],
-    ],
-    'accommodation' => [
-        'value' => $this->accommodation,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => "Accommodation can't be empty",
-            ],
-        ],
-    ],
-    'travel' => [
-        'value' => $this->travel,
-        'rules' => [
-            // Add validation rules for travel if needed
-        ],
-    ],
-    'phone' => [
-        'value' => $this->phone,
-        'rules' => [
-            [
-                'type' => 'phone',
-                'message' => 'Invalid phone number',
-            ],
-        ],
-    ],
-    'host' => [
-        'value' => $this->host,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => 'Host is required',
-            ],
-        ],
-    ],
-    'partner' => [
-        'value' => $this->partner,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => 'Partner is required',
-            ],
-        ],
-    ],
-    'manager' => [
-        'value' => $this->manager,
-        'rules' => [
-            [
-                'type' => 'required',
-                'message' => 'Manager is required',
-            ],
-        ],
-    ],
-    // Add more fields and validation rules as needed
-];
+    public $error;
+    public $errorMsgs;
 
 
-
-    // Call the Validator::validate function
-    $validate = Validator::validate($fields);
-
-    if ($validate['error']) {
-        return ['error' => $validate['error'], 'errorMsgs' => $validate['errorMsgs']];
-    } else {
-        $data = array(
-            'weddingID' => $this->groomName."weds".$this->brideName,
-            'lang' => $this->lang,
-            'domain' => $this->domain,
-            'weddingName' => $this->weddingName,
-            'from_role' => $this->from_role,
-            'brideName' => $this->brideName,
-            'groomName' => $this->groomName,
-            'brideQualifications' => $this->brideQualifications,
-            'groomQualifications' => $this->groomQualifications,
-            'brideBio' => $this->brideBio,
-            'groomBio' => $this->groomBio,
-            'timeline' => $this->timeline,
-            'hosts' => $this->hosts,
-            'textMessage' => $this->textMessage,
-            'template' => $this->template,
-            'tier' => $this->tier,
-            'videoMessage' => $this->videoMessage,
-            'music' => $this->music,
-            'youtube' => $this->youtube,
-            'accommodation' => $this->accommodation,
-            'travel' => $this->travel,
-            'phone' => $this->phone,
-            'host' => $this->host,
-            'partner' => $this->partner,
-            'manager' => $this->manager,
-            'createdAt' => date('Y-m-d H:i:s'),
-            'status' => 'pending'
-        );
-
+    /**
+     * Check if the wedding ID is unique.
+     *
+     * @param string $weddingID
+     * @param string $lang
+     * @return bool True if the wedding ID is unique; false otherwise.
+     */
+    public function check($weddingID, $lang)
+    {
         DB::connect();
-        $createWedding = DB::insert('weddings', $data);
+        $result = DB::count('weddings', "weddingID = '$weddingID' AND lang = '$lang'");
+        DB::close();
+        return $result;
+    }
+
+    // Create operation
+    public function create(array $data)
+    {
+        // Sanitize and assign values
+        DB::connect();
+        $this->weddingID = trim(DB::sanitize($data['weddingID']));
+        $this->lang = trim(DB::sanitize($data['lang'] ?? 'en'));
+        $this->domain = trim(DB::sanitize($data['domain']));
+        $this->weddingName = trim(DB::sanitize($data['weddingName']));
+        $this->fromRole = trim(DB::sanitize($data['fromRole']));
+        $this->brideName = trim(DB::sanitize($data['brideName']));
+        $this->groomName = trim(DB::sanitize($data['groomName']));
+        $this->brideQualifications = trim(DB::sanitize($data['brideQualifications']));
+        $this->groomQualifications = trim(DB::sanitize($data['groomQualifications']));
+        $this->brideBio = trim(DB::sanitize($data['brideBio']));
+        $this->groomBio = trim(DB::sanitize($data['groomBio']));
+        $this->story = json_encode($data['story']);
+        $this->timeline = json_encode($data['timeline']);
+        $this->hosts = json_encode($data['hosts']);
+        $this->invitation = trim(DB::sanitize($data['invitation']));
+        $this->template = trim(DB::sanitize($data['template']));
+        $this->tier = trim(DB::sanitize($data['tier'] ?? 'na'));
+        $this->music = trim(DB::sanitize($data['music']));
+        $this->youtube = trim(DB::sanitize($data['youtube']));
+        $this->accommodation = json_encode($data['accommodation']);
+        $this->travel = json_encode($data['travel']);
+        $this->phone = trim(DB::sanitize($data['phone']));
+        $this->whatsappAPIKey = trim(DB::sanitize($data['whatsappAPIKey']));
+        $this->host = trim(DB::sanitize($data['host']));
+        $this->partner = trim(DB::sanitize($data['partner']));
+        $this->manager = trim(DB::sanitize($data['manager']));
+
+        $this->languages = enumToArray(DB::select('information_schema.COLUMNS', 'COLUMN_TYPE', "TABLE_NAME = 'weddings'
+        AND COLUMN_NAME = 'lang'")->fetch()[0]);
+
+        $this->fromRoles = enumToArray(DB::select('information_schema.COLUMNS', 'COLUMN_TYPE', "TABLE_NAME = 'weddings'
+        AND COLUMN_NAME = 'fromRole'")->fetch()[0]);
+
+        $this->tiers = enumToArray(DB::select('information_schema.COLUMNS', 'COLUMN_TYPE', "TABLE_NAME = 'weddings'
+        AND COLUMN_NAME = 'tier'")->fetch()[0]);
+
+        $hostData = DB::select('users', 'email', "role = 
+       'host'")->fetchAll();
+
+        foreach ($hostData as $host) {
+            $this->hostList[] = $host['email'];
+        }
+
+        $partnerData = DB::select('users', 'email', "role = 
+       'partner'")->fetchAll();
+
+        foreach ($partnerData as $partner) {
+            $this->partnerList[] = $partner['email'];
+        }
+
+        $managerData = DB::select('users', 'email', "role = 
+      'manager'")->fetchAll();
+
+        foreach ($managerData as $manager) {
+            $this->managerList[] = $manager['email'];
+        }
         DB::close();
 
-        if ($createWedding) {
-            $this->error = false;
-            $this->errorMsgs['createWedding'] = '';
-        } else {
-            $this->error = true;
-            $this->errorMsgs['createWedding'] = 'Wedding registration failed';
-        }
 
-        if ($this->error) {
-            return ['error' => $this->error, 'errorMsgs' => $this->errorMsgs];
+        // Validation Rules
+
+        $fields = [
+            'weddingID' => [
+                'value' => $this->weddingID,
+                'rules' => [
+                    [
+                        'type' => 'required',
+                        'message' => "Wedding ID can't be empty",
+                    ],
+                    [
+                        'type' => 'eventID',
+                        'message' => "Invalid Wedding ID",
+                    ],
+                    [
+                        'type' => 'custom',
+                        'message' => 'Wedding ID already exists',
+                        'validate' => function () {
+                            return !($this->check($this->weddingID, $this->lang));
+                        },
+                    ]
+                ],
+            ],
+            'lang' => [
+                'value' => $this->lang,
+                'rules' => [
+                    [
+                        'type' => 'custom',
+                        'message' => 'Language Not Supported',
+                        'validate' => function () {
+                            return in_array($this->lang, $this->languages);
+                        },
+                    ]
+                ],
+            ],
+            'domain' => [
+                'value' => $this->domain,
+                'rules' => [
+                    [
+                        'type' => 'domain',
+                        'message' => 'Invalid Domain'
+                    ]
+                ],
+            ],
+            'weddingName' => [
+                'value' => $this->weddingName,
+                'rules' => [
+                    [
+                        'type' => 'required',
+                        'message' => "Wedding Name can't be empty",
+                    ],
+                    [
+                        'type' => 'minLength',
+                        'message' => 'Invalid Wedding Name',
+                        'minLength' => 10
+                    ]
+                ],
+            ],
+            'fromRole' => [
+                'value' => $this->fromRole,
+                'rules' => [
+                    [
+                        'type' => 'required',
+                        'message' => "From Role can't be empty",
+                    ],
+                    [
+                        'type' => 'custom',
+                        'message' => 'Invalid from field',
+                        'validate' => function () {
+                            return in_array($this->fromRole, $this->fromRoles);
+                        },
+                    ]
+                ],
+            ],
+            'brideName' => [
+                'value' => $this->brideName,
+                'rules' => [
+                    [
+                        'type' => 'required',
+                        'message' => "Bride Name can't be empty",
+                    ],
+                    [
+                        'type' => 'minLength',
+                        'message' => 'Invalid Bride Name',
+                        'minLength' => 3
+                    ]
+                ],
+            ],
+            'groomName' => [
+                'value' => $this->groomName,
+                'rules' => [
+                    [
+                        'type' => 'required',
+                        'message' => "Groom Name can't be empty",
+                    ],
+                    [
+                        'type' => 'minLength',
+                        'message' => 'Invalid Groom Name',
+                        'minLength' => 3
+                    ]
+                ],
+            ],
+            'brideQualifications' => [
+                'value' => $this->brideQualifications,
+                'rules' => [
+                    [
+                        'type' => 'minLength',
+                        'message' => 'Invalid Bride Qualifications',
+                        'minLength' => 3
+                    ]
+                ],
+            ],
+            'groomQualifications' => [
+                'value' => $this->groomQualifications,
+                'rules' => [
+                    [
+                        'type' => 'minLength',
+                        'message' => 'Invalid Groom Qualifications',
+                        'minLength' => 3
+                    ]
+                ],
+            ],
+            'brideBio' => [
+                'value' => $this->brideBio,
+                'rules' => [
+                    [
+                        'type' => 'minLength',
+                        'message' => 'Invalid Bride Bio',
+                        'minLength' => 3
+                    ]
+                ],
+            ],
+            'groomBio' => [
+                'value' => $this->groomBio,
+                'rules' => [
+                    [
+                        'type' => 'minLength',
+                        'message' => 'Invalid Groom Qualifications',
+                        'minLength' => 3
+                    ]
+                ],
+            ],
+            'tier' => [
+                'value' => $this->tier,
+                'rules' => [
+                    [
+                        'type' => 'required',
+                        'message' => "Tier can't be empty",
+                    ],
+                    [
+                        'type' => 'custom',
+                        'message' => 'Invalid Tier',
+                        'validate' => function () {
+                            return in_array($this->tier, $this->tiers);
+                        },
+                    ]
+                ],
+            ],
+            'music' => [
+                'value' => $this->music,
+                'rules' => [
+                    [
+                        'type' => 'url',
+                        'message' => 'Invalid Music Track'
+                    ]
+                ],
+            ],
+            'youtube' => [
+                'value' => $this->youtube,
+                'rules' => [
+                    [
+                        'type' => 'url',
+                        'message' => 'Invalid URL'
+                    ],
+                    [
+                        'type' => 'custom',
+                        'message' => 'Invalid YouTube Live URL',
+                        'validate' => function () {
+                            // Replace this with your validation logic for YouTube embed URL
+                            return preg_match("/^(https?:\/\/)?(www\.)?(youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/", $this->youtube);
+                        },
+                    ]
+                ],
+            ],
+            'phone' => [
+                'value' => $this->phone,
+                'rules' => [
+                    [
+                        'type' => 'phone',
+                        'message' => 'Invalid Phone Number'
+                    ],
+                ],
+            ],
+            'host' => [
+                'value' => $this->host,
+                'rules' => [
+                    [
+                        'type' => 'required',
+                        'message' => "Host can't be empty",
+                    ],
+                    [
+                        'type' => 'custom',
+                        'message' => 'Invalid host',
+                        'validate' => function () {
+                            return in_array($this->host, $this->hostList);
+                        },
+                    ]
+                ],
+            ],
+            'partner' => [
+                'value' => $this->partner,
+                'rules' => [
+                    [
+                        'type' => 'custom',
+                        'message' => 'Invalid partner',
+                        'validate' => function () {
+                            return in_array($this->partner, $this->partnerList);
+                        },
+                    ]
+                ],
+            ],
+            'manager' => [
+                'value' => $this->manager,
+                'rules' => [
+                    [
+                        'type' => 'custom',
+                        'message' => 'Invalid manager',
+                        'validate' => function () {
+                            return in_array($this->manager, $this->managerList);
+                        },
+                    ]
+                ],
+            ],
+        ];
+
+        // Call the Validator::validate function
+        $validate = Validator::validate($fields);
+
+        if ($validate['error']) {
+            return ['error' => $validate['error'], 'errorMsgs' => $validate['errorMsgs']];
         } else {
-            return ['error' => $this->error, 'errorMsgs' => $this->errorMsgs, 'message' => 'Wedding registration successful'];
+            // Prepare data array
+            $data = [
+                'weddingID' => $this->weddingID,
+                'lang' => $this->lang,
+                'domain' => $this->domain,
+                'weddingName' => $this->weddingName,
+                'fromRole' => $this->fromRole,
+                'brideName' => $this->brideName,
+                'groomName' => $this->groomName,
+                'brideQualifications' => $this->brideQualifications,
+                'groomQualifications' => $this->groomQualifications,
+                'brideBio' => $this->brideBio,
+                'groomBio' => $this->groomBio,
+                'story' => !empty($this->story) ? json_encode($this->story) : null,
+                'timeline' => !empty($this->timeline) ? json_encode($this->timeline) : null,
+                'hosts' => !empty($this->hosts) ? json_encode($this->hosts) : null,
+                'invitation' => !empty($this->invitation) ? json_encode($this->invitation) : null,
+                'template' => $this->template,
+                'tier' => $this->tier,
+                'music' => $this->music,
+                'youtube' => $this->youtube,
+                'accommodation' => !empty($this->accommodation) ? json_encode($this->accommodation) : null,
+                'travel' => !empty($this->travel) ? json_encode($this->travel) : null,
+                'phone' => $this->phone,
+                'whatsappAPIKey' => $this->whatsappAPIKey,
+                'host' => $this->host,
+                'partner' => $this->partner,
+                'manager' => $this->manager,
+                'createdAt' => date('Y-m-d H:i:s'),
+                'status' => 'pending',
+            ];
+            
+
+            // Insert data into the 'weddings' table
+            DB::connect();
+            $createWedding = DB::insert('weddings', $data);
+            DB::close();
+
+            // Handle success/failure
+            if ($createWedding) {
+                $this->error = false;
+                $this->errorMsgs['createWedding'] = '';
+            } else {
+                $this->error = true;
+                $this->errorMsgs['createWedding'] = 'Wedding Creation Failed';
+            }
+
+            if ($this->error) {
+                return ['error' => $this->error, 'errorMsgs' => $this->errorMsgs];
+            } else {
+                return ['error' => $this->error, 'errorMsgs' => $this->errorMsgs, 'message' => 'Wedding Creation successful'];
+            }
         }
     }
-}
-// create function ends
+    // create function ends
 
-
-  
+    // ... (similar functions for other CRUD operations)
 }
