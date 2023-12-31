@@ -17,8 +17,8 @@ class Auth
     protected $db;
     protected $loginId;
     protected $currentLog;
+    protected $userID;
     protected $email;
-    protected $newEmail;
     protected $password;
     protected $ip;
     protected $os;
@@ -74,6 +74,7 @@ class Auth
         DB::connect();
         $this->email = strtolower(trim(DB::sanitize($email)));
         $this->password = DB::sanitize($password);
+        $this->userID = App::getUserByEmail($this->email)['userID'];
         DB::close();
 
 
@@ -97,7 +98,7 @@ class Auth
                 $time = date_create()->format('Y-m-d H:i:s');
                 $data = [
                     'loginId' => $this->loginId,
-                    'email' => $this->email,
+                    'userID' => $this->userID,
                     'ip' => $this->ip,
                     'browser' => $this->browser,
                     'os' => $this->os,
@@ -133,7 +134,7 @@ class Auth
      * @param string $role The role to check against.
      * @return bool Returns true if the email exists for the specified role, false otherwise.
      */
-    public function check($email, $role)
+    public function checkEmail($email, $role)
     {
         DB::connect();
         $result = DB::select('users', '*', "email = '$email' and role = '$role' and status <> 'deleted'")->fetchAll();
@@ -142,18 +143,26 @@ class Auth
     }
     
 
+    public function checkPhone($phone, $role)
+    {
+        DB::connect();
+        $result = DB::select('users', '*', "phone = '$phone' and role = '$role' and status <> 'deleted'")->fetchAll();
+        DB::close();
+        return count($result);
+    }
     
+
     /**
-     * Get a  user with email.
+     * Get a  user with userID.
      *
-     * @param string $email The email of the user.
+     * @param string $userID The userID of the user.
      * @return array The result of the select query.
      */
-    public function getUser($email)
+    public function getUser($userID)
     {   
         DB::connect();
-        $email = DB::sanitize($email);
-        $getUser = DB::select('users', '*', "email = '$email' and status <> 'deleted'")->fetchAll()[0];
+        $userID = DB::sanitize($userID);
+        $getUser = DB::select('users', '*', "userID = '$userID' and status <> 'deleted'")->fetch();
         DB::close();
         if ($getUser)
             return $getUser;
@@ -198,6 +207,8 @@ class Auth
         $this->status = trim(DB::sanitize($status));
         DB::close();
 
+        $this->userID = md5(md5($this->email.$this->phone).md5(time().uniqid()));
+
         // fields array
         $fields = [
             'name' => [
@@ -218,10 +229,6 @@ class Auth
                 'value' => $this->email,
                 'rules' => [
                     [
-                        'type' => 'required',
-                        'message' => "Email can't be empty",
-                    ],
-                    [
                         'type' => 'email',
                         'message' => 'Email is invalid',
                     ],
@@ -229,7 +236,7 @@ class Auth
                         'type' => 'custom',
                         'message' => 'Email already in use',
                         'validate' => function () {
-                            return !($this->check($this->email, $this->role));
+                            return !($this->checkEmail($this->email, $this->role));
                         },
                     ],
                 ],
@@ -244,7 +251,14 @@ class Auth
                     [
                         'type' => 'phone',
                         'message' => "Invalid Phone",
-                    ]
+                    ],
+                    [
+                        'type' => 'custom',
+                        'message' => 'Phone already in use',
+                        'validate' => function () {
+                            return !($this->checkPhone($this->phone, $this->role));
+                        },
+                    ],
                 ]
             ],
             'password' => [
@@ -271,12 +285,14 @@ class Auth
             $this->password = md5($this->passwordWithoutMD5);
 
             $data = array(
+                'userID' => $this->userID,
                 'name' => $this->name,
                 'email' => $this->email,
                 'password' => $this->password,
                 'phone' => $this->phone,
                 'role' => $this->role,
-                'status' => $this->status
+                'status' => $this->status,
+                'createdAt' => date('Y-m-d H:i:s'),
             );
 
 
@@ -307,12 +323,12 @@ class Auth
      *
      * @param array $data The user data to be edited.
      * @return array The result of the edit operation.
-     */public function edit($email, $data)
+     */public function edit($userID, $data)
 {
     DB::connect();
     $this->name = trim(DB::sanitize($data['name']));
-    $this->email = trim(DB::sanitize($email));
-    $this->newEmail = trim(DB::sanitize($data['email']));
+    $this->userID = trim(DB::sanitize($userID));
+    $this->email = trim(DB::sanitize($data['email']));
     $this->phone = trim(DB::sanitize($data['phone']));
     $this->password = DB::sanitize($data['password']);
     $this->role = trim(DB::sanitize($data['role']));
@@ -321,6 +337,19 @@ class Auth
 
     // Define validation rules for fields
     $fields = [
+        'userId' => [
+            'values'=> $this->userID,
+            'rules' => [
+                [
+                    'type' => 'custom',
+                    'message' => 'Invalid User',
+                    'validate' => function () {
+                        return $this->getUser($this->userID);
+                    },
+
+                ]
+            ]
+        ],
         'name' => [
             'value' => $this->name,
             'rules' => [
@@ -336,7 +365,7 @@ class Auth
             ]
         ],
         'email' => [
-            'value' => $this->newEmail,
+            'value' => $this->email,
             'rules' => [
                 [
                     'type' => 'required',
@@ -365,7 +394,14 @@ class Auth
                 [
                     'type' => 'phone',
                     'message' => "Invalid Phone",
-                ]
+                ],
+                [
+                    'type' => 'custom',
+                    'message' => 'Phone already in use',
+                    'validate' => function () {
+                        return true;
+                    },
+                ],
             ]
         ],
     ];
@@ -379,16 +415,16 @@ class Auth
 
         $updateData = [
             'name' => $this->name,
-            'email' => $this->newEmail,
-            'password' => $this->password,
+            'email' => $this->email,
             'phone' => $this->phone,
             'role' => $this->role,
-            'status' => $this->status
+            'status' => $this->status,
+            'verifiedAt' => date('Y-m-d H:i:s'),
         ];
         
 
         DB::connect();
-        $updateUser = DB::update('users', $updateData, "email = '$this->email'");
+        $updateUser = DB::update('users', $updateData, "userID = '$this->userID'");
         DB::close();
 
         if ($updateUser) {
@@ -408,40 +444,49 @@ class Auth
      * @param string $email The email of the user to be deleted.
      * @return array The result of the delete operation.
      */
-    public function delete($email)
-    {   $check = $this->getUser($email);
-
-        if($check['error']) return $check;
-        
-        DB::connect();
-        $deleteLogs = DB::delete('logs', "email = '$email'");
-        DB::close();
-        
-        if(!$deleteLogs) return ["error"=> true,"errorMsgs"=> ["logs"=> "logs deletion failed"]];
-        
-        
-        $data = array(
-            'email'=> $email.md5($email.time()),
+    public function delete($userID)
+    {
+        $check = $this->getUser($userID);
+    
+        if ($check['error']) {
+            return $check;
+        }
+    
+        $data = [
             'status' => 'deleted'
-        );
-
+        ];
+    
+        // Update the 'users' table
         DB::connect();
-        $deleteUser = DB::update('users', $data, "email = '$email'");
+        $deleteUser = DB::update('users', $data, "userID = '$userID'");
         DB::close();
-
-        if ($deleteUser) {
+    
+        if (!$deleteUser) {
+            return [
+                'error' => true,
+                'errorMsg' => 'Failed to delete user'
+            ];
+        }
+        DB::connect();
+        // Update the 'logs' table
+        $updateLogs = DB::update('logs', ['loggedOutAt' => date('Y-m-d H:i:s')], "userID = '$userID'");
+    
+        DB::close();
+    
+        if ($updateLogs) {
             return [
                 'error' => false,
                 'errorMsg' => '',
-                'message' => "$email successfully deleted"
+                'message' => "$userID successfully deleted"
             ];
         } else {
             return [
                 'error' => true,
-                'errorMsg' => 'Failed to delete user '
+                'errorMsg' => 'Failed to update logs table'
             ];
         }
     }
+    
 
     public function changePassword($email, $newPassword)
     {
