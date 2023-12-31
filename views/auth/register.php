@@ -1,11 +1,11 @@
 <?php
-
 $config['APP_TITLE'] = "Register | ".$config['APP_TITLE'];
 DB::connect();
 $customers = DB::select('users', '*', "status <> 'deleted'")->fetchAll();
 DB::close();
 
 if (isset($_REQUEST['btn-register'])) {
+  errors(1);
   csrfCheck();
   controller("Auth");
   $user = new Auth();
@@ -144,10 +144,12 @@ if (isset($_REQUEST['btn-register'])) {
     let password = document.querySelector("#password");
 
     let emails = []
+    let phones = []
 
     <?php
     foreach ($customers as $email) {
       echo "emails.push('" . md5($email['email']) . "')\n";
+      echo "phones.push('" . md5($email['phone']) . "')\n";
     }
     ?>
     let eye = document.querySelector('#eye')
@@ -220,6 +222,11 @@ if (isset($_REQUEST['btn-register'])) {
         phoneMsg.innerText =
           "Mobile number is invalid (10 digits only)";
         phone.classList.add("is-invalid");
+      } else if (phones.includes(CryptoJS.MD5(phoneValue).toString())) {
+        phoneError = true
+        checkErrors()
+        phoneMsg.innerText = "Phone already in use"
+        phone.classList.add("is-invalid")
       } else {
         phoneError = false;
         checkErrors();
