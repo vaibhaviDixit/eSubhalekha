@@ -3,8 +3,10 @@ errors(0);
 // Include the Wedding controller
 controller('Wedding');
 
+
 // Test data for creating a wedding
 $weddingData = [
+    'weddingID' => 'HariWedsSwathi',
     'weddingName' => 'Pingali vari Vivaha mahotsavam',
     'fromRole' => 'bride',
     'brideName' => 'Lakshmi', 
