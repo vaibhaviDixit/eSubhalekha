@@ -12,6 +12,7 @@
  * @package GraphenePHP
  * @version 2.0.0
  */
+
 class App
 {
     /**
@@ -46,8 +47,8 @@ class App
         $query = DB::select('logs', '*', "loginID='$loginID' and loggedoutAt is null")->fetchAll()[0];
         
         if ($query) {
-            $email = $query['email'];
-            $currentLog = DB::select('users', '*', "email='$email'")->fetchAll();
+            $userID = $query['userID'];
+            $currentLog = DB::select('users', '*', "userID='$userID' AND status <> 'deleted'")->fetchAll();
             DB::close();
             return $currentLog[0];
         } else {
@@ -62,7 +63,7 @@ class App
     public static function getUserByEmail($email)
     {
         DB::connect();
-        $query = DB::select('users', '*', "email='$email'")->fetchAll()[0];
+        $query = DB::select('users', '*', "email='$email' and status <> 'deleted'")->fetchAll()[0];
         return $query;        
     }
 }
