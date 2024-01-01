@@ -78,6 +78,7 @@ h6 {
 
 /* Hover state for all buttons */
 .btn:hover {
+  opacity: .9;
 }
 
 /* Active state for all buttons */
