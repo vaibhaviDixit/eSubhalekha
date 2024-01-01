@@ -422,6 +422,7 @@ class Wedding
    // Update operation
     public function update($weddingID, array $data)
     {
+         
         // Sanitize and assign values
         DB::connect();
         $this->weddingID = trim(DB::sanitize($weddingID));
@@ -431,24 +432,51 @@ class Wedding
         $this->fromRole = trim(DB::sanitize($data['fromRole']));
         $this->brideName = trim(DB::sanitize($data['brideName']));
         $this->groomName = trim(DB::sanitize($data['groomName']));
-        $this->brideQualifications = trim(DB::sanitize($data['brideQualifications']));
-        $this->groomQualifications = trim(DB::sanitize($data['groomQualifications']));
-        $this->brideBio = trim(DB::sanitize($data['brideBio']));
-        $this->groomBio = trim(DB::sanitize($data['groomBio']));
-        $this->story = json_encode($data['story']);
-        $this->timeline = json_encode($data['timeline']);
-        $this->hosts = json_encode($data['hosts']);
-        $this->invitation = trim(DB::sanitize($data['invitation']));
-        $this->template = trim(DB::sanitize($data['template']));
-        $this->tier = trim(DB::sanitize($data['tier'] ?? 'na'));
-        $this->music = trim(DB::sanitize($data['music']));
-        $this->youtube = trim(DB::sanitize($data['youtube']));
-        $this->accommodation = json_encode($data['accommodation']);
-        $this->travel = json_encode($data['travel']);
+
+        // getting old values of wedding
+        $fetchWedding=$this->getWedding($weddingID,$this->lang);
+        $oldValuesOfWedding=$fetchWedding['errorMsgs']['wedding'];
+
+        echo $oldValuesOfWedding['story']=="null"?'yes':'no';
+        // die();
+
+        $this->brideQualifications = !empty($data['brideQualifications']) ? trim(DB::sanitize($data['brideQualifications'])) : $oldValuesOfWedding['brideQualifications'];  // not req
+
+        $this->groomQualifications =  !empty($data['groomQualifications']) ? trim(DB::sanitize($data['groomQualifications'])) : $oldValuesOfWedding['groomQualifications']; // not req
+       
+        $this->brideBio =  !empty($data['brideBio']) ? trim(DB::sanitize($data['brideBio'])) : $oldValuesOfWedding['brideBio']; // not req
+       
+        $this->groomBio =  !empty($data['groomBio']) ? trim(DB::sanitize($data['groomBio'])) : $oldValuesOfWedding['groomBio']; // not req
+
+        $this->story =!empty($data['story']) ? json_encode($data['story']) :(
+            ($oldValuesOfWedding['story']=="null")? null:$oldValuesOfWedding['story']
+        ); // not req
+
+        
+        $this->timeline = !empty($data['timeline']) ? json_encode($data['timeline']) : $oldValuesOfWedding['timeline']; // not req
+        
+        $this->hosts =!empty($data['hosts']) ? json_encode($data['hosts']) : $oldValuesOfWedding['hosts']; // not req
+        
+        $this->invitation =  !empty($data['invitation']) ? trim(DB::sanitize($data['invitation'])) : $oldValuesOfWedding['invitation']; // not req
+        
+        $this->template =  !empty($data['template']) ? trim(DB::sanitize($data['template'])) : $oldValuesOfWedding['template']; // not req
+        
+        $this->tier =  !empty($data['tier']) ? trim(DB::sanitize($data['tier'])) : $oldValuesOfWedding['tier']; // not req
+        
+        $this->music =  !empty($data['music']) ? trim(DB::sanitize($data['music'])) : $oldValuesOfWedding['music']; // not req
+        
+        $this->youtube = !empty($data['youtube']) ? trim(DB::sanitize($data['youtube'])) : $oldValuesOfWedding['youtube']; // not req
+
+        $this->accommodation = !empty($data['accommodation']) ? json_encode($data['accommodation']) : $oldValuesOfWedding['accommodation']; // not req
+
+        $this->travel = !empty($data['travel']) ? json_encode($data['travel']) : $oldValuesOfWedding['travel']; // not req
+
         $this->phone = trim(DB::sanitize($data['phone']));
         $this->whatsappAPIKey = trim(DB::sanitize($data['whatsappAPIKey']));
         $this->host = trim(DB::sanitize($data['host']));
-        $this->partner = trim(DB::sanitize($data['partner']));
+        
+        $this->partner = !empty($data['partner']) ? trim(DB::sanitize($data['partner'])) : $oldValuesOfWedding['partner'];  // not req
+        
         $this->manager = trim(DB::sanitize($data['manager']));
 
         $this->languages = enumToArray(DB::select('information_schema.COLUMNS', 'COLUMN_TYPE', "TABLE_NAME = 'weddings'
@@ -501,7 +529,7 @@ class Wedding
                         'type' => 'custom',
                         'message' => 'Wedding ID already exists',
                         'validate' => function () {
-                            return $this->getWedding($this->weddingID);
+                            return $this->getWedding($this->weddingID,$this->lang);
                         },
                     ]
                 ],
@@ -787,14 +815,15 @@ class Wedding
      * @param string $weddingID The weddingID of the wedding.
      * @return array The result of the select query.
      */
-    public function getWedding($weddingID)
+    public function getWedding($weddingID,$lang)
     {   
         DB::connect();
         $weddingID = DB::sanitize($weddingID);
-        $getWedding = DB::select('weddings', '*', "weddingID = '$weddingID'")->fetch();
+        $getWedding = DB::select('weddings', '*', "weddingID = '$weddingID' and lang='$lang' ")->fetch();
         DB::close();
-        if ($weddingID)
-            return ['error' => false, "errorMsgs" => ['wedding' => $weddingID]];
+
+        if ($getWedding)
+            return ['error' => false, "errorMsgs" => ['wedding' => $getWedding]];
         else
             return ['error' => true, "errorMsgs" => ['wedding' => "Wedding Not Found"]];
     }
@@ -808,10 +837,10 @@ class Wedding
      * @param string $weddingID The weddingID of the wedding to be deleted.
      * @return array The result of the delete operation.
      */
-    public function delete($weddingID)
+    public function delete($weddingID,$lang)
     {
 
-        $check = $this->getWedding($weddingID);
+        $check = $this->getWedding($weddingID,$lang);
 
         if ($check['error']) {
             return $check;
