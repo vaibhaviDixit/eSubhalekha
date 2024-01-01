@@ -65,7 +65,7 @@
   "wedding/{id}/billing": {
     "path": "views/dashboard/wedding/billing.php"
   },
-  "wedding/{id}": {
+  "wedding/{id}/{lang}": {
     "path": "views/dashboard/wedding/index.php"
   },
   "wedding/{id}/{lang}/basic-details": {
