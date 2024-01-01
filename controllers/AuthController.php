@@ -113,7 +113,7 @@ class Auth
                     if (!empty($_GET['back'])) {
                         header("Location:" . $_GET['back']);
                     } else {
-                        header("Location:" . route(''));
+                        header("Location:" . route('dashboard'));
                     }
                 } else {
                     $this->errors = "Internal Server Error";
