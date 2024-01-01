@@ -1,9 +1,6 @@
 <?php
 
-//display errors for debugging purpose
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+errors(0);
 
 // Include the Wedding controller
 controller('Wedding');
@@ -16,7 +13,7 @@ $weddingData = [
     'fromRole' => 'bride',
     'brideName' => 'Sakshi', 
     'groomName' => 'Rahul', 
-    'host' => 'vaibhavidixit511@gmail.com',
+    'host' => 'contact@imradhe.com',
 ];
 
 
@@ -39,7 +36,7 @@ $weddingController = new Wedding();
 
 
 // Test the delete function
-$resultOfDelete = $weddingController->delete('RehanWedsHarshada');
+$resultOfDelete = $weddingController->create($weddingData);
 
 // Display the result
 echo json_encode($resultOfDelete);
