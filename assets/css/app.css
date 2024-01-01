@@ -199,6 +199,7 @@ nav .container{
 
 
 nav *{
+  user-select: none;
   color: var(--color-secondary-1) !important;
 }
 nav .nav-link{
