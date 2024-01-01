@@ -488,7 +488,7 @@ class Auth
     }
     
 
-    public function changePassword($email, $newPassword)
+    public function changePassword($userID, $newPassword)
     {
 
         // Update the user's password in the database
@@ -498,7 +498,7 @@ class Auth
         $updateData = [
             'password' => $newPasswordHashed,
         ];
-        $updateUser = DB::update('users', $updateData, "email = '$email'");
+        $updateUser = DB::update('users', $updateData, "userID = '$userID'");
         DB::close();
 
         if ($updateUser) {
