@@ -9,7 +9,7 @@ if (isset($_POST['btn-login'])) {
   
 } else {
   if (App::getSession())
-    header("Location:" . home());
+    header("Location:" . route('/dashboard'));
 }
 ?>
 <!doctype html>
