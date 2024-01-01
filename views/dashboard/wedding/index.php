@@ -1,3 +1,3 @@
 <?php
 
-echo "dashboard/wedding/index.php";
+echo $_REQUEST['id'].", ".$_REQUEST['lang'];
