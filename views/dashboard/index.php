@@ -6,6 +6,8 @@ require('views/partials/dashboard/sidebar.php');
 DB::connect();
 $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
 DB::close();
+
+$auth = new Auth;
 ?>
 
 <head>
@@ -73,7 +75,7 @@ DB::close();
                             <?= $wedding['weddingName'] ?>
                         </td>
                         <td>
-                            <?= $wedding['host'] ?>
+                            <?= $auth->getUser($wedding['host'])['name']; ?>
                         </td>
                     </tr>
                 <?php } ?>
