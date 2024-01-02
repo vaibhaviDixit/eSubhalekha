@@ -1,6 +1,6 @@
 <?php
 
-errors(1);
+errors(0);
 
 // Include the Wedding controller
 controller('Wedding');
@@ -8,14 +8,11 @@ controller('Wedding');
 
 // Test data for creating a wedding
 $weddingData = [
-    'weddingID' => 'NirajWedsNitya',
-    'lang'=>'en',
-    'weddingName' => 'Destination Vivah Rajasthan',
+    'weddingID' => 'SamarthWedsShreya',
+    'weddingName' => 'Destination Vivaha Rajasthan',
     'fromRole' => 'groom',
-    'phone'=>'9277556933',
-    'domain'=>'subh.com',
-    'brideName' => 'Nitya', 
-    'groomName' => 'Niraj', 
+    'brideName' => 'Shreya', 
+    'groomName' => 'Samarth', 
     'host' => 'vaibhavidixit511@gmail.com',
 ];
 
@@ -31,10 +28,10 @@ $weddingController = new Wedding();
 
 
 // // Test the update function
-// $resultOfUpdate = $weddingController->update('NirajWedsNitya',$weddingData);
+$resultOfUpdate = $weddingController->update('SamarthWedsShreya',$weddingData);
 
 // // Display the result
-// echo json_encode($resultOfUpdate);
+echo json_encode($resultOfUpdate);
 
 // Test the delete function
 
@@ -46,19 +43,6 @@ $weddingController = new Wedding();
 
 // Display the result
 // echo json_encode($resultOfDelete);
-
-?>
-
-<!-- 
-To apply validation rules:
-span id should be input field {name+Error}
-input field id and name should be same
-
-as attributes we can add validations like required, domain, email
-
-
- -->
-
 
 
 

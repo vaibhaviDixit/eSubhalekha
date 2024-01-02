@@ -74,7 +74,6 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="<?php assets("css/common.css");?>">
     <link rel="stylesheet" href="<?php assets("css/dashboard.css");?>">
-    
     <title>eSubhalekha.com</title>
   </head>  
 <body>
