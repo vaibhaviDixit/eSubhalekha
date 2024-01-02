@@ -170,3 +170,24 @@ button[disabled] {
   border-radius: 30%;
   text-align: center;
 }
+
+
+/* form */
+
+form label{
+  font-weight: bold;
+}
+form{
+  padding: 10px 25px;
+  margin: 25px 0;
+}
+
+
+
+
+
+
+
+
+
+

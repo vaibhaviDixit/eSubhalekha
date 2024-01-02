@@ -1,3 +1,2 @@
 <?php
-
-echo "dashboard/wedding/edit.php";
+echo "wedding/edit.php";

@@ -8,12 +8,12 @@ controller('Wedding');
 
 // Test data for creating a wedding
 $weddingData = [
-    'weddingID' => 'RahulWedsSakshi',
+    'weddingID' => 'SamarthWedsShreya',
     'weddingName' => 'Destination Vivaha Rajasthan',
-    'fromRole' => 'bride',
-    'brideName' => 'Sakshi', 
-    'groomName' => 'Rahul', 
-    'host' => 'contact@imradhe.com',
+    'fromRole' => 'groom',
+    'brideName' => 'Shreya', 
+    'groomName' => 'Samarth', 
+    'host' => 'vaibhavidixit511@gmail.com',
 ];
 
 
@@ -28,18 +28,21 @@ $weddingController = new Wedding();
 
 
 // // Test the update function
-// $resultOfUpdate = $weddingController->update('HarshWedsHarshada',$weddingData);
+$resultOfUpdate = $weddingController->update('SamarthWedsShreya',$weddingData);
 
 // // Display the result
-// echo json_encode($resultOfUpdate);
+echo json_encode($resultOfUpdate);
 
+// Test the delete function
+
+// $resultOfDelete = $weddingController->delete('RehanWedsHarshada','en');
 
 
 // Test the delete function
-$resultOfDelete = $weddingController->create($weddingData);
+// $resultOfDelete = $weddingController->create($weddingData);
 
 // Display the result
-echo json_encode($resultOfDelete);
+// echo json_encode($resultOfDelete);
 
 
 
