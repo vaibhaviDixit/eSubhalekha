@@ -10,7 +10,7 @@ controller('Wedding');
 $weddingData = [
     'weddingID' => 'NirajWedsNitya',
     'lang'=>'en',
-    'weddingName' => 'Destination Vivaha Rajasthan',
+    'weddingName' => 'Destination Vivah Rajasthan',
     'fromRole' => 'groom',
     'phone'=>'9277556933',
     'domain'=>'subh.com',
@@ -46,7 +46,16 @@ $weddingController = new Wedding();
 
 ?>
 
-<script type="text/javascript" src="<?php assets("js/common.js"); ?>"></script>
+<!-- 
+To apply validation rules:
+span id should be input field {name+Error}
+input field id and name should be same
+
+as attributes we can add validations like required, domain, email
+
+
+ -->
+
 
 
 

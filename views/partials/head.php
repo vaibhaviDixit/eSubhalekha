@@ -55,6 +55,7 @@
     <link rel="stylesheet" href="<?php assets("css/common.css");?>">
     <link rel="stylesheet" href="<?php assets("css/app.css"); ?>">
 
+
     <title>
         <?php echo $config['APP_TITLE']; ?>
     </title>
