@@ -1,9 +1,6 @@
 <?php
 
-//display errors for debugging purpose
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+errors(0);
 
 // Include the Wedding controller
 controller('Wedding');
@@ -11,11 +8,11 @@ controller('Wedding');
 
 // Test data for creating a wedding
 $weddingData = [
-    'weddingID' => 'RaviWedsKeya',
+    'weddingID' => 'SamarthWedsShreya',
     'weddingName' => 'Destination Vivaha Rajasthan',
-    'fromRole' => 'bride',
-    'brideName' => 'Keya', 
-    'groomName' => 'Ravi', 
+    'fromRole' => 'groom',
+    'brideName' => 'Shreya', 
+    'groomName' => 'Samarth', 
     'host' => 'vaibhavidixit511@gmail.com',
 ];
 
@@ -31,13 +28,15 @@ $weddingController = new Wedding();
 
 
 // // Test the update function
-$resultOfUpdate = $weddingController->update('RaviWedsKeya',$weddingData);
+$resultOfUpdate = $weddingController->update('SamarthWedsShreya',$weddingData);
 
 // // Display the result
 echo json_encode($resultOfUpdate);
 
 // Test the delete function
-// $resultOfDelete = $weddingController->delete('RehanWedsHarshada');
+
+// $resultOfDelete = $weddingController->delete('RehanWedsHarshada','en');
+
 
 // Display the result
 // echo json_encode($resultOfDelete);
