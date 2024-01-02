@@ -476,21 +476,21 @@ class Wedding
        'host' OR role = 'user' AND status <> 'deleted'")->fetchAll();
 
         foreach ($hostData as $host) {
-            $this->hostList[] = $host['email'];
+            $this->userList[] = $host['email'];
         }
 
         $partnerData = DB::select('users', 'email', "role = 
        'partner' AND status <> 'deleted'")->fetchAll();
 
         foreach ($partnerData as $partner) {
-            $this->partnerList[] = $partner['email'];
+            $this->userList[] = $partner['email'];
         }
 
         $managerData = DB::select('users', 'email', "role = 
       'manager' AND status <> 'deleted'")->fetchAll();
 
         foreach ($managerData as $manager) {
-            $this->managerList[] = $manager['email'];
+            $this->userList[] = $manager['email'];
         }
         DB::close();
 
@@ -699,7 +699,7 @@ class Wedding
                         'type' => 'custom',
                         'message' => 'Invalid host',
                         'validate' => function () {
-                            return in_array($this->host, $this->hostList);
+                            return in_array($this->host, $this->userList);
                         },
                     ]
                 ],
@@ -711,7 +711,7 @@ class Wedding
                         'type' => 'custom',
                         'message' => 'Invalid partner',
                         'validate' => function () {
-                            return in_array($this->partner, $this->partnerList);
+                            return in_array($this->partner, $this->userList);
                         },
                     ]
                 ],
@@ -723,7 +723,7 @@ class Wedding
                         'type' => 'custom',
                         'message' => 'Invalid manager',
                         'validate' => function () {
-                            return in_array($this->manager, $this->managerList);
+                            return in_array($this->manager, $this->userList);
                         },
                     ]
                 ],
