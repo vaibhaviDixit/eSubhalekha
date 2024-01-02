@@ -191,7 +191,11 @@ input, select{
 label{
 	color: #293562 !important;
 }
+input::placeholder {
+  color: var(--color-primary-1) !important;
+  opacity: .4 !important;
 
+}
 
 
 
