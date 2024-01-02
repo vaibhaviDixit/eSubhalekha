@@ -41,6 +41,9 @@ $weddingController = new Wedding();
 // $resultOfDelete = $weddingController->delete('RehanWedsHarshada','en');
 
 
+// Test the delete function
+// $resultOfDelete = $weddingController->create($weddingData);
+
 // Display the result
 // echo json_encode($resultOfDelete);
 
