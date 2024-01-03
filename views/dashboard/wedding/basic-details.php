@@ -29,17 +29,17 @@ $wedding = new Wedding();
 
 			<?php
 
-			$config['APP_TITLE'] = "Create Wedding | " . $config['APP_TITLE'];
+			$config['APP_TITLE'] = "Basic Details - Wedding | " . $config['APP_TITLE'];
 			if (isset($_POST['btn-submit'])) {
 
 				$_REQUEST['host'] = App::getUser()['userID'];
-				$createWedding = $wedding->create($_REQUEST);
+				$updateWedding = $wedding->update($_REQUEST['weddingID'], $_REQUEST);
 
-				if ($createWedding['error']) {
+				if ($updateWedding['error']) {
 					?>
 					<div class="alert alert-danger">
 						<?php
-						foreach ($createWedding['errorMsgs'] as $msg) {
+						foreach ($updateWedding['errorMsgs'] as $msg) {
 							if (count($msg))
 								echo $msg[0] . "<br>";
 						}
@@ -47,7 +47,7 @@ $wedding = new Wedding();
 					</div>
 					<?php
 				} else
-					redirect("wedding/" . $_REQUEST['weddingID'] . "/" . $_REQUEST['lang']."/basic-details");
+					redirect("wedding/" . $_REQUEST['weddingID'] . "/" . $_REQUEST['lang']."/timeline");
 
 			}
 
