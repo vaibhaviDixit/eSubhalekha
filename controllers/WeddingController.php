@@ -69,16 +69,16 @@ class Wedding
         $this->groomQualifications = trim(DB::sanitize($data['groomQualifications']));
         $this->brideBio = trim(DB::sanitize($data['brideBio']));
         $this->groomBio = trim(DB::sanitize($data['groomBio']));
-        $this->story = DB::sanitize($data['story']);
-        $this->timeline = DB::sanitize($data['timeline']);
-        $this->hosts = DB::sanitize($data['hosts']);
+        $this->story = $data['story'];
+        $this->timeline = $data['timeline'];
+        $this->hosts = $data['hosts'];
         $this->invitation = trim(DB::sanitize($data['invitation']));
         $this->template = trim(DB::sanitize($data['template']));
         $this->tier = trim(DB::sanitize($data['tier'] ?? 'na'));
         $this->music = trim(DB::sanitize($data['music']));
         $this->youtube = trim(DB::sanitize($data['youtube']));
-        $this->accommodation = DB::sanitize($data['accommodation']);
-        $this->travel = DB::sanitize($data['travel']);
+        $this->accommodation = $data['accommodation'];
+        $this->travel = $data['travel'];
         $this->phone = trim(DB::sanitize($data['phone']));
         $this->whatsappAPIKey = trim(DB::sanitize($data['whatsappAPIKey']));
         $this->host = trim(DB::sanitize($data['host']));
@@ -399,12 +399,9 @@ class Wedding
         }
     }
     // create function ends
-
-    // ... (similar functions for other CRUD operations)
-
-
+    
    // Update operation
-    public function update($weddingID, array $data)
+    public function update($weddingID, $lang, array $data)
     {
          
         // Sanitize and assign values
@@ -417,51 +414,46 @@ class Wedding
         $this->brideName = trim(DB::sanitize($data['brideName']));
         $this->groomName = trim(DB::sanitize($data['groomName']));
 
-        // getting old values of wedding
-        $fetchWedding=$this->getWedding($weddingID,$this->lang);
-        $oldValuesOfWedding=$fetchWedding['errorMsgs']['wedding'];
 
-        echo $oldValuesOfWedding['story']=="null"?'yes':'no';
-        // die();
+        $this->brideQualifications = trim(DB::sanitize($data['brideQualifications']));  
 
-        $this->brideQualifications = !empty($data['brideQualifications']) ? trim(DB::sanitize($data['brideQualifications'])) : $oldValuesOfWedding['brideQualifications'];  // not req
-
-        $this->groomQualifications =  !empty($data['groomQualifications']) ? trim(DB::sanitize($data['groomQualifications'])) : $oldValuesOfWedding['groomQualifications']; // not req
+        $this->groomQualifications =  trim(DB::sanitize($data['groomQualifications'])) ; 
        
-        $this->brideBio =  !empty($data['brideBio']) ? trim(DB::sanitize($data['brideBio'])) : $oldValuesOfWedding['brideBio']; // not req
+        $this->brideBio =  trim(DB::sanitize($data['brideBio'])); 
        
-        $this->groomBio =  !empty($data['groomBio']) ? trim(DB::sanitize($data['groomBio'])) : $oldValuesOfWedding['groomBio']; // not req
+        $this->groomBio =  trim(DB::sanitize($data['groomBio'])); 
 
-        $this->story =!empty($data['story']) ? json_encode($data['story']) :(
-            ($oldValuesOfWedding['story']=="null")? null:$oldValuesOfWedding['story']
-        ); // not req
+        $this->story = json_encode($data['story']); 
 
         
-        $this->timeline = !empty($data['timeline']) ? json_encode($data['timeline']) : $oldValuesOfWedding['timeline']; // not req
+        $this->timeline = json_encode($data['timeline']);
         
-        $this->hosts =!empty($data['hosts']) ? json_encode($data['hosts']) : $oldValuesOfWedding['hosts']; // not req
-        
-        $this->invitation =  !empty($data['invitation']) ? trim(DB::sanitize($data['invitation'])) : $oldValuesOfWedding['invitation']; // not req
-        
-        $this->template =  !empty($data['template']) ? trim(DB::sanitize($data['template'])) : $oldValuesOfWedding['template']; // not req
-        
-        $this->tier =  !empty($data['tier']) ? trim(DB::sanitize($data['tier'])) : $oldValuesOfWedding['tier']; // not req
-        
-        $this->music =  !empty($data['music']) ? trim(DB::sanitize($data['music'])) : $oldValuesOfWedding['music']; // not req
-        
-        $this->youtube = !empty($data['youtube']) ? trim(DB::sanitize($data['youtube'])) : $oldValuesOfWedding['youtube']; // not req
+        $this->hosts = json_encode($data['hosts']); 
 
-        $this->accommodation = !empty($data['accommodation']) ? json_encode($data['accommodation']) : $oldValuesOfWedding['accommodation']; // not req
+        $this->invitation =  trim(DB::sanitize($data['invitation']));
+        
+        $this->template = trim(DB::sanitize($data['template']));
+        
+        $this->tier =  trim(DB::sanitize($data['tier'])); 
+        
+        $this->music =  trim(DB::sanitize($data['music'])); 
+        
+        $this->youtube = trim(DB::sanitize($data['youtube'])); 
 
-        $this->travel = !empty($data['travel']) ? json_encode($data['travel']) : $oldValuesOfWedding['travel']; // not req
+        $this->accommodation = json_encode($data['accommodation']) ; 
+
+        $this->travel = json_encode($data['travel']); 
 
         $this->phone = trim(DB::sanitize($data['phone']));
         $this->whatsappAPIKey = trim(DB::sanitize($data['whatsappAPIKey']));
         $this->host = trim(DB::sanitize($data['host']));
         
-        $this->partner = !empty($data['partner']) ? trim(DB::sanitize($data['partner'])) : $oldValuesOfWedding['partner'];  // not req
+        $this->partner = trim(DB::sanitize($data['partner']));  
         
         $this->manager = trim(DB::sanitize($data['manager']));
+
+        $this->status = trim(DB::sanitize($data['status'])); 
+
 
         $this->languages = enumToArray(DB::select('information_schema.COLUMNS', 'COLUMN_TYPE', "TABLE_NAME = 'weddings'
         AND COLUMN_NAME = 'lang'")->fetch()[0]);
@@ -472,39 +464,24 @@ class Wedding
         $this->tiers = enumToArray(DB::select('information_schema.COLUMNS', 'COLUMN_TYPE', "TABLE_NAME = 'weddings'
         AND COLUMN_NAME = 'tier'")->fetch()[0]);
 
-        $hostData = DB::select('users', 'email', "role = 
+        $userData = DB::select('users', 'userID', "role = 
        'host' OR role = 'user' AND status <> 'deleted'")->fetchAll();
 
-        foreach ($hostData as $host) {
-            $this->userList[] = $host['email'];
+
+        foreach ($userData as $user) {
+            $this->userList[] = $user['userID'];
         }
 
-        $partnerData = DB::select('users', 'email', "role = 
-       'partner' AND status <> 'deleted'")->fetchAll();
-
-        foreach ($partnerData as $partner) {
-            $this->userList[] = $partner['email'];
-        }
-
-        $managerData = DB::select('users', 'email', "role = 
-      'manager' AND status <> 'deleted'")->fetchAll();
-
-        foreach ($managerData as $manager) {
-            $this->userList[] = $manager['email'];
-        }
         DB::close();
 
 
+        $weddingData = $this->getWedding($weddingID, $lang);
         // Validation Rules
 
         $fields = [
             'weddingID' => [
                 'value' => $this->weddingID,
                 'rules' => [
-                    [
-                        'type' => 'required',
-                        'message' => "Wedding ID can't be empty",
-                    ],
                     [
                         'type' => 'eventID',
                         'message' => "Invalid Wedding ID",
@@ -543,10 +520,6 @@ class Wedding
                 'value' => $this->weddingName,
                 'rules' => [
                     [
-                        'type' => 'required',
-                        'message' => "Wedding Name can't be empty",
-                    ],
-                    [
                         'type' => 'minLength',
                         'message' => 'Invalid Wedding Name',
                         'minLength' => 10
@@ -556,10 +529,6 @@ class Wedding
             'fromRole' => [
                 'value' => $this->fromRole,
                 'rules' => [
-                    [
-                        'type' => 'required',
-                        'message' => "From Role can't be empty",
-                    ],
                     [
                         'type' => 'custom',
                         'message' => 'Invalid from field',
@@ -573,10 +542,6 @@ class Wedding
                 'value' => $this->brideName,
                 'rules' => [
                     [
-                        'type' => 'required',
-                        'message' => "Bride Name can't be empty",
-                    ],
-                    [
                         'type' => 'minLength',
                         'message' => 'Invalid Bride Name',
                         'minLength' => 3
@@ -587,32 +552,8 @@ class Wedding
                 'value' => $this->groomName,
                 'rules' => [
                     [
-                        'type' => 'required',
-                        'message' => "Groom Name can't be empty",
-                    ],
-                    [
                         'type' => 'minLength',
                         'message' => 'Invalid Groom Name',
-                        'minLength' => 3
-                    ]
-                ],
-            ],
-            'brideQualifications' => [
-                'value' => $this->brideQualifications,
-                'rules' => [
-                    [
-                        'type' => 'minLength',
-                        'message' => 'Invalid Bride Qualifications',
-                        'minLength' => 3
-                    ]
-                ],
-            ],
-            'groomQualifications' => [
-                'value' => $this->groomQualifications,
-                'rules' => [
-                    [
-                        'type' => 'minLength',
-                        'message' => 'Invalid Groom Qualifications',
                         'minLength' => 3
                     ]
                 ],
@@ -640,10 +581,6 @@ class Wedding
             'tier' => [
                 'value' => $this->tier,
                 'rules' => [
-                    [
-                        'type' => 'required',
-                        'message' => "Tier can't be empty",
-                    ],
                     [
                         'type' => 'custom',
                         'message' => 'Invalid Tier',
@@ -692,10 +629,6 @@ class Wedding
                 'value' => $this->host,
                 'rules' => [
                     [
-                        'type' => 'required',
-                        'message' => "Host can't be empty",
-                    ],
-                    [
                         'type' => 'custom',
                         'message' => 'Invalid host',
                         'validate' => function () {
@@ -738,39 +671,60 @@ class Wedding
         } else {
             // Prepare data array
             $updateData = [
-                'lang' => $this->lang,
-                'domain' => $this->domain,
-                'weddingName' => $this->weddingName,
-                'fromRole' => $this->fromRole,
-                'brideName' => $this->brideName,
-                'groomName' => $this->groomName,
-                'brideQualifications' => $this->brideQualifications,
-                'groomQualifications' => $this->groomQualifications,
-                'brideBio' => $this->brideBio,
-                'groomBio' => $this->groomBio,
-                'story' => !empty($this->story) ? json_encode($this->story) : null,
-                'timeline' => !empty($this->timeline) ? json_encode($this->timeline) : null,
-                'hosts' => !empty($this->hosts) ? json_encode($this->hosts) : null,
-                'invitation' => !empty($this->invitation) ? json_encode($this->invitation) : null,
-                'template' => $this->template,
-                'tier' => $this->tier,
-                'music' => $this->music,
-                'youtube' => $this->youtube,
-                'accommodation' => !empty($this->accommodation) ? json_encode($this->accommodation) : null,
-                'travel' => !empty($this->travel) ? json_encode($this->travel) : null,
-                'phone' => $this->phone,
-                'whatsappAPIKey' => $this->whatsappAPIKey,
-                'host' => $this->host,
-                'partner' => $this->partner,
-                'manager' => $this->manager,
-                'createdAt' => date('Y-m-d H:i:s'),
-                'status' => $this->status,
-            ];
-            
+                'domain' => !empty($this->domain) ? $this->domain : $weddingData['domain'],
 
+                'weddingName' => !empty($this->weddingName) ? $this->weddingName : $weddingData['weddingName'],
+
+                'fromRole' => !empty($this->fromRole) ? $this->fromRole : $weddingData['fromRole'],
+
+                'brideName' => !empty($this->brideName) ? $this->brideName : $weddingData['brideName'],
+
+                'groomName' => !empty($this->groomName) ? $this->groomName : $weddingData['groomName'],
+
+                'brideQualifications' => !empty($this->brideQualifications) ? $this->brideQualifications : $weddingData['brideQualifications'],
+                
+                'groomQualifications' => !empty($this->groomQualifications) ? $this->groomQualifications : $weddingData['groomQualifications'],
+
+                'brideBio' => !empty($this->brideBio) ? $this->brideBio : $weddingData['brideBio'],
+
+                'groomBio' => !empty($this->groomBio) ? $this->groomBio : $weddingData['groomBio'],
+                
+                'story' => !empty($this->story) ? $this->story : $weddingData['story'],
+
+                'timeline' => !empty($this->timeline) ? $this->timeline : $weddingData['timeline'],
+
+                'hosts' => !empty($this->hosts) ? $this->hosts : $weddingData['hosts'],
+
+                'invitation' => !empty($this->invitation) ? $this->invitation : $weddingData['invitation'],
+
+                'template' => !empty($this->template) ? $this->template : $weddingData['template'],
+
+                'tier' => !empty($this->tier) ? $this->tier : $weddingData['tier'],
+
+                'music' => !empty($this->music) ? $this->music : $weddingData['music'],
+
+                'youtube' => !empty($this->youtube) ? $this->youtube : $weddingData['youtube'],
+
+                'accommodation' => !empty($this->accommodation) ? $this->accommodation : $weddingData['accommodation'],
+
+                'travel' => !empty($this->travel) ? $this->travel : $weddingData['travel'],
+
+                'phone' => !empty($this->phone) ? $this->phone : $weddingData['phone'],
+
+                'whatsappAPIKey' => !empty($this->whatsappAPIKey) ? $this->whatsappAPIKey : $weddingData['whatsappAPIKey'],
+
+                'host' => !empty($this->host) ? $this->host : $weddingData['host'],
+
+                'partner' => !empty($this->partner) ? $this->partner : $weddingData['partner'],
+
+                'manager' => !empty($this->manager) ? $this->manager : $weddingData['manager'],
+
+                'status' => !empty($this->status) ? $this->status : $weddingData['status'],
+            ];
+            //return $updateData;
             // Update data into the 'weddings' table
             DB::connect();
-            $updateWedding = DB::update('weddings', $updateData, "weddingID = '$this->weddingID'");
+            $updateWedding = DB::update('weddings', $updateData, "weddingID = '$this->weddingID' and lang = '$this->lang'");
             DB::close();
 
             // Handle success/failure
