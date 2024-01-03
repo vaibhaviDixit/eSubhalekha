@@ -83,6 +83,9 @@
   "wedding/{id}/{lang}/hosts": {
     "path": "views/dashboard/wedding/hosts.php"
   },
+  "wedding/{id}/{lang}/whatsapp": {
+    "path": "views/dashboard/wedding/whatsapp.php"
+  },
   "wedding/{id}/{lang}/additional-details": {
     "path": "views/dashboard/wedding/additional-details.php"
   },
