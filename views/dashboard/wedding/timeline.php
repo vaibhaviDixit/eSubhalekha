@@ -20,51 +20,51 @@ $userID=App::getUser()['email'];
     <h1 class="h2">Timeline</h1>
 
      <div>
-     	
-     	<form id="form">
-    	
-    	<div class="row">
-    		<!-- Event -->
-		    <div class="mb-3 col-sm-4">
-		      <label for="event" class="form-label">Event</label>
-		      <input type="text" class="form-control" id="event" placeholder="Enter Event" required>
-		      <strong id="eventMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-		    </div>
+      
+      <form id="form">
+      
+      <div class="row">
+        <!-- Event -->
+        <div class="mb-3 col-sm-4">
+          <label for="event" class="form-label">Event</label>
+          <input type="text" class="form-control" id="event" placeholder="Enter Event" required>
+          <strong id="eventMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+        </div>
 
-		    <!-- Time -->
-		    <div class="mb-3 col-sm-4">
-		      <label for="time" class="form-label">Time</label>
-		      <input type="time" class="form-control" id="time" placeholder="Enter Time" required>
-		      <strong id="timeMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-		    </div>
+        <!-- Time -->
+        <div class="mb-3 col-sm-4">
+          <label for="time" class="form-label">Time</label>
+          <input type="time" class="form-control" id="time" placeholder="Enter Time" required>
+          <strong id="timeMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+        </div>
 
-		    <!-- location url -->
-		     <div class="mb-3 col-sm-4">
-		      <label for="locationURL" class="form-label">LocationURL</label>
-		      <input type="text" class="form-control" id="locationURL" placeholder="Enter Location URL" required url>
-		       <strong id="locationURLMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-	    	</div>
+        <!-- location url -->
+         <div class="mb-3 col-sm-4">
+          <label for="locationURL" class="form-label">LocationURL</label>
+          <input type="text" class="form-control" id="locationURL" placeholder="Enter Location URL" required url>
+           <strong id="locationURLMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+        </div>
 
-    	</div>
+      </div>
 
-   	<div class="row">
-   		 <!-- Venue -->
-		    <div class="mb-3 col-sm-6">
-		      <label for="venue" class="form-label">Venue</label>
-       		  <textarea class="form-control" id="venue" rows="3" required></textarea>
-		      <strong id="venueMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-		    </div>
+    <div class="row">
+       <!-- Venue -->
+        <div class="mb-3 col-sm-6">
+          <label for="venue" class="form-label">Venue</label>
+            <textarea class="form-control" id="venue" rows="3" required></textarea>
+          <strong id="venueMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+        </div>
 
-		    <!-- Address -->
-		    <div class="mb-3 col-sm-6">
-		     
-		        <label for="address" class="form-label">Address</label>
-        		<textarea class="form-control" id="address" rows="3" required></textarea>
+        <!-- Address -->
+        <div class="mb-3 col-sm-6">
+         
+            <label for="address" class="form-label">Address</label>
+            <textarea class="form-control" id="address" rows="3" required></textarea>
 
-		       <strong id="addressMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-		    </div>
+           <strong id="addressMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+        </div>
 
-   	</div>
+    </div>
 
 
     <!-- Submit Button -->
@@ -98,10 +98,9 @@ $userID=App::getUser()['email'];
 <script type="text/javascript">
 
 document.querySelector("#form").addEventListener("submit", function(event) {
-	
+  
     event.preventDefault();
-    alert("hi")
-    console.log("added");
+     alert("Timeline added");
       // Get form values
       var event = $("#event").val();
       var time = $("#time").val();
@@ -131,8 +130,8 @@ document.querySelector("#form").addEventListener("submit", function(event) {
     function removeRow(button) {
       // Remove the corresponding row when the remove button is clicked
       $(button).closest("tr").remove();
-    }	
-	
+    } 
+  
 </script>
 
 <!-- <script type="text/javascript" src="<?php assets("js/validation.js");?>"></script> -->
