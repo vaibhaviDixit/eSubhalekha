@@ -23,6 +23,8 @@ CREATE TABLE weddings (
     travel JSON,
     phone VARCHAR (15),
     whatsappAPIKey VARCHAR(2048),
+    originalPrice FLOAT,
+    finalPrice FLOAT,
     host VARCHAR(255) NOT NULL,
     partner VARCHAR(255),
     manager VARCHAR(255),
