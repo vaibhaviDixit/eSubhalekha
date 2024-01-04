@@ -108,8 +108,6 @@ $wedding = new Wedding();
     
 
 </main>
-<script type="text/javascript" src="<?php assets("js/validation.js");?>"></script>
-
 <!--Main End-->
 
 <?php require('views/partials/dashboard/scripts.php') ?>
