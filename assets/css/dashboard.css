@@ -1,3 +1,6 @@
+*{
+  font: var(--dashboard-font);
+}
 .tooltip-arrow {
   display: none !important;
 }
