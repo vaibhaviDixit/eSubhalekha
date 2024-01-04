@@ -40,7 +40,7 @@ function uploadToAWS($filearr){
 	}
 
 	// For this, I would generate a unqiue random string for the key name. But you can do whatever.
-	$keyName = 'test_example/' . basename($filearr['fileToUpload']['name']);  
+	$keyName = 'test_example/'.time() . basename($filearr['fileToUpload']['name']);  
 	$pathInS3 = 'https://s3.ap-south-1.amazonaws.com/' . $bucketName . '/' . $keyName;
 
 	// Add it to S3
