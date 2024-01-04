@@ -1,5 +1,5 @@
 <?php
-
+errors(1);
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
@@ -32,9 +32,9 @@ $wedding = new Wedding();
 				$_REQUEST['host'] = App::getUser()['userID'];
 
 				// upload music to aws bucket
-				if(isset($_FILES['music'])){
+				if(isset($_FILES['fileToUpload'])){
 					
-					$uploadedMusicURL=uploadToAWS($_FILES['music']['name']);
+					$uploadedMusicURL=uploadToAWS($_FILES);
 
 					if($uploadedMusicURL['error']){
 						echo '<div class="alert alert-danger">'.$uploadedMusicURL['errorMsg'].'</div>';
@@ -43,6 +43,7 @@ $wedding = new Wedding();
 						$_REQUEST['music']=$uploadedMusicURL['url'];	
 					}
 				}
+                
 
 				$createWedding = $wedding->update($_REQUEST['id'],$_REQUEST['lang'],$_REQUEST);
 
@@ -68,7 +69,7 @@ $wedding = new Wedding();
 		    <div class="mb-3 col-sm-6">
 		      <label for="musicTrack" class="form-label">Music Track</label>
 		      
-		      <input type="file" class="form-control" id="musicTrack" accept="audio/*" name="music">
+		      <input type="file" class="form-control" id="musicTrack" accept="audio/*" name="fileToUpload">
 
 		      <strong id="musicTrackMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 		    </div>

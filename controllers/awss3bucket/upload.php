@@ -4,7 +4,7 @@
 	use Aws\S3\S3Client;
 	use Aws\S3\Exception\S3Exception;
 	
-function uploadToAWS($filename){
+function uploadToAWS($filearr){
 
     // AWS Info
 	// $bucketName = 'esubhalekha';
@@ -40,7 +40,7 @@ function uploadToAWS($filename){
 	}
 
 	// For this, I would generate a unqiue random string for the key name. But you can do whatever.
-	$keyName = 'test_example/' . basename($filename);  
+	$keyName = 'test_example/' . basename($filearr['fileToUpload']['name']);  
 	$pathInS3 = 'https://s3.ap-south-1.amazonaws.com/' . $bucketName . '/' . $keyName;
 
 	// Add it to S3
@@ -50,11 +50,11 @@ function uploadToAWS($filename){
 			mkdir('/tmp/tmpfile',0777,true);
 		}
 			
-		$tempFilePath = '/tmp/tmpfile/' . basename($filename);
+		$tempFilePath = '/tmp/tmpfile/' . basename($filearr['fileToUpload']['name']);
 	 
 		$tempFile = fopen($tempFilePath, "w") or die("Error: Unable to open file.");
-		
-		$fileContents = file_get_contents($filename);
+
+		$fileContents = file_get_contents($filearr['fileToUpload']['tmp_name']);
 		$tempFile = file_put_contents($tempFilePath, $fileContents);
 
 		$result =$s3->putObject(
