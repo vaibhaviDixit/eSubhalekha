@@ -1,4 +1,5 @@
 <?php
+
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
@@ -19,7 +20,7 @@ $wedding = new Wedding();
 
 	<div>
 
-		<form method="post" name="createWedding" class="form-wedding">
+		<form method="post" id="form" name="createWedding" class="form-wedding">
 
 			<?php
 
@@ -40,7 +41,7 @@ $wedding = new Wedding();
 					</div>
 					<?php
 				} else
-					redirect("wedding/" . $_REQUEST['weddingID'] . "/" . $_REQUEST['lang']."/basic-details");
+					redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/basic-details");
 
 			}
 
@@ -108,7 +109,7 @@ $wedding = new Wedding();
 			</div>
 
 			<!-- Submit Button -->
-			<button type="submit" name="btn-submit" class="btn btn-primary">Create Wedding</button>
+			<button type="submit" name="btn-submit" id="submit-btn" class="btn btn-primary">Create Wedding</button>
 		</form>
 
 	</div>
