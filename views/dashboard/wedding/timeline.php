@@ -1,4 +1,5 @@
 <?php
+
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
@@ -7,8 +8,8 @@ DB::connect();
 $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
 DB::close();
 
-// current user id
-$userID=App::getUser()['email'];
+controller("Wedding");
+$wedding = new Wedding();
 
 ?>
 
@@ -21,124 +22,146 @@ $userID=App::getUser()['email'];
 
      <div>
       
-      <form id="form">
+      <form id="form" method="post">
       <?php
-      if($_REQUEST['btn-sbmit']){
-        print_r($_REQUEST);
+      
+      if (isset($_POST['btn-submit'])) {
+                
+        $_REQUEST['host'] = App::getUser()['userID'];
+
+        
+        // Initialize the new array
+        $newArray = array();
+
+        $eventArray=array();
+        $timeArray=array();
+        $locationURLArray=array();
+        $venueArray=array();
+        $addressArray=array();
+
+        foreach ($_REQUEST['event'] as $key => $value) {
+            $eventArray[$key]= $value;
+        }
+
+        foreach ($_REQUEST['time'] as $key => $value) {
+            $timeArray[$key]= $value;
+        }
+
+        foreach ($_REQUEST['locationURL'] as $key => $value) {
+            $locationURLArray[$key]= $value;
+        }
+
+        foreach ($_REQUEST['venue'] as $key => $value) {
+            $venueArray[$key]= $value;
+        }
+
+        foreach ($_REQUEST['address'] as $key => $value) {
+            $addressArray[$key]= $value;
+        }
+
+        for($i=0;$i<sizeof($eventArray);$i++){
+          $temp=array();
+          $temp['event']=$eventArray[$i];
+          $temp['time']=$timeArray[$i];
+          $temp['locationURL']=$locationURLArray[$i];
+          $temp['venue']=$venueArray[$i];
+          $temp['address']=$addressArray[$i];
+
+          array_push($newArray,$temp);
+
+        }
+        
+        // set timeline 
+        $_REQUEST['timeline']=$newArray;
+
+        $createWedding = $wedding->update($_REQUEST['id'],$_REQUEST['lang'],$_REQUEST);
+
+        if ($createWedding['error']) {
+          ?>
+          <div class="alert alert-danger">
+            <?php
+            foreach ($createWedding['errorMsgs'] as $msg) {
+              if (count($msg))
+                echo $msg[0] . "<br>";
+            }
+            ?>
+          </div>
+          <?php
+        } else
+          redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/preview");
+
       }
+
+
       ?>
       <div class="row">
-        <!-- Event -->
-        <div class="mb-3 col-sm-4">
-          <label for="event" class="form-label">Event</label>
-          <input type="text" class="form-control" id="event" placeholder="Enter Event" required>
-          <strong id="eventMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-        </div>
-
-        <!-- Time -->
-        <div class="mb-3 col-sm-4">
-          <label for="time" class="form-label">Time</label>
-          <input type="time" class="form-control" id="time" placeholder="Enter Time" required>
-          <strong id="timeMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-        </div>
-
-        <!-- location url -->
-         <div class="mb-3 col-sm-4">
-          <label for="locationURL" class="form-label">LocationURL</label>
-          <input type="text" class="form-control" id="locationURL" placeholder="Enter Location URL" required url>
-           <strong id="locationURLMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-        </div>
-
+          <div class="col-md-12">
+              <button type="button" class="btn btn-primary mb-3" id="addRowBtn"><i class="bi bi-node-plus-fill"></i> Add</button>
+              <table class="table table-responsive" style="vertical-align: middle;">
+                  <thead>
+                      <tr>
+                          <th>Event</th>
+                          <th>Date Time</th>
+                          <th>Location URL</th>
+                          <th>Venue</th>
+                          <th>Address</th>
+                          <th>Action</th>
+                      </tr>
+                  </thead>
+                  <tbody id="dynamicTableBody">
+                      <!-- Rows will be added dynamically here -->
+                  </tbody>
+              </table>
+          </div>
       </div>
-
-    <div class="row">
-       <!-- Venue -->
-        <div class="mb-3 col-sm-6">
-          <label for="venue" class="form-label">Venue</label>
-            <textarea class="form-control" id="venue" rows="3" required></textarea>
-          <strong id="venueMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-        </div>
-
-        <!-- Address -->
-        <div class="mb-3 col-sm-6">
-         
-            <label for="address" class="form-label">Address</label>
-            <textarea class="form-control" id="address" rows="3" required></textarea>
-
-           <strong id="addressMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-        </div>
-
-    </div>
 
 
     <!-- Submit Button -->
-    <button type="submit" id="btn-submit" class="btn btn-primary">Add</button>
+    <button type="submit" id="btn-submit" name="btn-submit" class="btn btn-primary">Save & Next</button>
   </form>
 
-   <!-- Display Table -->
-  <div class="container mt-4">
-    <h2>Submitted Data</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Event</th>
-          <th>Time</th>
-          <th>Location URL</th>
-          <th>Venue</th>
-          <th>Address</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="dataTableBody"></tbody>
-    </table>
-  </div>
-<!-- display table ends -->
 
      </div>
     
 
 </main>
 
-<script type="text/javascript">
+<script>
+// JavaScript code for dynamic form functionality
+$(document).ready(function() {
+    // Counter to keep track of the number of rows
+    var rowCount = 0;
 
-document.querySelector("#form").addEventListener("submit", function(event) {
-  
-    event.preventDefault();
-     alert("Timeline added");
-      // Get form values
-      var event = $("#event").val();
-      var time = $("#time").val();
-      var locationURL = $("#locationURL").val();
-      var venue = $("#venue").val();
-      var address = $("#address").val();
+    // Event listener for the "Add Row" button
+    $("#addRowBtn").click(function() {
+        rowCount++;
 
-      // Validate form fields (you can add your validation logic here)
+        // HTML for a new row with your provided structure
+        var newRow = `
+            <tr id="row${rowCount}">
+                <td><input type="text" class="form-control" name="event[]"></td>
+                <td><input type="datetime-local" class="form-control" name="time[]"></td>
+                <td><input type="text" class="form-control" name="locationURL[]"></td>
+                <td><textarea class="form-control" name="venue[]" rows="3"></textarea></td>
+                <td><textarea class="form-control" name="address[]" rows="3"></textarea></td>
+                <td><button class="btn btn-danger" onclick="deleteRow(${rowCount})"><i class="bi bi-trash-fill"></i></button></td>
+            </tr>
+        `;
 
-      // Create a new table row
-      var newRow = $("<tr>");
-      newRow.append("<td>" + event + "</td>");
-      newRow.append("<td>" + time + "</td>");
-      newRow.append("<td>" + locationURL + "</td>");
-      newRow.append("<td>" + venue + "</td>");
-      newRow.append("<td>" + address + "</td>");
-      newRow.append("<td><button type='button' class='btn btn-danger' onclick='removeRow(this)'>Remove</button></td>");
+        // Append the new row to the table body
+        $("#dynamicTableBody").append(newRow);
+    });
 
-      // Append the new row to the table body
-      $("#dataTableBody").append(newRow);
-
-      // Clear form fields
-      $("#form")[0].reset();
-
+    // Function to delete a row
+    window.deleteRow = function(rowId) {
+        // Remove the row with the specified ID
+        $("#row" + rowId).remove();
+    };
 });
 
-    function removeRow(button) {
-      // Remove the corresponding row when the remove button is clicked
-      $(button).closest("tr").remove();
-    } 
-  
 </script>
 
-<!-- <script type="text/javascript" src="<?php assets("js/validation.js");?>"></script> -->
+<!-- <script type="text/javascript" src="<?php assets("js/validation.js");?>"></script> 
 
 <!--Main End-->
 

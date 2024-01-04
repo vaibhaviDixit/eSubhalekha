@@ -452,9 +452,9 @@ class Wedding
         
         $this->youtube = trim(DB::sanitize($data['youtube'])); 
 
-        $this->accommodation = $data['accommodation'] ; 
+        $this->accommodation =trim(DB::sanitize($data['accommodation'])); 
 
-        $this->travel = $data['travel']; 
+        $this->travel = trim(DB::sanitize($data['travel'])); 
 
         $this->phone = trim(DB::sanitize($data['phone']));
         $this->whatsappAPIKey = trim(DB::sanitize($data['whatsappAPIKey']));

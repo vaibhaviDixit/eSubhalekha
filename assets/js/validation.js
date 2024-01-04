@@ -28,6 +28,14 @@
     return null;
   }
 
+  yturl(value, message) {
+    const yturlregex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    if (!yturlregex.test(value)) {
+      return message;
+    }
+    return null;
+  }
+
   maxLength(value, length, message) {
     if (value.length > length) {
       return message;
@@ -140,6 +148,9 @@
           break;
         case 'url':
           this.errors[field] = this.url(value, message);
+          break;
+        case 'yturl':
+          this.errors[field] = this.yturl(value, message);
           break;
         case 'domain':
           this.errors[field] = this.domain(value, message);
@@ -259,6 +270,13 @@ formElements.forEach((element) => {
       });
   }
 
+  if (element.hasAttribute('phone')) {
+    fields[element.id].rules.push({
+        type: 'phone',
+        message: 'Phone no. is invalid',
+      });
+  }
+
 
   if (element.hasAttribute('url')) {
     fields[element.id].rules.push({
@@ -267,12 +285,26 @@ formElements.forEach((element) => {
       });
   }
 
+  if (element.hasAttribute('yturl')) {
+    fields[element.id].rules.push({
+        type: 'yturl',
+        message: 'URL is invalid',
+      });
+  }
 
   if (element.hasAttribute('minLength')) {
     fields[element.id].rules.push({
         type: 'minLength',
         message: `Name can't be less than ${element.minLength} characters`,
         minLength: element.minLength,
+      });
+  }
+
+ if (element.hasAttribute('maxLength')) {
+    fields[element.id].rules.push({
+        type: 'maxLength',
+        message: `Name can't be more than ${element.maxLength} characters`,
+        maxLength: element.maxLength,
       });
   }
 
@@ -321,7 +353,7 @@ submitBtn.addEventListener("click", function() {
     });
 
     let result=validator.validate();
-   console.log(result);
+    console.log(result);
     if(!result.error){
       form.submit();
     }
