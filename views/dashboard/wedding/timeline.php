@@ -20,13 +20,25 @@ $wedding = new Wedding();
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
     <h1 class="h2">Timeline</h1>
 
-     <div>
       
       <form id="form" method="post">
       <?php
       
       if (isset($_POST['btn-submit'])) {
                 
+        $timeline = array();
+
+        for($i=0;$i<count($_REQUEST['event']); $i++){
+            $timeline[$i] = [
+                'event' => $_REQUEST['event'][$i],
+                'time' => $_REQUEST['time'][$i],
+                'locationURL' => $_REQUEST['locationURL'][$i],
+                'venue' => $_REQUEST['venue'][$i],
+                'address' => $_REQUEST['address'][$i]
+            ];
+        }
+        echo json_encode($timeline);
+        exit;
         $_REQUEST['host'] = App::getUser()['userID'];
 
         
@@ -119,9 +131,6 @@ $wedding = new Wedding();
     <!-- Submit Button -->
     <button type="submit" id="btn-submit" name="btn-submit" class="btn btn-primary">Save & Next</button>
   </form>
-
-
-     </div>
     
 
 </main>
@@ -160,8 +169,6 @@ $(document).ready(function() {
 });
 
 </script>
-
-<!-- <script type="text/javascript" src="<?php assets("js/validation.js");?>"></script> 
 
 <!--Main End-->
 
