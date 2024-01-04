@@ -34,7 +34,7 @@ $wedding = new Wedding();
 				// upload music to aws bucket
 				if(isset($_FILES['music'])){
 					
-					$uploadedMusicURL=uploadToAWS($_FILES['music']['tmp_name']);
+					$uploadedMusicURL=uploadToAWS($_FILES['music']['name']);
 
 					if($uploadedMusicURL['error']){
 						echo '<div class="alert alert-danger">'.$uploadedMusicURL['errorMsg'].'</div>';
@@ -43,7 +43,6 @@ $wedding = new Wedding();
 						$_REQUEST['music']=$uploadedMusicURL['url'];	
 					}
 				}
-               	
 
 				$createWedding = $wedding->update($_REQUEST['id'],$_REQUEST['lang'],$_REQUEST);
 
