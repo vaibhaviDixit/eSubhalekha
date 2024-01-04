@@ -85,15 +85,15 @@ class Wedding
         $this->partner = trim(DB::sanitize($data['partner']));
         $this->manager = trim(DB::sanitize($data['manager']));
 
-        
+
 
         $this->hosts = [
-            "brideFather" => ["name" => $data['brideFather'], "relation" => "Bride Father" ],
-            "groomFather" => ["name" => $data['groomFather'], "relation" => "Groom Father" ],
-            "brideMother" => ["name" =>  $data['brideMother'], "relation" => "Bride Mother" ],
-            "groomMother" => ["name" =>  $data['groomMother'], "relation" => "Groom Mother" ],
-            "brideTagline" =>  $data['brideTagline'],
-            "groomTagline" =>  $data['groomTagline']
+            "brideFather" => ["name" => $data['brideFather'], "relation" => "Bride Father"],
+            "groomFather" => ["name" => $data['groomFather'], "relation" => "Groom Father"],
+            "brideMother" => ["name" => $data['brideMother'], "relation" => "Bride Mother"],
+            "groomMother" => ["name" => $data['groomMother'], "relation" => "Groom Mother"],
+            "brideTagline" => $data['brideTagline'],
+            "groomTagline" => $data['groomTagline']
         ];
 
 
@@ -387,7 +387,7 @@ class Wedding
                 'createdAt' => date('Y-m-d H:i:s'),
                 'status' => 'pending',
             ];
-            
+
 
             // Insert data into the 'weddings' table
             DB::connect();
@@ -411,11 +411,11 @@ class Wedding
         }
     }
     // create function ends
-    
-   // Update operation
+
+    // Update operation
     public function update($weddingID, $lang, array $data)
     {
-         
+
         // Sanitize and assign values
         DB::connect();
         $this->weddingID = trim(DB::sanitize($weddingID));
@@ -427,62 +427,45 @@ class Wedding
         $this->groomName = trim(DB::sanitize($data['groomName']));
 
 
-        $this->brideQualifications = trim(DB::sanitize($data['brideQualifications']));  
+        $this->brideQualifications = trim(DB::sanitize($data['brideQualifications']));
 
-        $this->groomQualifications =  trim(DB::sanitize($data['groomQualifications'])) ; 
-       
-        $this->brideBio =  trim(DB::sanitize($data['brideBio'])); 
-       
-        $this->groomBio =  trim(DB::sanitize($data['groomBio'])); 
+        $this->groomQualifications = trim(DB::sanitize($data['groomQualifications']));
 
-        $this->story = $data['story']; 
+        $this->brideBio = trim(DB::sanitize($data['brideBio']));
 
-        
+        $this->groomBio = trim(DB::sanitize($data['groomBio']));
+
+        $this->story = $data['story'];
+
+
         $this->timeline = $data['timeline'];
-        
-        $this->hosts = $data['hosts']; 
 
-        $this->invitation =  trim(DB::sanitize($data['invitation']));
-        
+        $this->hosts = $data['hosts'];
+
+        $this->invitation = trim(DB::sanitize($data['invitation']));
+
         $this->template = trim(DB::sanitize($data['template']));
-        
-        $this->tier =  trim(DB::sanitize($data['tier'])); 
-        
-        $this->music =  trim(DB::sanitize($data['music'])); 
-        
-        $this->youtube = trim(DB::sanitize($data['youtube'])); 
 
-        $this->accommodation =trim(DB::sanitize($data['accommodation'])); 
+        $this->tier = trim(DB::sanitize($data['tier']));
 
-        $this->travel = trim(DB::sanitize($data['travel'])); 
+        $this->music = trim(DB::sanitize($data['music']));
+
+        $this->youtube = trim(DB::sanitize($data['youtube']));
+
+        $this->accommodation = trim(DB::sanitize($data['accommodation']));
+
+        $this->travel = trim(DB::sanitize($data['travel']));
 
         $this->phone = trim(DB::sanitize($data['phone']));
         $this->whatsappAPIKey = trim(DB::sanitize($data['whatsappAPIKey']));
         $this->host = trim(DB::sanitize($data['host']));
-        
-        $this->partner = trim(DB::sanitize($data['partner']));  
-        
+
+        $this->partner = trim(DB::sanitize($data['partner']));
+
         $this->manager = trim(DB::sanitize($data['manager']));
 
-        $this->status = trim(DB::sanitize($data['status'])); 
+        $this->status = trim(DB::sanitize($data['status']));
 
-        $this->hosts = [
-            "brideFather" => ["name" => $data['brideFather'], "relation" => "Bride Father" ],
-            "groomFather" => ["name" => $data['groomFather'], "relation" => "Groom Father" ],
-            "brideMother" => ["name" =>  $data['brideMother'], "relation" => "Bride Mother" ],
-            "groomMother" => ["name" =>  $data['groomMother'], "relation" => "Groom Mother" ],
-            "brideTagline" =>  $data['brideTagline'],
-            "groomTagline" =>  $data['groomTagline']
-        ];
-
-
-        $this->story = [
-            "howWeMet" => $data['howWeMet'],
-            "whenWeMet" => $data['whenWeMet'],
-            "engagement" => $data['engagement'],
-            "engagementYear" => $data['engagementYear'],
-            "memorableMoments" => $data['memorableMoments'],
-        ];
 
         $this->languages = enumToArray(DB::select('information_schema.COLUMNS', 'COLUMN_TYPE', "TABLE_NAME = 'weddings'
         AND COLUMN_NAME = 'lang'")->fetch()[0]);
@@ -518,7 +501,7 @@ class Wedding
                         'type' => 'custom',
                         'message' => 'Wedding ID already exists',
                         'validate' => function () {
-                            return $this->getWedding($this->weddingID,$this->lang);
+                            return $this->getWedding($this->weddingID, $this->lang);
                         },
                     ]
                 ],
@@ -697,6 +680,35 @@ class Wedding
         if ($validate['error']) {
             return ['error' => $validate['error'], 'errorMsgs' => $validate['errorMsgs']];
         } else {
+
+
+            if(isset($_REQUEST['hosts'])){
+            $this->hosts = [
+
+                "brideFather" => ["name" => $data['brideFather'], "relation" => "Bride Father"],
+
+                "groomFather" => ["name" => $data['groomFather'], "relation" => "Groom Father"],
+
+                "brideMother" => ["name" => $data['brideMother'], "relation" => "Bride Mother"],
+
+                "groomMother" => ["name" => $data['groomMother'], "relation" => "Groom Mother"],
+
+                "brideTagline" => $data['brideTagline'],
+
+                "groomTagline" => $data['groomTagline']
+            ];
+        }
+            if (isset($_REQUEST['basic-details'])) {
+                $this->story = [
+                    "howWeMet" => $data['howWeMet'],
+                    "whenWeMet" => $data['whenWeMet'],
+                    "engagement" => $data['engagement'],
+                    "engagementYear" => $data['engagementYear'],
+                    "memorableMoments" => $data['memorableMoments'],
+                ];
+            }
+
+            
             // Prepare data array
             $updateData = [
                 'domain' => !empty($this->domain) ? $this->domain : $weddingData['domain'],
@@ -710,13 +722,13 @@ class Wedding
                 'groomName' => !empty($this->groomName) ? $this->groomName : $weddingData['groomName'],
 
                 'brideQualifications' => !empty($this->brideQualifications) ? $this->brideQualifications : $weddingData['brideQualifications'],
-                
+
                 'groomQualifications' => !empty($this->groomQualifications) ? $this->groomQualifications : $weddingData['groomQualifications'],
 
                 'brideBio' => !empty($this->brideBio) ? $this->brideBio : $weddingData['brideBio'],
 
                 'groomBio' => !empty($this->groomBio) ? $this->groomBio : $weddingData['groomBio'],
-                
+
                 'story' => !empty($this->story) ? json_encode($this->story) : $weddingData['story'],
 
                 'timeline' => !empty($this->timeline) ? json_encode($this->timeline) : $weddingData['timeline'],
@@ -772,7 +784,7 @@ class Wedding
                 return ['error' => $this->error, 'errorMsgs' => $this->errorMsgs, 'message' => 'Wedding Updation successful'];
             }
         }
-       
+
     }
     // Update function ends
 
@@ -783,8 +795,8 @@ class Wedding
      * @param string $weddingID The weddingID of the wedding.
      * @return array The result of the select query.
      */
-    public function getWedding($weddingID,$lang)
-    {   
+    public function getWedding($weddingID, $lang)
+    {
         DB::connect();
         $weddingID = DB::sanitize($weddingID);
         $getWedding = DB::select('weddings', '*', "weddingID = '$weddingID' and lang='$lang' ")->fetch();
@@ -805,24 +817,24 @@ class Wedding
      * @param string $weddingID The weddingID of the wedding to be deleted.
      * @return array The result of the delete operation.
      */
-    public function delete($weddingID,$lang)
+    public function delete($weddingID, $lang)
     {
 
-        $check = $this->getWedding($weddingID,$lang);
+        $check = $this->getWedding($weddingID, $lang);
 
         if ($check['error']) {
             return $check;
         }
-    
+
         // Delete the wedding
         DB::connect();
-        $deleteWedding = DB::delete('weddings',"weddingID = '$weddingID' ");
+        $deleteWedding = DB::delete('weddings', "weddingID = '$weddingID' ");
 
         // also delete gallery of wedding to be deleted
-        $deleteWeddingGallery = DB::delete('gallery',"weddingID = '$weddingID' ");
+        $deleteWeddingGallery = DB::delete('gallery', "weddingID = '$weddingID' ");
 
         // also delete guests of wedding to be deleted
-        $deleteWeddingGuests = DB::delete('guests',"weddingID = '$weddingID' ");
+        $deleteWeddingGuests = DB::delete('guests', "weddingID = '$weddingID' ");
         DB::close();
 
         if (!$deleteWedding) {
@@ -830,8 +842,7 @@ class Wedding
                 'error' => true,
                 'errorMsg' => 'Failed to delete wedding'
             ];
-        }
-        else{
+        } else {
             return [
                 'error' => false,
                 'errorMsg' => '',
