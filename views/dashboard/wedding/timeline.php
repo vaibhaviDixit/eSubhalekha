@@ -22,7 +22,11 @@ $userID=App::getUser()['email'];
      <div>
       
       <form id="form">
-      
+      <?php
+      if($_REQUEST['btn-sbmit']){
+        print_r($_REQUEST);
+      }
+      ?>
       <div class="row">
         <!-- Event -->
         <div class="mb-3 col-sm-4">
@@ -68,7 +72,7 @@ $userID=App::getUser()['email'];
 
 
     <!-- Submit Button -->
-    <button type="submit" id="submit-btn" class="btn btn-primary">Add</button>
+    <button type="submit" id="btn-submit" class="btn btn-primary">Add</button>
   </form>
 
    <!-- Display Table -->

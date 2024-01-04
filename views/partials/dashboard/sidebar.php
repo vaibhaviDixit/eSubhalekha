@@ -11,7 +11,9 @@ DB::close();
 
     <div class="dropdown mt-3 fs-5">
       <strong class="ms-3 me-5">
-        <i class="bi bi-person-circle"></i> Hi <?=explode(' ', App::getUser()['name'])[0]?>!</strong>
+        <i class="bi bi-person-circle"></i> Hi
+        <?= explode(' ', App::getUser()['name'])[0] ?>!
+      </strong>
       <a href="#"
         class="dropdown-toggle text-decoration-none text-secondary bi bi-three-dots-vertical dropdownHide fs-5 pe-3 float-end"
         id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false"></a>
@@ -27,13 +29,83 @@ DB::close();
 
     <hr>
     <ul class="nav flex-column">
-      <li class="nav-item mt-3 mb-5">
-        <strong class="ms-3 text-secondary-3">Weddings</strong>
+
+      <li class="nav-item my-2">
         <a class="nav-link dashboard" aria-current="page" href="<?php echo route('dashboard'); ?>">
           <i class="bi bi-house-door"></i>
           Dashboard
         </a>
       </li>
+
+      <?php
+      if (isset($_REQUEST['id']) && isset($_REQUEST['lang'])):
+        ?>
+        <li class="nav-item my-2">
+          <strong class="ms-3 text-secondary-3">
+            <?= $_REQUEST['id'] ?>
+          </strong>
+          <a class="nav-link basic-details" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/basic-details') . queryString(); ?>">
+            <i class="bi bi-clipboard-data"></i>
+            Basic Details
+          </a>
+
+          <a class="nav-link hosts" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/hosts') . queryString(); ?>">
+            <i class="bi bi-people-fill"></i>
+            Hosts
+          </a>
+
+          <a class="nav-link timeline" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/timeline') . queryString(); ?>">
+            <i class="bi bi-clock"></i>
+            Timeline
+          </a>
+
+          <a class="nav-link additional-details" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/additional-details') . queryString(); ?>">
+            <i class="bi bi-pie-chart"></i>
+            Additional Details
+          </a>
+
+          <a class="nav-link whatsapp" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/whatsapp') . queryString(); ?>">
+            <i class="bi bi-whatsapp"></i>
+            Whatsapp Setup
+          </a>
+
+          
+
+          <a class="nav-link preview" target="_blank" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/preview') . queryString(); ?>">
+            <i class="bi bi-eye"></i>
+            Preview 
+          </a>
+
+
+          <a class="nav-link checkout" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] .   '/checkout') . queryString(); ?>">
+            <i class="bi bi-currency-rupee"></i>
+            Payment
+          </a>
+        </li>
+        <?php
+      elseif (isset($_REQUEST['id'])):
+        ?>
+<li class="nav-item my-2">
+          <strong class="ms-3 text-secondary-3">
+            <?= $_REQUEST['id'] ?>
+          </strong>
+<a class="nav-link checkout" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] .   '/checkout') . queryString(); ?>">
+            <i class="bi bi-currency-rupee"></i>
+            Payment
+          </a>
+</li>
+        <?php
+      endif;
+      ?>
+
     </ul>
   </div>
 </aside>
@@ -43,8 +115,51 @@ DB::close();
   var url = window.location.pathname
   console.log(url)
   switch (url) {
-    case "<?php echo !empty($config['APP_SLUG']) ?  '/'.$config['APP_SLUG']."/dashboard" : "/dashboard" ?>":
+    case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . "/dashboard" : "/dashboard" ?>":
       document.querySelector(".dashboard").classList.toggle("active")
       break
+      <?php
+      if (isset($_REQUEST['id']) && isset($_REQUEST['lang'])):
+        ?>
+
+      case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/basic-details' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/basic-details'; ?>":
+        document.querySelector(".basic-details").classList.toggle("active")
+        break
+
+        
+      case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/hosts' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/hosts'; ?>":
+        document.querySelector(".hosts").classList.toggle("active")
+        break
+
+        case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/timeline' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/timeline'; ?>":
+        document.querySelector(".timeline").classList.toggle("active")
+        break
+
+        
+      case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/additional-details' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/additional-details'; ?>":
+        document.querySelector(".additional-details").classList.toggle("active")
+        break
+
+        
+      case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/whatsapp' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/whatsapp'; ?>":
+        document.querySelector(".whatsapp").classList.toggle("active")
+        break
+
+        case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/checkout' : '/wedding/' . $_REQUEST['id'] .  '/checkout'; ?>":
+        document.querySelector(".checkout").classList.toggle("active")
+        break
+
+        <?php
+      elseif (isset($_REQUEST['id'])):
+        ?>
+
+case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/checkout' : '/wedding/' . $_REQUEST['id'] .  '/checkout'; ?>":
+        document.querySelector(".checkout").classList.toggle("active")
+        break
+
+
+        <?php
+      endif;
+      ?>
   }
 </script>

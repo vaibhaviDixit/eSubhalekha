@@ -2,12 +2,8 @@
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
-
 DB::connect();
-$weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
-
 $languages = enumToArray(DB::select('information_schema.COLUMNS', 'COLUMN_TYPE', "TABLE_NAME = 'weddings' AND COLUMN_NAME = 'lang'", 'COLUMN_TYPE DESC')->fetch()[0]);
-
 DB::close();
 
 
@@ -16,9 +12,7 @@ controller("Wedding");
 $wedding = new Wedding();
 ?>
 
-<head>
 
-</head>
 <!--Main Start-->
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
 	<h1 class="h2">Create Wedding</h1>
@@ -29,7 +23,6 @@ $wedding = new Wedding();
 
 			<?php
 
-			$config['APP_TITLE'] = "Create Wedding | " . $config['APP_TITLE'];
 			if (isset($_POST['btn-submit'])) {
 
 				$_REQUEST['host'] = App::getUser()['userID'];

@@ -3,120 +3,149 @@ locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
 
-DB::connect();
-$weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
 
-$languages = enumToArray(DB::select('information_schema.COLUMNS', 'COLUMN_TYPE', "TABLE_NAME = 'weddings' AND COLUMN_NAME = 'lang'", 'COLUMN_TYPE DESC')->fetch()[0]);
-
-DB::close();
-
-
-sort($languages);
 controller("Wedding");
 $wedding = new Wedding();
+$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
+$story = json_decode($weddingData['story'], true);
+
 ?>
 
 <head>
 
 </head>
 <!--Main Start-->
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
-	<h1 class="h2">Create Wedding</h1>
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
-	<div>
+	<form method="post" name="updateWedding" class="form-wedding">
 
-		<form method="post" name="createWedding" class="form-wedding">
+		<?php
+		if (isset($_POST['btn-submit'])) {
 
-			<?php
+			$_REQUEST['host'] = App::getUser()['userID'];
+			$updateWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
 
-			$config['APP_TITLE'] = "Basic Details - Wedding | " . $config['APP_TITLE'];
-			if (isset($_POST['btn-submit'])) {
-
-				$_REQUEST['host'] = App::getUser()['userID'];
-				$updateWedding = $wedding->update($_REQUEST['weddingID'], $_REQUEST);
-
-				if ($updateWedding['error']) {
-					?>
-					<div class="alert alert-danger">
-						<?php
-						foreach ($updateWedding['errorMsgs'] as $msg) {
-							if (count($msg))
-								echo $msg[0] . "<br>";
-						}
-						?>
-					</div>
+			if ($updateWedding['error']) {
+				?>
+				<div class="alert alert-danger">
 					<?php
-				} else
-					redirect("wedding/" . $_REQUEST['weddingID'] . "/" . $_REQUEST['lang']."/timeline");
-
-			}
-
-			?>
-			<div class="row">
-
-				<!-- Groom Name -->
-				<div class="mb-3 col-sm-6">
-					<label for="groomName" class="form-label">Groom Name</label>
-					<input type="text" class="form-control" id="groomName" name="groomName"
-						placeholder="Enter Groom Name" value="<?= $_REQUEST['groomName'] ?? '' ?>">
+					foreach ($updateWedding['errorMsgs'] as $msg) {
+						if (count($msg))
+							echo $msg[0] . "<br>";
+					}
+					?>
 				</div>
+				<?php
+			} else
+				redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang'] . "/hosts");
 
-				<!-- Bride Name -->
-				<div class="mb-3 col-sm-6">
-					<label for="brideName" class="form-label">Bride Name</label>
-					<input type="text" class="form-control" id="brideName" name="brideName"
-						placeholder="Enter Bride Name" value="<?= $_REQUEST['brideName'] ?? '' ?>">
-				</div>
+		}
 
-				<!-- From (Bride/Groom) -->
-				<div class="mb-3 col-sm-6">
-					<label class="form-label" for="fromRole">From</label>
-
-					<select class="form-select" id="fromRole" name="fromRole">
-						<option value="bride" <?= ($_REQUEST['fromRole'] == 'bride') ? 'selected' : '' ?>>Bride</option>
-						<option value="groom" <?= ($_REQUEST['fromRole'] == 'groom') ? 'selected' : '' ?>>Groom</option>
-
-					</select>
-				</div>
-
-				<!-- Language -->
-				<div class="mb-3 col-sm-6">
-					<label for="lang" class="form-label">Language</label>
-					<select class="form-select" id="lang" name="lang">
-						<?php foreach ($languages as $lang) {
-							?>
-							<option value="<?= $lang ?>" <?php
-							  if ($_REQUEST['lang'] == $lang)
-								  echo 'selected';
-							  elseif ($lang == 'en')
-								  echo 'selected' ?>>
-								<?= Locale::getDisplayLanguage($lang, "en")?>
-							</option>
-							<?php
-						} ?>
-					</select>
-				</div>
-				<!-- Wedding Name -->
-				<div class="mb-3 col-sm-6">
-					<label for="weddingName" class="form-label">Wedding Name</label>
-					<input type="text" class="form-control" id="weddingName" name="weddingName"
-						placeholder="Thota vaari pelli sandhadi" value="<?= $_REQUEST['weddingName'] ?? '' ?>">
-				</div>
+		?>
+		<h1 class="h2">Our Story</h1>
+		<div class="row">
 
 
-
-
-				<!-- Wedding ID -->
-				<div class="mb-3 col-sm-6">
-					<label for="weddingID" class="form-label">Wedding ID</label>
-					<input type="text" class="form-control" id="weddingID" name="weddingID"
-						placeholder="KishoreWedsSwathi" value="<?= $_REQUEST['weddingID'] ?? '' ?>">
-				</div>
+			<!-- How we met -->
+			<div class="mb-3 col-8">
+				<label for="howWeMet" class="form-label">How We Met</label>
+				<textarea class="form-control" id="howWeMet" name="howWeMet"
+					placeholder="Enter how Bride & Groom met for the first time"
+					rows="3"><?= $_REQUEST['howWeMet'] ?? $story['howWeMet'] ?></textarea>
 			</div>
 
-			<!-- Submit Button -->
-			<button type="submit" name="btn-submit" class="btn btn-primary">Create Wedding</button>
-		</form>
+			<!-- When we met -->
+			<div class="mb-3 col-4">
+				<label for="whenWeMet" class="form-label">When We Met</label>
+				<select id="whenWeMet" name="whenWeMet" class="form-control">
+					<option hidden>Select Year</option>
+					<?php
+					for ($i = 1990; $i <= date('Y'); $i++):
+						?>
+						<option value="<?= $i ?>" <?php if ($story['whenWeMet'] == $i)
+							echo "selected" ?>>
+							<?= $i ?>
+						</option>
+						<?php
+					endfor;
+					?>
+				</select>
+			</div>
+
+			<!-- Engagement -->
+			<div class="mb-3 col-8">
+				<label for="engagement" class="form-label">Engagement</label>
+				<textarea class="form-control" id="engagement" name="engagement"
+					placeholder="Enter how Bride & Groom got engaged"
+					rows="3"><?= $_REQUEST['engagement'] ?? $story['engagement'] ?></textarea>
+			</div>
+
+			<!-- Engagement Year -->
+			<div class="mb-3 col-4">
+				<label for="engagementYear" class="form-label">Engagement Year</label>
+				<select id="engagementYear" name="engagementYear" class="form-control">
+					<option hidden>Select Year</option>
+					<?php
+					for ($i = 1990; $i <= date('Y'); $i++):
+						?>
+						<option value="<?= $i ?>" <?php if ($story['engagementYear'] == $i)
+							echo "selected" ?>>
+							<?= $i ?>
+						</option>
+						<?php
+					endfor;
+					?>
+				</select>
+			</div>
+
+			<!-- Memorable Moments -->
+			<div class="mb-3 col-12">
+				<label for="memorableMoments" class="form-label">Memorable Moments</label>
+				<textarea class="form-control" id="memorableMoments" name="memorableMoments"
+					placeholder="Add any sweet memorable moments you like to share"
+					rows="3"><?= $_REQUEST['memorableMoments'] ?? $story['memorableMoments'] ?></textarea>
+			</div>
+
+
+			<h1 class="h2 mt-3">Basic Details</h1>
+			<!-- Groom Qualifications -->
+			<div class="mb-3 col-6">
+				<label for="groomQualifications" class="form-label">Groom Qualifications (Optional)</label>
+				<input type="text" class="form-control" id="groomQualifications" name="groomQualifications"
+					placeholder="B.Tech"
+					value="<?= $_REQUEST['groomQualifications'] ?? $weddingData['groomQualifications'] ?>">
+			</div>
+
+			<!-- Bride Qualifications -->
+			<div class="mb-3 col-6">
+				<label for="brideQualifications" class="form-label">Bride Qualifications (Optional)</label>
+				<input type="text" class="form-control" id="brideQualifications" name="brideQualifications"
+					placeholder="B.Tech"
+					value="<?= $_REQUEST['brideQualifications'] ?? $weddingData['brideQualifications'] ?>">
+			</div>
+
+			<!-- Groom Bio -->
+			<div class="mb-3 col-sm-6">
+				<label for="groomBio" class="form-label">Groom Bio (Optional)</label>
+				<textarea class="form-control" id="groomBio" name="groomBio" placeholder="Enter Groom Bio"
+					rows="3"><?= $_REQUEST['groomBio'] ?? $weddingData['groomBio'] ?></textarea>
+			</div>
+
+			<!-- Bride Bio -->
+			<div class="mb-3 col-sm-6">
+				<label for="brideBio" class="form-label">Bride Bio (Optional)</label>
+				<textarea class="form-control" id="brideBio" name="brideBio" placeholder="Enter bride Bio"
+					rows="3"><?= $_REQUEST['brideBio'] ?? $weddingData['brideBio'] ?></textarea>
+			</div>
+
+
+		</div>
+
+
+
+		<!-- Submit Button -->
+		<button type="submit" name="btn-submit" class="btn btn-primary">Save & Next</button>
+	</form>
 
 	</div>
 

@@ -85,6 +85,18 @@ class Wedding
         $this->partner = trim(DB::sanitize($data['partner']));
         $this->manager = trim(DB::sanitize($data['manager']));
 
+        
+
+        $this->hosts = [
+            "brideFather" => ["name" => $data['brideFather'], "relation" => "Bride Father" ],
+            "groomFather" => ["name" => $data['groomFather'], "relation" => "Groom Father" ],
+            "brideMother" => ["name" =>  $data['brideMother'], "relation" => "Bride Mother" ],
+            "groomMother" => ["name" =>  $data['groomMother'], "relation" => "Groom Mother" ],
+            "brideTagline" =>  $data['brideTagline'],
+            "groomTagline" =>  $data['groomTagline']
+        ];
+
+
         $this->languages = enumToArray(DB::select('information_schema.COLUMNS', 'COLUMN_TYPE', "TABLE_NAME = 'weddings'
         AND COLUMN_NAME = 'lang'")->fetch()[0]);
 
@@ -423,12 +435,12 @@ class Wedding
        
         $this->groomBio =  trim(DB::sanitize($data['groomBio'])); 
 
-        $this->story = json_encode($data['story']); 
+        $this->story = $data['story']; 
 
         
-        $this->timeline = json_encode($data['timeline']);
+        $this->timeline = $data['timeline'];
         
-        $this->hosts = json_encode($data['hosts']); 
+        $this->hosts = $data['hosts']; 
 
         $this->invitation =  trim(DB::sanitize($data['invitation']));
         
@@ -440,9 +452,9 @@ class Wedding
         
         $this->youtube = trim(DB::sanitize($data['youtube'])); 
 
-        $this->accommodation = json_encode($data['accommodation']) ; 
+        $this->accommodation = $data['accommodation'] ; 
 
-        $this->travel = json_encode($data['travel']); 
+        $this->travel = $data['travel']; 
 
         $this->phone = trim(DB::sanitize($data['phone']));
         $this->whatsappAPIKey = trim(DB::sanitize($data['whatsappAPIKey']));
@@ -454,6 +466,23 @@ class Wedding
 
         $this->status = trim(DB::sanitize($data['status'])); 
 
+        $this->hosts = [
+            "brideFather" => ["name" => $data['brideFather'], "relation" => "Bride Father" ],
+            "groomFather" => ["name" => $data['groomFather'], "relation" => "Groom Father" ],
+            "brideMother" => ["name" =>  $data['brideMother'], "relation" => "Bride Mother" ],
+            "groomMother" => ["name" =>  $data['groomMother'], "relation" => "Groom Mother" ],
+            "brideTagline" =>  $data['brideTagline'],
+            "groomTagline" =>  $data['groomTagline']
+        ];
+
+
+        $this->story = [
+            "howWeMet" => $data['howWeMet'],
+            "whenWeMet" => $data['whenWeMet'],
+            "engagement" => $data['engagement'],
+            "engagementYear" => $data['engagementYear'],
+            "memorableMoments" => $data['memorableMoments'],
+        ];
 
         $this->languages = enumToArray(DB::select('information_schema.COLUMNS', 'COLUMN_TYPE', "TABLE_NAME = 'weddings'
         AND COLUMN_NAME = 'lang'")->fetch()[0]);
@@ -473,7 +502,6 @@ class Wedding
         }
 
         DB::close();
-
 
         $weddingData = $this->getWedding($weddingID, $lang);
         // Validation Rules
@@ -689,11 +717,11 @@ class Wedding
 
                 'groomBio' => !empty($this->groomBio) ? $this->groomBio : $weddingData['groomBio'],
                 
-                'story' => !empty($this->story) ? $this->story : $weddingData['story'],
+                'story' => !empty($this->story) ? json_encode($this->story) : $weddingData['story'],
 
-                'timeline' => !empty($this->timeline) ? $this->timeline : $weddingData['timeline'],
+                'timeline' => !empty($this->timeline) ? json_encode($this->timeline) : $weddingData['timeline'],
 
-                'hosts' => !empty($this->hosts) ? $this->hosts : $weddingData['hosts'],
+                'hosts' => !empty($this->hosts) ? json_encode($this->hosts) : $weddingData['hosts'],
 
                 'invitation' => !empty($this->invitation) ? $this->invitation : $weddingData['invitation'],
 
@@ -705,9 +733,9 @@ class Wedding
 
                 'youtube' => !empty($this->youtube) ? $this->youtube : $weddingData['youtube'],
 
-                'accommodation' => !empty($this->accommodation) ? $this->accommodation : $weddingData['accommodation'],
+                'accommodation' => !empty($this->accommodation) ? json_encode($this->accommodation) : $weddingData['accommodation'],
 
-                'travel' => !empty($this->travel) ? $this->travel : $weddingData['travel'],
+                'travel' => !empty($this->travel) ? json_encode($this->travel) : $weddingData['travel'],
 
                 'phone' => !empty($this->phone) ? $this->phone : $weddingData['phone'],
 
@@ -720,6 +748,8 @@ class Wedding
                 'manager' => !empty($this->manager) ? $this->manager : $weddingData['manager'],
 
                 'status' => !empty($this->status) ? $this->status : $weddingData['status'],
+
+                'updatedAt' => date('Y-m-d H:i:s'),
             ];
             //return $updateData;
             // Update data into the 'weddings' table
@@ -761,7 +791,7 @@ class Wedding
         DB::close();
 
         if ($getWedding)
-            return ['error' => false, "errorMsgs" => ['wedding' => $getWedding]];
+            return $getWedding;
         else
             return ['error' => true, "errorMsgs" => ['wedding' => "Wedding Not Found"]];
     }

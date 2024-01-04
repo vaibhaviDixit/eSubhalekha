@@ -29,6 +29,7 @@ CREATE TABLE weddings (
     partner VARCHAR(255),
     manager VARCHAR(255),
     createdAt DATETIME,
+    updatedAt DATETIME,
     status ENUM('pending', 'paid', 'live', 'completed') DEFAULT 'pending',
     PRIMARY KEY (weddingID, lang)
 );

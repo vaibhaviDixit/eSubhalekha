@@ -68,13 +68,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
 
     <!-- Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+
     <script src="https://kit.fontawesome.com/30fd2510e8.js"></script>
 
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="<?php assets("css/common.css");?>">
     <link rel="stylesheet" href="<?php assets("css/dashboard.css");?>">
-    <title>eSubhalekha.com</title>
+    <title><?=$config['APP_TITLE']?></title>
   </head>  
 <body>
     <header class="navbar navbar-dark sticky-top bg-primary flex-lg-nowrap p-0 shadow">
