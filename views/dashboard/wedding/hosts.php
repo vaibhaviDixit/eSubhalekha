@@ -24,8 +24,6 @@ $hosts = json_decode($weddingData['hosts'], true);
     	
 			<?php
 if (isset($_REQUEST['btn-submit'])) {
-	//errors();
-	$_REQUEST['host'] = App::getUser()['userID'];
 	$updateWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
 
 	if ($updateWedding['error']) {
@@ -45,6 +43,9 @@ if (isset($_REQUEST['btn-submit'])) {
 }
 	?>
     	<div class="row">
+
+			<input type="text" hidden name="hosts">
+
 		    <div class="mb-3 col-sm-6">
 		      <label for="brideFather" class="form-label">Bride's Father</label>
 		      <input type="text" class="form-control" id="brideFather" name="brideFather" placeholder="Enter Bride's Father Name" value="<?= $_REQUEST['brideFather'] ?? $hosts['brideFather']['name'] ?>" required>

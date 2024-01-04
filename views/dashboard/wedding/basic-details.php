@@ -21,8 +21,6 @@ $story = json_decode($weddingData['story'], true);
 
 		<?php
 		if (isset($_POST['btn-submit'])) {
-
-			$_REQUEST['host'] = App::getUser()['userID'];
 			$updateWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
 
 			if ($updateWedding['error']) {
@@ -45,7 +43,7 @@ $story = json_decode($weddingData['story'], true);
 		<h1 class="h2">Our Story</h1>
 		<div class="row">
 
-
+			<input type="text" hidden name="basic-details">
 			<!-- How we met -->
 			<div class="mb-3 col-8">
 				<label for="howWeMet" class="form-label">How We Met</label>

@@ -1,5 +1,4 @@
 <?php
-errors(1);
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
@@ -8,7 +7,6 @@ require('views/partials/dashboard/sidebar.php');
 controller("Wedding");
 $wedding = new Wedding();
 $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
-$story = json_decode($weddingData['story'], true);
 
 ?>
 
@@ -55,7 +53,7 @@ $story = json_decode($weddingData['story'], true);
 		    <div class="mb-3 col-sm-6">
 		      <label for="phone" class="form-label">Phone (Whatsapp only)</label>
 		      
-		      <input type="text" class="form-control" id="phone"  name="phone" phone placeholder="Enter Whatsapp Mobile No.">
+		      <input type="text" class="form-control" id="phone"  name="phone" value="<?= $_REQUEST['phone'] ?? $weddingData['phone'] ?>" placeholder="Enter phone number">
 
 		      <strong id="phoneMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 		    </div>
@@ -63,7 +61,7 @@ $story = json_decode($weddingData['story'], true);
 		    <div class="mb-3 col-sm-6">
 		      <label for="whatsappAPIKey" class="form-label">API Key</label>
 		      
-		      <input type="text" class="form-control" id="whatsappAPIKey" placeholder="Enter Whatsapp API Key" name="whatsappAPIKey" value="<?= $_REQUEST['whatsappAPIKey'] ?? '' ?>" >
+		      <input type="text" class="form-control" id="whatsappAPIKey" placeholder="Enter Whatsapp API Key" name="whatsappAPIKey" value="<?= $_REQUEST['whatsappAPIKey'] ?? $weddingData['whatsappAPIKey'] ?>" >
 
 		      <strong id="whatsappAPIKeyMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 		    </div>
@@ -72,8 +70,8 @@ $story = json_decode($weddingData['story'], true);
 
 		<div class="row">
 		    <div class="mb-3 col-sm-12">
-		      <label for="invitation" class="form-label">Invitation Msg</label>
-		        <textarea class="form-control" id="invitation" rows="3" name="invitation"> <?php echo $_REQUEST['invitation'] ?? ''  ?></textarea>
+		      <label for="invitation" class="form-label">Invitation Messgae (Template)</label>
+		        <textarea class="form-control" id="invitation" rows="3" name="invitation"> <?= $_REQUEST['invitation'] ?? $weddingData['invitation'] ?> </textarea>
 		      <strong id="invitationMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 		    </div>
 
@@ -88,8 +86,6 @@ $story = json_decode($weddingData['story'], true);
     
 
 </main>
-<script type="text/javascript" src="<?php assets("js/validation.js");?>"></script>
-
 
 <!--Main End-->
 
