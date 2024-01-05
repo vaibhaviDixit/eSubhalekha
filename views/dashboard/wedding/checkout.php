@@ -14,10 +14,6 @@ $planPrice = 16000;
 $discountAmount = 500;
 $totalAmount = $planPrice - $discountAmount;
 
-// add payment controller here
-// controller("Payment");
-// $payment = new Payment();
-
 
 ?>
 
@@ -29,41 +25,7 @@ $totalAmount = $planPrice - $discountAmount;
 <!-- Main Start -->
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
     <h1>Checkout</h1>
-<?php
 
-        if (isset($_POST['paymentID'])) {
-
-            $timeline = array();
-
-            $_REQUEST['userID'] = App::getUser()['userID'];
-            $_REQUEST['weddingID']=$_REQUEST['id'];
-
-            // debug: print paymentid
-            echo "payment_id: ".$_REQUEST['paymentID'];
-            die();
-            
-            // run create method from payment controller
-            // $updatePayment = $payment->create($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
-
-            // if ($updatePayment['error']) {
-            //     ?>
-            //     <div class="alert alert-danger">
-            //         <?php
-            //         foreach ($updatePayment['errorMsgs'] as $msg) {
-            //             if (count($msg))
-            //                 echo $msg[0] . "<br>";
-            //         }
-            //         ?>
-            //     </div>
-            //     <?php
-            // }
-            // else
-            // 	redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/additional-details");
-        
-        }
-
-
-        ?>
 
     <div class="container mt-2">
         <div class="row">
@@ -110,16 +72,13 @@ $totalAmount = $planPrice - $discountAmount;
         handler: function (response) {
             // Insert data into the database on successful payment
             var paymentId = response.razorpay_payment_id;
-
-            document.getElementById('paymentID').value = paymentId;
-        	// Submitting the form
-        	document.getElementById('paymentIDForm').submit();
+            insertIntoDatabase(paymentId);	
 
         },
         prefill: {
             name: 'eSubhalekha',
             email: 'vaibhavidixit511@gmail.com',
-            contact: '9284552192'
+            contact: '9122334455'
         },
         notes: {
             plan_id: 'YOUR_PLAN_ID'
@@ -129,11 +88,35 @@ $totalAmount = $planPrice - $discountAmount;
         }
     };
 
+    var rzp = new Razorpay(options);
+
     // Event listener for checkout button
     document.getElementById('checkoutBtn').addEventListener('click', function () {
-        var rzp = new Razorpay(options);
         rzp.open();
     });
+
+    rzp1.on('payment.failed', function (response){
+		        alert("Payment Failed! "+response.error.description);
+		});
+
+
+    // Function to insert data into the database
+    function insertIntoDatabase(paymentId) {
+        
+        // using AJAX
+
+        jQuery.ajax({
+        	type:'post',
+        	url:'payment_process.php'
+        	data:'paymentID='+paymentId+"&weddingID="+'<?php echo $_REQUEST['id'];?>'+"&userID="+'<?php echo App::getUser()['userID'];?>',
+        	success:function(result){
+        		// redirect user to other page
+        	}
+
+        });
+         
+
+    }
 
 </script>
 
