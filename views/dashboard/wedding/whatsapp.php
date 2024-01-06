@@ -71,7 +71,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 		<div class="row">
 		    <div class="mb-3 col-sm-12">
 		      <label for="invitation" class="form-label">Invitation Messgae (Template)</label>
-		        <textarea class="form-control" id="invitation" rows="3" name="invitation"> <?= $_REQUEST['invitation'] ?? $weddingData['invitation'] ?> </textarea>
+		        <textarea class="form-control" id="invitation" rows="3" name="invitation"><?=$_REQUEST['invitation'] ?? $weddingData['invitation'] ?></textarea>
 		      <strong id="invitationMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 		    </div>
 

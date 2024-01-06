@@ -19,7 +19,7 @@ $timeline = json_decode($weddingData['timeline'], true);
 </head>
 <!--Main Start-->
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
-    <h1 class="h2">Timeline</h1>
+    <h1 class="h2">Events</h1>
 
 
     <form id="form" method="post">
@@ -29,19 +29,20 @@ $timeline = json_decode($weddingData['timeline'], true);
 
             $timeline = array();
 
-            if($_REQUEST['event'] != null){
+            if ($_REQUEST['event'] != null) {
                 for ($i = 0; $i < count($_REQUEST['event']); $i++) {
                     $timeline[$i] = [
                         'event' => $_REQUEST['event'][$i],
-                        'time' => $_REQUEST['time'][$i],
+                        'startTime' => $_REQUEST['startTime'][$i],
+                        'endTime' => $_REQUEST['endTime'][$i],
                         'locationURL' => $_REQUEST['locationURL'][$i],
                         'venue' => $_REQUEST['venue'][$i],
-                        'address' => $_REQUEST['address'][$i]
+                        'address' => str_replace("\r\n", "<br>", $_REQUEST['address'][$i])
                     ];
                 }
             }
             $_REQUEST['timeline'] = $timeline;
-            
+
             $createWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
 
             if ($createWedding['error']) {
@@ -55,17 +56,17 @@ $timeline = json_decode($weddingData['timeline'], true);
                     ?>
                 </div>
                 <?php
-            }
-            else
-            redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/additional-details");
-        
+            } else
+                redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang'] . "/additional-details");
+
         }
 
 
         ?>
         <div class="row">
             <div class="col-md-12">
-                <button type="button" class="btn btn-primary mb-3" id="addRowBtn"><i class="bi bi-node-plus-fill"></i>
+                <button type="button" class="btn btn-primary mb-3 float-end" id="addRowBtn"><i
+                        class="bi bi-plus-circle"></i>
                     Add</button>
                 <table class="table table-responsive" style="vertical-align: middle;">
                     <thead>
@@ -76,53 +77,66 @@ $timeline = json_decode($weddingData['timeline'], true);
                         <!-- Rows will be added dynamically here -->
                         <?php
                         if ($timeline != null):
-                            for($i=0;$i<count($timeline);$i++):
-                            ?>
-                            <tr id="row<?=$i?>" class="row">
-                                <td>
-                                    <button class="btn btn-danger float-end" onclick="deleteRow(<?=$i?>)"><i
-                                            class="bi bi-trash-fill"></i></button>
+                            for ($i = 0; $i < count($timeline); $i++):
+                                ?>
+                                <tr id="row<?= $i ?>" class="row">
+                                    <td>
+                                        <button class="btn btn-danger float-end" onclick="deleteRow(<?= $i ?>)"><i
+                                                class="bi bi-trash-fill"></i></button>
 
-                                    <div class="card mb-3 p-3">
-                                        <div class="row">
+                                        <div class="card mb-3 p-3">
+                                            <div class="row">
 
-                                            <div class="mb-2 col-sm-6 col-md-4 col-lg-3">
-                                                <label for="event" class="form-label">Event Name</label>
-                                                <input type="text" class="form-control"placeholder="Enter Bride's Father Name" value="<?= $timeline[$i] ['event']?>" name="event[]">
-                                                <strong id="eventMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-                                            </div>
+                                                <div class="mb-2 col-sm-6 col-md-4 col-lg-3">
+                                                    <label for="event" class="form-label">Event Name</label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="Enter Bride's Father Name"
+                                                        value="<?= $timeline[$i]['event'] ?>" name="event[]">
+                                                    <strong id="eventMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+                                                </div>
 
-                                            <div class="mb-2 col-sm-6 col-md-4 col-lg-3">
-                                                <label for="time" class="form-label">Event Time</label>
-                                                <input type="datetime-local" class="form-control" name="time[]" value="<?= $timeline[$i] ['time']?>" >
-                                                <strong id="timeMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-                                            </div>
+                                                <div class="mb-2 col-sm-6 col-md-4 col-lg-3">
+                                                    <label for="startTime" class="form-label">Event Start Time</label>
+                                                    <input type="datetime-local" class="form-control" value="<?= $timeline[$i]['startTime'] ?>" name="startTime[]">
+                                                    <strong id="startTimeMsg"
+                                                        class="text-danger errorMsg my-2 fw-bolder"></strong>
+                                                </div>
 
-                                            <div class="mb-2 col-sm-6 col-md-4 col-lg-6">
-                                                <label for="locationURL" class="form-label">Location URL</label>
-                                                <input type="text" class="form-control" name="locationURL[]" value="<?= $timeline[$i] ['locationURL']?>" >
-                                                <strong id="locationURLMsg"
-                                                    class="text-danger errorMsg my-2 fw-bolder"></strong>
-                                            </div>
+                                                <div class="mb-2 col-sm-6 col-md-4 col-lg-3">
+                                                    <label for="endTime" class="form-label">Event End Time</label>
+                                                    <input type="datetime-local" class="form-control"value="<?= $timeline[$i]['endTime'] ?>"  name="endTime[]">
+                                                    <strong id="endTimeMsg"
+                                                        class="text-danger errorMsg my-2 fw-bolder"></strong>
+                                                </div>
 
-                                            <div class="mb-2 col-sm-6 col-md-4 col-lg-6">
-                                                <label for="venue" class="form-label">Event Venue</label>
-                                                <input type="text" class="form-control" name="venue[]" value="<?= $timeline[$i] ['venue']?>" >
-                                                <strong id="venueMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-                                            </div>
+                                                <div class="mb-2 col-sm-6 col-md-4 col-lg-6">
+                                                    <label for="locationURL" class="form-label">Location URL</label>
+                                                    <input type="text" class="form-control" name="locationURL[]"
+                                                        value="<?= $timeline[$i]['locationURL'] ?>">
+                                                    <strong id="locationURLMsg"
+                                                        class="text-danger errorMsg my-2 fw-bolder"></strong>
+                                                </div>
+
+                                                <div class="mb-2 col-sm-6 col-md-4 col-lg-6">
+                                                    <label for="venue" class="form-label">Event Venue</label>
+                                                    <input type="text" class="form-control" name="venue[]"
+                                                        value="<?= $timeline[$i]['venue'] ?>">
+                                                    <strong id="venueMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+                                                </div>
 
 
-                                            <div class="mb-2 col-sm-6 col-md-4 col-lg-6">
-                                                <label for="Address" class="form-label">Event Address</label>
-                                                <textarea class="form-control" name="address[]" rows="3"> <?= $timeline[$i] ['address']?></textarea>
-                                                <strong id="AddressMsg"
-                                                    class="text-danger errorMsg my-2 fw-bolder"></strong>
+                                                <div class="mb-2 col-sm-6 col-md-4 col-lg-6">
+                                                    <label for="Address" class="form-label">Event Address</label>
+                                                    <textarea class="form-control" name="address[]"
+                                                        rows="3"><?= str_replace("<br>", "\r\n", $timeline[$i]['address']) ?></textarea>
+                                                    <strong id="AddressMsg"
+                                                        class="text-danger errorMsg my-2 fw-bolder"></strong>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php
+                                    </td>
+                                </tr>
+                                <?php
                             endfor;
                         endif;
                         ?>
@@ -143,7 +157,10 @@ $timeline = json_decode($weddingData['timeline'], true);
     // JavaScript code for dynamic form functionality
     $(document).ready(function () {
         // Counter to keep track of the number of rows
-        var rowCount = <?php if($timeline != null) echo count($timeline); else echo 0; ?>
+        var rowCount = <?php if ($timeline != null)
+            echo count($timeline);
+        else
+            echo 0; ?>
 
         // Event listener for the "Add Row" button
         $("#addRowBtn").click(function () {
@@ -165,11 +182,17 @@ $timeline = json_decode($weddingData['timeline'], true);
             </div>
                 
             <div class="mb-2 col-sm-6 col-md-4 col-lg-3">
-              <label for="time" class="form-label">Event Time</label>
-              <input type="datetime-local" class="form-control" name="time[]">
-              <strong id="timeMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+              <label for="startTime" class="form-label">Event Start Time</label>
+              <input type="datetime-local" class="form-control" name="startTime[]">
+              <strong id="startTimeMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
             </div>
-                
+
+            <div class="mb-2 col-sm-6 col-md-4 col-lg-3">
+              <label for="endTime" class="form-label">Event End Time</label>
+              <input type="datetime-local" class="form-control" name="endTime[]">
+              <strong id="endTimeMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+            </div>
+
             <div class="mb-2 col-sm-6 col-md-4 col-lg-6">
               <label for="locationURL" class="form-label">Location URL</label>
               <input type="text" class="form-control" name="locationURL[]">

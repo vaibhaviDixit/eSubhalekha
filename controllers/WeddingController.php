@@ -74,7 +74,7 @@ class Wedding
         $this->hosts = $data['hosts'];
         $this->invitation = trim(DB::sanitize($data['invitation']));
         $this->template = trim(DB::sanitize($data['template']));
-        $this->tier = trim(DB::sanitize($data['tier'] ?? 'na'));
+        $this->tier = trim(DB::sanitize($data['tier'] ?? 'basic'));
         $this->music = trim(DB::sanitize($data['music']));
         $this->youtube = trim(DB::sanitize($data['youtube']));
         $this->accommodation = $data['accommodation'];
@@ -425,45 +425,25 @@ class Wedding
         $this->fromRole = trim(DB::sanitize($data['fromRole']));
         $this->brideName = trim(DB::sanitize($data['brideName']));
         $this->groomName = trim(DB::sanitize($data['groomName']));
-
-
         $this->brideQualifications = trim(DB::sanitize($data['brideQualifications']));
-
         $this->groomQualifications = trim(DB::sanitize($data['groomQualifications']));
-
         $this->brideBio = trim(DB::sanitize($data['brideBio']));
-
         $this->groomBio = trim(DB::sanitize($data['groomBio']));
-
         $this->story = $data['story'];
-
-
         $this->timeline = $data['timeline'];
-
         $this->hosts = $data['hosts'];
-
         $this->invitation = trim(DB::sanitize($data['invitation']));
-
         $this->template = trim(DB::sanitize($data['template']));
-
         $this->tier = trim(DB::sanitize($data['tier']));
-
         $this->music = trim(DB::sanitize($data['music']));
-
         $this->youtube = trim(DB::sanitize($data['youtube']));
-
         $this->accommodation = trim(DB::sanitize($data['accommodation']));
-
         $this->travel = trim(DB::sanitize($data['travel']));
-
         $this->phone = trim(DB::sanitize($data['phone']));
         $this->whatsappAPIKey = trim(DB::sanitize($data['whatsappAPIKey']));
         $this->host = trim(DB::sanitize($data['host']));
-
         $this->partner = trim(DB::sanitize($data['partner']));
-
         $this->manager = trim(DB::sanitize($data['manager']));
-
         $this->status = trim(DB::sanitize($data['status']));
 
 
@@ -685,26 +665,26 @@ class Wedding
             if(isset($_REQUEST['hosts'])){
             $this->hosts = [
 
-                "brideFather" => ["name" => $data['brideFather'], "relation" => "Bride Father"],
+                "brideFather" => ["name" => $data['brideFather'] ?? "", "relation" => "Bride Father"],
 
-                "groomFather" => ["name" => $data['groomFather'], "relation" => "Groom Father"],
+                "groomFather" => ["name" => $data['groomFather'] ?? "", "relation" => "Groom Father"],
 
-                "brideMother" => ["name" => $data['brideMother'], "relation" => "Bride Mother"],
+                "brideMother" => ["name" => $data['brideMother'] ?? "", "relation" => "Bride Mother"],
 
-                "groomMother" => ["name" => $data['groomMother'], "relation" => "Groom Mother"],
+                "groomMother" => ["name" => $data['groomMother'] ?? "", "relation" => "Groom Mother"],
 
-                "brideTagline" => $data['brideTagline'],
+                "brideTagline" => $data['brideTagline'] ?? "",
 
-                "groomTagline" => $data['groomTagline']
+                "groomTagline" => $data['groomTagline'] ?? ""
             ];
         }
             if (isset($_REQUEST['basic-details'])) {
                 $this->story = [
-                    "howWeMet" => $data['howWeMet'],
-                    "whenWeMet" => $data['whenWeMet'],
-                    "engagement" => $data['engagement'],
-                    "engagementYear" => $data['engagementYear'],
-                    "memorableMoments" => $data['memorableMoments'],
+                    "howWeMet" => str_replace("\r\n", "<br>", $data['howWeMet']),
+                    "whenWeMet" => str_replace("\r\n", "<br>", $data['whenWeMet']),
+                    "engagement" => str_replace("\r\n", "<br>", $data['engagement']),
+                    "engagementYear" => str_replace("\r\n", "<br>", $data['engagementYear']),
+                    "memorableMoments" => str_replace("\r\n", "<br>", $data['memorableMoments']),
                 ];
             }
 
@@ -725,17 +705,17 @@ class Wedding
 
                 'groomQualifications' => !empty($this->groomQualifications) ? $this->groomQualifications : $weddingData['groomQualifications'],
 
-                'brideBio' => !empty($this->brideBio) ? $this->brideBio : $weddingData['brideBio'],
+                'brideBio' => !empty($this->brideBio) ? str_replace("\r\n", "<br>", $this->brideBio) : $weddingData['brideBio'],
 
-                'groomBio' => !empty($this->groomBio) ? $this->groomBio : $weddingData['groomBio'],
+                'groomBio' => !empty($this->groomBio) ? str_replace("\r\n", "<br>", $this->groomBio) : $weddingData['groomBio'],
 
-                'story' => !empty($this->story) ? json_encode($this->story) : $weddingData['story'],
+                'story' => !empty($this->story) ? str_replace("\r\n", "<br>", json_encode($this->story)) : $weddingData['story'],
 
-                'timeline' => !empty($this->timeline) ? json_encode($this->timeline) : $weddingData['timeline'],
+                'timeline' => !empty($this->timeline) ? str_replace("\r\n", "<br>", json_encode($this->timeline)) : $weddingData['timeline'],
 
                 'hosts' => !empty($this->hosts) ? json_encode($this->hosts) : $weddingData['hosts'],
 
-                'invitation' => !empty($this->invitation) ? $this->invitation : $weddingData['invitation'],
+                'invitation' => !empty($this->invitation) ? str_replace("\r\n", "<br>", $this->invitation) : $weddingData['invitation'],
 
                 'template' => !empty($this->template) ? $this->template : $weddingData['template'],
 
@@ -745,9 +725,9 @@ class Wedding
 
                 'youtube' => !empty($this->youtube) ? $this->youtube : $weddingData['youtube'],
 
-                'accommodation' => !empty($this->accommodation) ? json_encode($this->accommodation) : $weddingData['accommodation'],
+                'accommodation' => !empty($this->accommodation) ? $this->accommodation : $weddingData['accommodation'],
 
-                'travel' => !empty($this->travel) ? json_encode($this->travel) : $weddingData['travel'],
+                'travel' => !empty($this->travel) ? $this->travel : $weddingData['travel'],
 
                 'phone' => !empty($this->phone) ? $this->phone : $weddingData['phone'],
 

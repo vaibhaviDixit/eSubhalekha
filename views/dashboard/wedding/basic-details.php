@@ -49,7 +49,7 @@ $story = json_decode($weddingData['story'], true);
 				<label for="howWeMet" class="form-label">How We Met</label>
 				<textarea class="form-control" id="howWeMet" name="howWeMet"
 					placeholder="Enter how Bride & Groom met for the first time"
-					rows="3"><?= $_REQUEST['howWeMet'] ?? $story['howWeMet'] ?></textarea>
+					rows="3"><?= $_REQUEST['howWeMet'] ?? str_replace("<br>", "\r\n", $story['howWeMet']) ?></textarea>
 			</div>
 
 			<!-- When we met -->
@@ -75,7 +75,7 @@ $story = json_decode($weddingData['story'], true);
 				<label for="engagement" class="form-label">Engagement</label>
 				<textarea class="form-control" id="engagement" name="engagement"
 					placeholder="Enter how Bride & Groom got engaged"
-					rows="3"><?= $_REQUEST['engagement'] ?? $story['engagement'] ?></textarea>
+					rows="3"><?= $_REQUEST['engagement'] ?? str_replace("<br>", "\r\n", $story['engagement']) ?></textarea>
 			</div>
 
 			<!-- Engagement Year -->
@@ -101,7 +101,7 @@ $story = json_decode($weddingData['story'], true);
 				<label for="memorableMoments" class="form-label">Memorable Moments</label>
 				<textarea class="form-control" id="memorableMoments" name="memorableMoments"
 					placeholder="Add any sweet memorable moments you like to share"
-					rows="3"><?= $_REQUEST['memorableMoments'] ?? $story['memorableMoments'] ?></textarea>
+					rows="3"><?= $_REQUEST['memorableMoments'] ?? str_replace("<br>", "\r\n", $story['memorableMoments']) ?></textarea>
 			</div>
 
 

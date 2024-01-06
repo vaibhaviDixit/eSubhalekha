@@ -29,8 +29,6 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
 			if (isset($_POST['btn-submit'])) {
                 
-				$_REQUEST['host'] = App::getUser()['userID'];
-
 				// upload music to aws bucket
 				if(!empty($_FILES['fileToUpload']['name'])){
 					$uploadedMusicURL = uploadToAWS($_FILES);
@@ -89,15 +87,15 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
 		<div class="row mt-3">
 		    <div class="mb-3 col-sm-6">
-		      <label for="accomodation" class="form-label">Accomodation</label>
-		        <textarea class="form-control" id="accomodation" rows="3" name="accommodation"><?= $_REQUEST['accommodation'] ?? json_decode($weddingData['accommodation']) ?></textarea>
-		      <strong id="accomodationMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+		      <label for="accommodation" class="form-label">Accommodation Details</label>
+		        <textarea class="form-control" id="accommodation" rows="3" name="accommodation"><?=$_REQUEST['accommodation'] ?? $weddingData['accommodation']?></textarea>
+		      <strong id="accommodationMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 		    </div>
 
 		    <div class="mb-3 col-sm-6">
-		      <label for="travelDet" class="form-label">Travel Details</label>
-		        <textarea class="form-control" id="travelDet" rows="3" name="travel"><?= $_REQUEST['travel'] ?? json_decode($weddingData['travel']) ?></textarea>
-		      <strong id="travelDetMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+		      <label for="travel" class="form-label">Travel Details</label>
+		        <textarea class="form-control" id="travel" rows="3" name="travel"><?=$_REQUEST['travel'] ?? $weddingData['travel']?></textarea>
+		      <strong id="travelMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 		    </div>
 
     	</div>

@@ -41,7 +41,7 @@ $wedding = new Wedding();
 					</div>
 					<?php
 				} else
-					redirect("wedding/" . $_REQUEST['weddingID'] . "/" . $_REQUEST['lang']."/basic-details");
+					redirect("wedding/" . $_REQUEST['weddingID'] . "/" . $_REQUEST['lang'] . "/basic-details");
 
 			}
 
@@ -84,7 +84,7 @@ $wedding = new Wedding();
 								  echo 'selected';
 							  elseif ($lang == 'en')
 								  echo 'selected' ?>>
-								<?= Locale::getDisplayLanguage($lang, "en")?>
+								<?= Locale::getDisplayLanguage($lang, "en") ?>
 							</option>
 							<?php
 						} ?>
@@ -123,6 +123,10 @@ $wedding = new Wedding();
 		?>
 
 		function generateWeddingID(groomName, brideName) {
+			// Replace spaces and empty characters in groom and bride names
+			groomName = groomName.replace(/\s/g, "");
+			brideName = brideName.replace(/\s/g, "");
+
 			let weddingID = groomName + "Weds" + brideName;
 
 			if (weddings.includes(weddingID)) {
@@ -131,6 +135,7 @@ $wedding = new Wedding();
 
 			return weddingID;
 		}
+
 
 		function updateWeddingID() {
 			const groomName = document.querySelector('#groomName').value.trim();

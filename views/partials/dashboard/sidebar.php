@@ -59,7 +59,7 @@ DB::close();
           <a class="nav-link timeline" aria-current="page"
             href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/timeline') . queryString(); ?>">
             <i class="bi bi-clock"></i>
-            Timeline
+            Events
           </a>
 
           <a class="nav-link additional-details" aria-current="page"
