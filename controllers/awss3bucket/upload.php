@@ -30,7 +30,8 @@ function uploadToAWS($filearr){
 					'secret' => $IAM_SECRET
 				),
 				'version' => 'latest',
-				'region'  => 'ap-south-1'
+				'region'  => 'ap-south-1',
+				'use_accelerate_endpoint' => true,
 			)
 		);
 		
