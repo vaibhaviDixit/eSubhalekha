@@ -74,6 +74,11 @@ DB::close();
             Whatsapp Setup
           </a>
 
+          <a class="nav-link whatsapp" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/gallery') . queryString(); ?>">
+            <i class="bi bi-image"></i>
+             Gallery
+          </a>
           
 
           <a class="nav-link preview" target="_blank" aria-current="page"

@@ -89,11 +89,8 @@
   "wedding/{id}/{lang}/additional-details": {
     "path": "views/dashboard/wedding/additional-details.php"
   },
-  "wedding/{id}/gallery": {
-    "path": "views/dashboard/wedding/gallery/index.php"
-  },
-  "wedding/{id}/gallery/add": {
-    "path": "views/dashboard/wedding/gallery/add.php"
+  "wedding/{id}/{lang}/gallery": {
+    "path": "views/dashboard/wedding/gallery.php"
   },
   "wedding/{id}/{lang}/preview": {
     "path": "views/dashboard/wedding/preview.php"

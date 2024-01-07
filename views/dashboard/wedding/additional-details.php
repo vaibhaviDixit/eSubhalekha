@@ -30,8 +30,8 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 			if (isset($_POST['btn-submit'])) {
                 
 				// upload music to aws bucket
-				if(!empty($_FILES['fileToUpload']['name'])){
-					$uploadedMusicURL = uploadToAWS($_FILES);
+				if(!empty($_FILES['musicTrack']['name'])){
+					$uploadedMusicURL = uploadToAWS($_FILES,'musicTrack');
 					if($uploadedMusicURL['error']){
 						echo '<div class="alert alert-danger">'.$uploadedMusicURL['errorMsg'].'</div>';
 					}
@@ -65,7 +65,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 		    <div class="mb-3 col-sm-6">
 		      <label for="musicTrack" class="form-label">Music Track</label>
 		      
-		      <input type="file" class="form-control" id="musicTrack" accept="audio/*" name="fileToUpload">
+		      <input type="file" class="form-control" id="musicTrack" accept="audio/*" name="musicTrack">
 
 		      <strong id="musicTrackMsg" class="text-danger errorMsg my-2 fw-bolder"><?php
 			 	if(!empty($weddingData['music'])):
