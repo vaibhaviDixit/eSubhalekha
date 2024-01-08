@@ -8,7 +8,12 @@ require('controllers/awss3bucket/upload.php');
 controller("Gallery");
 $gallery = new Gallery();
 $galleryData = $gallery->getGallery($_REQUEST['id']);
-$eventsGallery=$gallery->getGalleryEvents($_REQUEST['id']);
+
+$eventsGallery=array();
+$preweddingGallery=array();
+
+$eventsGallery=$gallery->getEventGallery($_REQUEST['id']);
+$preweddingGallery=$gallery->getPreWedGallery($_REQUEST['id'],'gallery');
 
 function getImgURL($name){
 	$gallery = new Gallery();
@@ -23,6 +28,23 @@ function getImgURL($name){
 	
 }
 
+  // delete img by url
+    if(isset($_REQUEST['imgurl'])){
+
+        $imgurl=$_REQUEST['imgurl'];
+        $gallery=new Gallery();
+        $getrow=$gallery->deleteByURL($_REQUEST['id'],$imgurl);
+        
+        if(!$getrow['error']){
+        	deleteFromAWS($imgurl);
+
+        	echo "<script>alert('Deleted Successfully'); window.history.back(); </script>";
+        }
+        else{
+        	echo "<script>alert('Failed to delete');window.history.back();  </script>";
+        }
+
+    }
 
 ?>
 
@@ -62,6 +84,28 @@ function getImgURL($name){
 						$_REQUEST['type']='groom';
 					}
 				}
+				elseif (!empty($_FILES['both']['name'])) {
+					$uploadedURL = uploadToAWS($_FILES,'both');
+					if($uploadedURL['error']){
+						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
+					}
+					else{					
+						$_REQUEST['imageURL'] = $uploadedURL['url'];	
+						$_REQUEST['imageName']='both';
+						$_REQUEST['type']='both';
+					}
+				}
+				elseif (!empty($_FILES['hero']['name'])) {
+					$uploadedURL = uploadToAWS($_FILES,'hero');
+					if($uploadedURL['error']){
+						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
+					}
+					else{					
+						$_REQUEST['imageURL'] = $uploadedURL['url'];	
+						$_REQUEST['imageName']='hero';
+						$_REQUEST['type']='hero';
+					}
+				}
 				elseif (!empty($_FILES['eventPic']['name']) && !empty($_REQUEST['imageName']) ) {
 					$uploadedURL = uploadToAWS($_FILES,'eventPic');
 					if($uploadedURL['error']){
@@ -72,9 +116,22 @@ function getImgURL($name){
 						$_REQUEST['type']='event';
 					}
 				}
+				elseif (!empty($_FILES['galleryPic']['name']) ) {
+                  
+					$uploadedURL = uploadToAWS($_FILES,'galleryPic');
+					if($uploadedURL['error']){
+						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
+					}
+					else{
+					    $_REQUEST['imageName'] = $_FILES['galleryPic']['name'].time();					
+						$_REQUEST['imageURL'] = $uploadedURL['url'];
+						$_REQUEST['type']='gallery';
+					}
+				}
                 
                 $_REQUEST['weddingID']=$_REQUEST['id'];
 				$addToGallery = $gallery->update($_REQUEST);
+
 
 				if ($addToGallery['error']) {
 					?>
@@ -93,8 +150,9 @@ function getImgURL($name){
 			}
 
 			?>
-
-     	<form  method="post" enctype="multipart/form-data">
+		<div class="row">
+			<!--  bride pic -->
+     	<form  method="post" enctype="multipart/form-data" class="col-sm-6">
 	    	<div class="row">
 			    <div class="col-sm-3">
 			      <label for="bride" class="form-label">Bride Photo</label>
@@ -103,7 +161,7 @@ function getImgURL($name){
 			    <div class="col-sm-5">
 			    	<input type="file" class="form-control" id="bride" accept="image/*" name="bride" required>
 
-			    <strong id="musicTrackMsg" class="text-danger errorMsg my-2 fw-bolder"><?php
+			    <strong id="brideMsg" class="text-danger errorMsg my-2 fw-bolder"><?php
 			 	if(getImgURL('bride')):
 					?>
 					<a class="ms-3" href="<?php echo getImgURL('bride'); ?>" target="_blank" >View File <i class="bi bi-box-arrow-up-right"></i> </a>
@@ -112,9 +170,9 @@ function getImgURL($name){
 
 			    </div>
 
-			    <div class="col-sm-3">
+			    <div class="col-sm-2">
 			    	<!-- Submit Button -->
-	    			<button type="submit" id="submit-btn" name="btn-submit" class="btn btn-primary">Upload</button>
+	    			<button type="submit" id="submit-btn" name="btn-submit" class="btn btn-primary btn-sm">Upload</button>
 			    </div>
 
 			</div>
@@ -122,16 +180,16 @@ function getImgURL($name){
   		</form>
   		<!-- groom form -->
 
-     	<form  method="post" enctype="multipart/form-data">
+     	<form  method="post" enctype="multipart/form-data" class="col-sm-6">
 	    	<div class="row">
 			    <div class="col-sm-3">
-			      <label for="bride" class="form-label">Groom Photo</label>
+			      <label for="groom" class="form-label">Groom Photo</label>
 			    </div>
 
 			    <div class="col-sm-5">
 			    	<input type="file" class="form-control" id="groom" accept="image/*" name="groom" required>
 
-			    <strong id="musicTrackMsg" class="text-danger errorMsg my-2 fw-bolder"><?php
+			    <strong id="groomMsg" class="text-danger errorMsg my-2 fw-bolder"><?php
 			 	if(getImgURL('groom')):
 					?>
 					<a class="ms-3" href="<?php echo getImgURL('groom'); ?>" target="_blank" >View File <i class="bi bi-box-arrow-up-right"></i> </a>
@@ -141,14 +199,77 @@ function getImgURL($name){
 			    </div>
 
 
-			    <div class="col-sm-3">
+			    <div class="col-sm-2">
 			    	<!-- Submit Button -->
-	    			<button type="submit" id="submit-btn" name="btn-submit" class="btn btn-primary">Upload</button>
+	    			<button type="submit" id="submit-btn" name="btn-submit" class="btn btn-primary btn-sm">Upload</button>
 			    </div>
 
 			</div>
 
   		</form>
+
+		</div>
+
+  		<div class="row">
+  			
+  					<!--  both pic -->
+     	<form  method="post" enctype="multipart/form-data" class="col-sm-6">
+	    	<div class="row">
+			    <div class="col-sm-3">
+			      <label for="both" class="form-label">Couple Photo</label>
+			    </div>
+
+			    <div class="col-sm-5">
+			    	<input type="file" class="form-control" id="both" accept="image/*" name="both" required>
+
+			    <strong id="bothMsg" class="text-danger errorMsg my-2 fw-bolder"><?php
+			 	if(getImgURL('both')):
+					?>
+					<a class="ms-3" href="<?php echo getImgURL('both'); ?>" target="_blank" >View File <i class="bi bi-box-arrow-up-right"></i> </a>
+					<?php endif; ?>
+				</strong>
+
+			    </div>
+
+			    <div class="col-sm-2">
+			    	<!-- Submit Button -->
+	    			<button type="submit" id="submit-btn" name="btn-submit" class="btn btn-primary btn-sm">Upload</button>
+			    </div>
+
+			</div>
+
+  		</form>
+
+  		<!-- hero form -->
+     	<form  method="post" enctype="multipart/form-data" class="col-sm-6">
+	    	<div class="row">
+			    <div class="col-sm-3">
+			      <label for="hero" class="form-label">Hero Photo</label>
+			    </div>
+
+			    <div class="col-sm-5">
+			    	<input type="file" class="form-control" id="hero" accept="image/*" name="hero" required>
+
+			    <strong id="musicTrackMsg" class="text-danger errorMsg my-2 fw-bolder"><?php
+			 	if(getImgURL('hero')):
+					?>
+					<a class="ms-3" href="<?php echo getImgURL('hero'); ?>" target="_blank" >View File <i class="bi bi-box-arrow-up-right"></i> </a>
+					<?php endif;?>
+				</strong>
+
+			    </div>
+
+
+			    <div class="col-sm-2">
+			    	<!-- Submit Button -->
+	    			<button type="submit" id="submit-btn" name="btn-submit" class="btn btn-primary btn-sm">Upload</button>
+			    </div>
+
+			</div>
+
+  		</form>
+
+  		</div>
 
 
   		<!--  events  -->
@@ -173,7 +294,35 @@ function getImgURL($name){
 
 				    <div class="col-sm-3">
 				    	<!-- Submit Button -->
-		    			<button type="submit" name="btn-submit" class="btn btn-primary">Upload</button>
+		    			<button type="submit" name="btn-submit" class="btn btn-primary btn-sm">Upload</button>
+				    </div>
+
+				</div>
+
+  			</form>
+
+  		</div>
+
+  		  		<!--  gallery  -->
+  		<h5>Pre Wedding Gallery</h5>
+
+  		<button type="button" class="btn btn-primary mb-3 float-start" id="addPreWedImgBtn"><i
+                        class="bi bi-plus-circle"></i>Add</button>
+                        <br>
+
+  		<div class="preweddingGallery">
+  			
+  			<form  method="post" enctype="multipart/form-data">
+
+		    	<div class="row">
+
+				    <div class="col-sm-5">
+				    	<input type="file" class="form-control" accept="image/*" name="galleryPic" required>
+				    </div>
+
+				    <div class="col-sm-3">
+				    	<!-- Submit Button -->
+		    			<button type="submit" name="btn-submit" class="btn btn-primary btn-sm">Upload</button>
 				    </div>
 
 				</div>
@@ -184,6 +333,7 @@ function getImgURL($name){
 
   		<!--  display event images -->
   		<div>
+  			<b> Event Gallery </b>
   			    <?php
                         if (!$eventsGallery['error']):
                                 ?>
@@ -200,8 +350,49 @@ function getImgURL($name){
                                 			<tr>
                                 				<td><?= $eventsGallery[$i]['imageName'] ?> </td>
                                 				<td><a target="_blank" href="<?= $eventsGallery[$i]['imageURL'] ?>"><?= $eventsGallery[$i]['imageURL'] ?></a> </td>
-                                				<td><button class="btn btn-danger" onclick="<?php $gallery->deleteOld($_REQUEST['id'],$eventGallery[$i]['imageName']); ?>"><i
-                                                class="bi bi-trash-fill"></i></button></td>
+
+                                				<td>
+                                					<a href="?imgurl=<?= $eventsGallery[$i]['imageURL'] ?>">
+                                						<button class="btn btn-danger btn-sm" ><i class="bi bi-trash-fill"></i></button>
+                                					</a>
+                                                </td>
+
+                                			</tr>
+                                			<?php endfor; ?>
+                                		
+
+                                	</tbody>
+                                	
+                                </table>
+
+                <?php endif;
+                ?>
+  			
+  		</div>
+
+		<!--  display pre wedding images -->
+  		<div>
+  			<b> Pre Wedding Gallery </b>
+  			    <?php
+                        if (!$preweddingGallery['error']):
+                                ?>
+                                <table class="table table-responsive table-sm">
+                                	<thead>
+                                		<tr>
+	                                		<th>Image</th>
+	                                		<th>Action</th>
+                                		</tr>
+                                	</thead>
+                                	<tbody>
+                                		<?php for ($i = 0; $i < count($preweddingGallery); $i++):?>
+                                			<tr>
+                                				<td><a target="_blank" href="<?= $preweddingGallery[$i]['imageURL'] ?>"><?= $preweddingGallery[$i]['imageURL'] ?></a> </td>
+
+                                				<td>
+                                					<a href="?imgurl=<?= $preweddingGallery[$i]['imageURL'] ?>">
+                                						<button class="btn btn-danger btn-sm" ><i class="bi bi-trash-fill"></i></button>
+                                					</a>
+                                                </td>
                                 			</tr>
                                 			<?php endfor; ?>
                                 		
@@ -230,7 +421,16 @@ function getImgURL($name){
                 var newForm = $(".eventGallery form:first").clone();
                 $(".eventGallery").append(newForm);
             });
+
+            //pre wedding
+            $("#addPreWedImgBtn").click(function(){
+                var galleryform = $(".preweddingGallery form:first").clone();
+                $(".preweddingGallery").append(galleryform);
+            });
+
         });
+
+
 
 </script>
 

@@ -11,7 +11,7 @@ class Gallery
     // Update operation
     public function update($data)
     {   
-
+       
         DB::connect();
         $this->imageName = trim(DB::sanitize($data['imageName']));
         $this->imageURL = strtolower(trim(DB::sanitize($data['imageURL'])));
@@ -84,12 +84,28 @@ class Gallery
             return ['error' => true, "errorMsgs" => ['gallery' => "Gallery Not Found"]];
     }
 
-      // get events image in gallery
-    public function getGalleryEvents($weddingID)
+    // get type wise image in gallery
+
+    // event
+    public function getEventGallery($weddingID)
     {
         DB::connect();
         $weddingID = DB::sanitize($weddingID);
         $getGallery = DB::select('gallery', '*', "weddingID = '$weddingID' and type='event' ")->fetchAll();
+        DB::close();
+
+        if ($getGallery)
+            return $getGallery;
+        else
+            return ['error' => true, "errorMsgs" => ['gallery' => "Gallery Not Found"]];
+    }
+
+        // pre wedding
+    public function getPreWedGallery($weddingID)
+    {
+        DB::connect();
+        $weddingID = DB::sanitize($weddingID);
+        $getGallery = DB::select('gallery', '*', "weddingID = '$weddingID' and type='gallery' ")->fetchAll();
         DB::close();
 
         if ($getGallery)
@@ -109,12 +125,12 @@ class Gallery
             return $check;
         }
 
-        // Delete the wedding
+        // Delete the gallery
         DB::connect();
-        $deleteWedding = DB::delete('gallery', "weddingID = '$weddingID' and imageName='$imageName' ");
+        $deleteGallery = DB::delete('gallery', "weddingID = '$weddingID' and imageName='$imageName' ");
         DB::close();
 
-        if (!$deleteWedding) {
+        if (!$deleteGallery) {
             return [
                 'error' => true,
                 'errorMsg' => 'Failed to delete image'
@@ -129,7 +145,44 @@ class Gallery
     }
     //  deleteOld() ends
 
+    // delete old img
+    public function deleteByURL($weddingID, $url)
+    {
 
+        // Delete the gallery
+        DB::connect();
+        $deleteGallery = DB::delete('gallery', "weddingID = '$weddingID' and imageURL='$url' ");
+        DB::close();
 
-    
+        if (!$deleteGallery) {
+            return [
+                'error' => true,
+                'errorMsg' => 'Failed to delete image'
+            ];
+        } else {
+            return [
+                'error' => false,
+                'errorMsg' => '',
+                'message' => "Image successfully deleted"
+            ];
+        }
+    }
+    //  deleteOld() ends
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

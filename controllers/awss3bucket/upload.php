@@ -91,6 +91,60 @@ function uploadToAWS($filearr,$filename){
 
 }
 
+function deleteFromAWS($imgurl){
+		
+	try {
+
+		// AWS Info
+	$bucketName = 'esubhalekha';
+	$IAM_KEY = 'AKIA4X3FUWUEORJBSKUT';
+	$IAM_SECRET = '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';
+
+		$s3 = S3Client::factory(
+			array(
+				'credentials' => array(
+					'key' => $IAM_KEY,
+					'secret' => $IAM_SECRET
+				),
+				'version' => 'latest',
+				'region'  => 'ap-south-1',
+				'use_accelerate_endpoint' => true,
+			)
+		);
+		
+	} catch (Exception $e) {
+		
+	die("Error: " . $e->getMessage());
+	}
+
+		try{
+
+			$result = $s3->deleteObject(array(
+        		'Bucket' => $bucketName,
+        		'Key'    => $imgurl
+    		));
+
+
+            return [
+                'error' => false
+            ];
+
+		}
+		catch (S3Exception $e) {
+			return [
+                 'error' => true,
+                 'errorMsg' => $e->getMessage()
+            ];
+		} catch (Exception $e) {
+			return [
+	            'error' => true,
+	            'errorMsg' => $e->getMessage()
+	        ];
+		}
+
+
+}
+
 
 	
 ?>
