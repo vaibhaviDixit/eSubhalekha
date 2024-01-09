@@ -9,6 +9,10 @@ $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
 DB::close();
 
 controller("Wedding");
+controller("AWSBucket");
+
+$awsObj=new AWSBucket();
+
 $wedding = new Wedding();
 $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
@@ -31,7 +35,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
                 
 				// upload music to aws bucket
 				if(!empty($_FILES['musicTrack']['name'])){
-					$uploadedMusicURL = uploadToAWS($_FILES,'musicTrack');
+					$uploadedMusicURL = $awsObj->uploadToAWS($_FILES,'musicTrack');
 					if($uploadedMusicURL['error']){
 						echo '<div class="alert alert-danger">'.$uploadedMusicURL['errorMsg'].'</div>';
 					}

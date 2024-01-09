@@ -3,9 +3,10 @@
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
-require('controllers/awss3bucket/upload.php');
 
 controller("Gallery");
+controller("AWSBucket");
+
 $gallery = new Gallery();
 $galleryData = $gallery->getGallery($_REQUEST['id']);
 
@@ -14,6 +15,8 @@ $preweddingGallery=array();
 
 $eventsGallery=$gallery->getEventGallery($_REQUEST['id']);
 $preweddingGallery=$gallery->getPreWedGallery($_REQUEST['id'],'gallery');
+
+$awsObj=new AWSBucket();
 
 function getImgURL($name){
 	$gallery = new Gallery();
@@ -36,7 +39,8 @@ function getImgURL($name){
         $getrow=$gallery->deleteByURL($_REQUEST['id'],$imgurl);
         
         if(!$getrow['error']){
-        	deleteFromAWS($imgurl);
+        	$awsObj=new AWSBucket();
+        	$awsObj->deleteFromAWS($imgurl);
 
         	echo "<script>alert('Deleted Successfully'); window.history.back(); </script>";
         }
@@ -62,7 +66,8 @@ function getImgURL($name){
                 
 				// upload img to aws bucket
 				if(!empty($_FILES['bride']['name'])){
-					$uploadedURL = uploadToAWS($_FILES,'bride');
+					$uploadedURL = $awsObj->uploadToAWS($_FILES,'bride');
+
 					if($uploadedURL['error']){
 						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
 					}
@@ -74,7 +79,8 @@ function getImgURL($name){
 					
 				}
 				elseif (!empty($_FILES['groom']['name'])) {
-					$uploadedURL = uploadToAWS($_FILES,'groom');
+					$uploadedURL = $awsObj->uploadToAWS($_FILES,'groom');
+					$awsObj->deleteFromAWS(getImgURL('groom'));
 					if($uploadedURL['error']){
 						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
 					}
@@ -85,7 +91,8 @@ function getImgURL($name){
 					}
 				}
 				elseif (!empty($_FILES['both']['name'])) {
-					$uploadedURL = uploadToAWS($_FILES,'both');
+					$uploadedURL = $awsObj->uploadToAWS($_FILES,'both');
+					$awsObj->deleteFromAWS(getImgURL('both'));
 					if($uploadedURL['error']){
 						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
 					}
@@ -96,7 +103,8 @@ function getImgURL($name){
 					}
 				}
 				elseif (!empty($_FILES['hero']['name'])) {
-					$uploadedURL = uploadToAWS($_FILES,'hero');
+					$uploadedURL = $awsObj->uploadToAWS($_FILES,'hero');
+					$awsObj->deleteFromAWS(getImgURL('hero'));
 					if($uploadedURL['error']){
 						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
 					}
@@ -107,7 +115,7 @@ function getImgURL($name){
 					}
 				}
 				elseif (!empty($_FILES['eventPic']['name']) && !empty($_REQUEST['imageName']) ) {
-					$uploadedURL = uploadToAWS($_FILES,'eventPic');
+					$uploadedURL = $awsObj->uploadToAWS($_FILES,'eventPic');
 					if($uploadedURL['error']){
 						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
 					}
@@ -118,7 +126,7 @@ function getImgURL($name){
 				}
 				elseif (!empty($_FILES['galleryPic']['name']) ) {
                   
-					$uploadedURL = uploadToAWS($_FILES,'galleryPic');
+					$uploadedURL = $awsObj->uploadToAWS($_FILES,'galleryPic');
 					if($uploadedURL['error']){
 						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
 					}
@@ -179,7 +187,6 @@ function getImgURL($name){
 
   		</form>
   		<!-- groom form -->
-
      	<form  method="post" enctype="multipart/form-data" class="col-sm-6">
 	    	<div class="row">
 			    <div class="col-sm-3">
@@ -366,6 +373,10 @@ function getImgURL($name){
                                 </table>
 
                 <?php endif;
+                if ($eventsGallery['error']){
+                 	echo "<br>Event Gallery is empty!";
+                 }
+
                 ?>
   			
   		</div>
@@ -402,6 +413,10 @@ function getImgURL($name){
                                 </table>
 
                 <?php endif;
+                 if ($preweddingGallery['error']){
+                 	echo "<br>Pre Wedding Gallery is empty!";
+                 }
+
                 ?>
   			
   		</div>
