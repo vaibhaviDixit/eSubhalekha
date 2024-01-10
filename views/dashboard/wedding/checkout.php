@@ -107,8 +107,8 @@ $totalAmount = $planPrice - $discountAmount;
 
         jQuery.ajax({
         	type:'post',
-        	url:'payment_process.php'
-        	data:'paymentID='+paymentId+"&weddingID="+'<?php echo $_REQUEST['id'];?>'+"&userID="+'<?php echo App::getUser()['userID'];?>',
+        	url: 'payment_process.php',
+            data: 'paymentID=' + paymentId + "&weddingID=" + '<?php echo $_REQUEST['id'];?>' + "&userID=" + '<?php echo App::getUser()['userID'];?>',
         	success:function(result){
         		// redirect user to other page
         	}

@@ -1,7 +1,7 @@
 <?php
 
 
-class PaymentController
+class Payment
 {   
     protected $paymentID;
     protected $userID;
@@ -11,9 +11,9 @@ class PaymentController
     public function create($data)
     {
         DB::connect();
-        $this->paymentID = trim(DB::sanitize($paymentID));
-        $this->userID = strtolower(trim(DB::sanitize($userID)));
-        $this->weddingID = trim(DB::sanitize($weddingID));
+        $this->paymentID = trim(DB::sanitize($data['paymentID']));
+        $this->userID = strtolower(trim(DB::sanitize($data['userID'])));
+        $this->weddingID = trim(DB::sanitize($data['weddingID']));
 
         DB::close();
 
