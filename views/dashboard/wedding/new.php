@@ -14,10 +14,7 @@ $wedding = new Wedding();
 
 
 controller("Gallery");
-controller("AWSBucket");
-
 $gallery = new Gallery();
-$awsObj=new AWSBucket();
 
 function getImgURL($name){
 	$gallery = new Gallery();
@@ -46,6 +43,9 @@ function getImgURL($name){
 
 
 			if (isset($_POST['btn-submit'])) {
+
+				controller("AWSBucket");
+				$awsObj=new AWSBucket();
 
 				$_REQUEST['host'] = App::getUser()['userID'];
 				$groomArray=array();

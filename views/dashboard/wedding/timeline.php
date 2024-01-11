@@ -22,10 +22,9 @@ $timeline = [];
 $timeline = json_decode($weddingData['timeline'], true);
 
 controller("Gallery");
-controller("AWSBucket");
-
 $gallery = new Gallery();
-$awsObj=new AWSBucket();
+
+
 
 function getImgURL($name){
     $gallery = new Gallery();
@@ -40,6 +39,9 @@ function getImgURL($name){
     
 }
  if(isset($_REQUEST['delTimeline'])){
+
+    controller("AWSBucket");
+    $awsObj=new AWSBucket();
 
         $eventid=$_REQUEST['delTimeline'];
         $imgurl=getImgURL($timeline[$eventid]['event']);
@@ -80,6 +82,9 @@ function getImgURL($name){
         <?php
 
         if (isset($_POST['btn-submit'])) {
+
+            controller("AWSBucket");
+            $awsObj=new AWSBucket();
 
             $timeline = array();
             $eventImgArray=array();

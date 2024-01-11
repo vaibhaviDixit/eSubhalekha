@@ -9,9 +9,6 @@ $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
 DB::close();
 
 controller("Wedding");
-controller("AWSBucket");
-
-$awsObj=new AWSBucket();
 
 $wedding = new Wedding();
 $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
@@ -32,6 +29,9 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
      		<?php
 
 			if (isset($_POST['btn-submit'])) {
+
+				controller("AWSBucket");
+				$awsObj=new AWSBucket();
                 
 				// upload music to aws bucket
 				if(!empty($_FILES['musicTrack']['name'])){

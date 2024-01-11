@@ -5,7 +5,6 @@ require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
 
 controller("Gallery");
-controller("AWSBucket");
 
 $gallery = new Gallery();
 $galleryData = $gallery->getGallery($_REQUEST['id']);
@@ -16,7 +15,6 @@ $preweddingGallery=array();
 $eventsGallery=$gallery->getEventGallery($_REQUEST['id']);
 $preweddingGallery=$gallery->getPreWedGallery($_REQUEST['id'],'gallery');
 
-$awsObj=new AWSBucket();
 
 function getImgURL($name){
 	$gallery = new Gallery();
@@ -33,6 +31,9 @@ function getImgURL($name){
 
   // delete img by url
     if(isset($_REQUEST['imgurl'])){
+
+    	controller("AWSBucket");
+		$awsObj=new AWSBucket();
 
         $imgurl=$_REQUEST['imgurl'];
         $gallery=new Gallery();
@@ -63,6 +64,9 @@ function getImgURL($name){
      	<?php
 
 				if (!empty($_FILES['couple']['name'])) {
+					controller("AWSBucket");
+					$awsObj=new AWSBucket();
+
 					$uploadedURL = $awsObj->uploadToAWS($_FILES,'couple');
 					$awsObj->deleteFromAWS(getImgURL('couple'));
 					if($uploadedURL['error']){
@@ -93,6 +97,9 @@ function getImgURL($name){
 				}
 
 				if (!empty($_FILES['hero']['name'])) {
+					controller("AWSBucket");
+					$awsObj=new AWSBucket();
+
 					$uploadedURL = $awsObj->uploadToAWS($_FILES,'hero');
 					$awsObj->deleteFromAWS(getImgURL('hero'));
 					if($uploadedURL['error']){
@@ -124,6 +131,10 @@ function getImgURL($name){
 
 
 				if(isset($_POST['btn-submit'])){
+
+					controller("AWSBucket");
+					$awsObj=new AWSBucket();
+
 					if (!empty($_FILES['galleryPic']['name']) ) {
                   
 					$uploadedURL = $awsObj->uploadToAWS($_FILES,'galleryPic');
