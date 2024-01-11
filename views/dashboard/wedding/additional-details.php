@@ -2,17 +2,12 @@
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
-require('controllers/awss3bucket/upload.php');
 
 DB::connect();
 $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
 DB::close();
 
 controller("Wedding");
-controller("AWSBucket");
-
-$awsObj=new AWSBucket();
-
 $wedding = new Wedding();
 $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
@@ -35,6 +30,10 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
                 
 				// upload music to aws bucket
 				if(!empty($_FILES['musicTrack']['name'])){
+					controller("AWSBucket");
+					
+					$awsObj = new AWSBucket();
+					
 					$uploadedMusicURL = $awsObj->uploadToAWS($_FILES,'musicTrack');
 					if($uploadedMusicURL['error']){
 						echo '<div class="alert alert-danger">'.$uploadedMusicURL['errorMsg'].'</div>';
