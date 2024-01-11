@@ -2,7 +2,6 @@
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
-require('controllers/awss3bucket/upload.php');
 
 DB::connect();
 $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
