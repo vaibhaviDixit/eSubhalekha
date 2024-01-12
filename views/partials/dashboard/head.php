@@ -85,7 +85,7 @@
   </head>  
 <body>
 
-    <!-- div for the loader -->
+    <!-- div for the preloader -->
         <div id="loader-div">
             <div id="loader" class="spinner-border text-primary" role="status">
             </div>
