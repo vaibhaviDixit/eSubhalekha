@@ -12,6 +12,56 @@ $wedding = new Wedding();
 $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 $timeline = [];
 $timeline = json_decode($weddingData['timeline'], true);
+
+
+controller("Gallery");
+$gallery = new Gallery();
+
+
+
+function getImgURL($name){
+    $gallery = new Gallery();
+    $row=$gallery->getGalleryImg($_REQUEST['id'],$name);
+    
+    if($row['imageURL']){
+        return $row['imageURL'];
+    }
+    else{
+        return false;
+    }
+    
+}
+ if(isset($_REQUEST['delTimeline'])){
+
+    controller("AWSBucket");
+    $awsObj=new AWSBucket();
+
+        $eventid=$_REQUEST['delTimeline'];
+        $imgurl=getImgURL($timeline[$eventid]['event']);
+
+        unset($timeline[$eventid]);
+
+        $_REQUEST['timeline'] = $timeline;
+        $createWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
+
+         if (!$createWedding['error']) {
+                $gallery=new Gallery();
+                $getrow=$gallery->deleteByURL($_REQUEST['id'],$imgurl);
+                
+                if(!$getrow['error']){
+                    $awsObj=new AWSBucket();
+                    $awsObj->deleteFromAWS($imgurl);
+
+                    echo "<script>alert('Deleted Successfully'); window.history.back(); window.location.reload(true); </script>";
+                }
+         }
+        else{
+            echo "<script>alert('Failed to delete');window.history.back(); window.location.reload(true);  </script>";
+        }
+
+    }
+
+
 ?>
 
 <head>
@@ -26,6 +76,9 @@ $timeline = json_decode($weddingData['timeline'], true);
         <?php
 
         if (isset($_POST['btn-submit'])) {
+
+            controller("AWSBucket");
+            $awsObj=new AWSBucket();
 
             $timeline = array();
 

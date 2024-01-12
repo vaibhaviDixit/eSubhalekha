@@ -88,6 +88,10 @@ function assets($path)
   echo home() . "assets/" . $path;
 }
 
+function themeAssets($template,$path)
+{
+  echo home() . "views/templates/".$template."/assets/" . $path;
+}
 
 function view($fileName)
 {
