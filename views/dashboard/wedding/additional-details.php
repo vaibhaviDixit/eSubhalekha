@@ -8,7 +8,6 @@ $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
 DB::close();
 
 controller("Wedding");
-
 $wedding = new Wedding();
 $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
@@ -28,9 +27,6 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
      		<?php
 
 			if (isset($_POST['btn-submit'])) {
-
-				controller("AWSBucket");
-				$awsObj=new AWSBucket();
                 
 				// upload music to aws bucket
 				if(!empty($_FILES['musicTrack']['name'])){
@@ -62,7 +58,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 					</div>
 					<?php
 				} else
-					redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/our-story");
+					redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/whatsapp");
 
 			}
 
