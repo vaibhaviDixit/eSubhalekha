@@ -64,7 +64,8 @@ function getImgURL($name){
      	<?php
 
 				if (!empty($_FILES['couple']['name'])) {
-					echo 'document.getElementById("loader-div").style.display = "block"';
+
+					echo 'document.getElementById("loader-div").style.display = "block"; ';
 
 					controller("AWSBucket");
 					$awsObj=new AWSBucket();
