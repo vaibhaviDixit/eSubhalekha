@@ -27,6 +27,9 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
      		<?php
 
 			if (isset($_POST['btn-submit'])) {
+
+				controller("AWSBucket");
+				$awsObj=new AWSBucket();
                 
 				// upload music to aws bucket
 				if(!empty($_FILES['musicTrack']['name'])){
@@ -58,7 +61,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 					</div>
 					<?php
 				} else
-					redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/whatsapp");
+					redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/our-story");
 
 			}
 

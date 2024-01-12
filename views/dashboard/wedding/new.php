@@ -11,6 +11,23 @@ DB::close();
 sort($languages);
 controller("Wedding");
 $wedding = new Wedding();
+
+
+controller("Gallery");
+$gallery = new Gallery();
+
+function getImgURL($name){
+	$gallery = new Gallery();
+	$row=$gallery->getGalleryImg($_REQUEST['id'],$name);
+	
+	if($row['imageURL']){
+		return $row['imageURL'];
+	}
+	else{
+		return false;
+	}
+	
+}
 ?>
 
 
@@ -25,6 +42,9 @@ $wedding = new Wedding();
 			<?php
 
 			if (isset($_POST['btn-submit'])) {
+
+				controller("AWSBucket");
+				$awsObj=new AWSBucket();
 
 				$_REQUEST['host'] = App::getUser()['userID'];
 				$createWedding = $wedding->create($_REQUEST);
@@ -41,11 +61,45 @@ $wedding = new Wedding();
 					</div>
 					<?php
 				} else
-					redirect("wedding/" . $_REQUEST['weddingID'] . "/" . $_REQUEST['lang'] . "/basic-details");
+					redirect("wedding/" . $_REQUEST['weddingID'] . "/" . $_REQUEST['lang'] . "/host");
 
 			}
 
 			?>
+     <div class="row text-center">
+
+     		<!-- groom pic -->
+			    <div class="col-sm-6">
+			      <label for="groom" class="form-label" style="position: relative;">
+
+			      	Groom Photo<br>
+			      	    <img id="groomImage" src="<?php assets('img/upload.png'); ?>" alt="Groom Image" class="rounded-circle" style="width: 150px; height: 150px;">
+
+			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
+
+			      </label>
+
+			    	<input type="file" class="form-control" id="groom" accept="image/*" name="groom" required  onchange="displayGroomImage(this)" hidden>
+			    </div>
+			
+     	
+     	<!--  bride pic -->
+			    <div class="col-sm-6">
+			      <label for="bride" class="form-label" style="position: relative;">
+
+			      	Bride Photo<br>
+			      	    <img id="brideImage" src="<?php assets('img/upload.png'); ?>" alt="Bride Image" class="rounded-circle" style="width: 150px; height: 150px;">
+
+			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
+
+			      </label>
+			      <input type="file" class="form-control" id="bride" accept="image/*" name="bride" required  onchange="displayBrideImage(this)" hidden>
+
+			    </div>
+  	
+     </div>
+		
+
 			<div class="row">
 
 				<!-- Groom Name -->
