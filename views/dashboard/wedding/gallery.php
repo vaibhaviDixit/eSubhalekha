@@ -5,6 +5,7 @@ require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
 
 controller("Gallery");
+controller("AWSBucket");
 
 $gallery = new Gallery();
 $galleryData = $gallery->getGallery($_REQUEST['id']);
@@ -15,6 +16,7 @@ $preweddingGallery=array();
 $eventsGallery=$gallery->getEventGallery($_REQUEST['id']);
 $preweddingGallery=$gallery->getPreWedGallery($_REQUEST['id'],'gallery');
 
+$awsObj=new AWSBucket();
 
 function getImgURL($name){
 	$gallery = new Gallery();
@@ -31,9 +33,6 @@ function getImgURL($name){
 
   // delete img by url
     if(isset($_REQUEST['imgurl'])){
-
-    	controller("AWSBucket");
-		$awsObj=new AWSBucket();
 
         $imgurl=$_REQUEST['imgurl'];
         $gallery=new Gallery();
@@ -63,15 +62,6 @@ function getImgURL($name){
      <div>
      	<?php
 
-				if (!empty($_FILES['couple']['name'])) {
-					echo 'document.getElementById("loader-div").style.display = "block"';
-
-					controller("AWSBucket");
-					$awsObj=new AWSBucket();
-
-					$uploadedURL = $awsObj->uploadToAWS($_FILES,'couple');
-					$awsObj->deleteFromAWS(getImgURL('couple'));
-
 			if (isset($_POST['btn-submit'])) {
                 
 				// upload img to aws bucket
@@ -83,43 +73,11 @@ function getImgURL($name){
 					}
 					else{					
 						$_REQUEST['imageURL'] = $uploadedURL['url'];	
-
-						$_REQUEST['imageName']='couple';
-						$_REQUEST['type']='couple';
-
-						 $_REQUEST['weddingID']=$_REQUEST['id'];
-						$addToGallery = $gallery->update($_REQUEST);
-
-						if ($addToGallery['error']) {
-							?>
-							<div class="alert alert-danger">
-								<?php
-								foreach ($addToGallery['errorMsgs'] as $msg) {
-									echo 'document.getElementById("loader-div").style.display = "none";';
-									if (count($msg))
-										echo $msg[0] . "<br>";
-								}
-								?>
-							</div>
-							<?php
-						} else{
-							echo 'document.getElementById("loader-div").style.display = "none";';
-							redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/gallery");
-						}
-
 						$_REQUEST['imageName']='bride';
 						$_REQUEST['type']='bride';
-
 					}
 					
 				}
-
-
-				if (!empty($_FILES['hero']['name'])) {
-					controller("AWSBucket");
-					$awsObj=new AWSBucket();
-
-
 				elseif (!empty($_FILES['groom']['name'])) {
 					$uploadedURL = $awsObj->uploadToAWS($_FILES,'groom');
 					$awsObj->deleteFromAWS(getImgURL('groom'));
@@ -154,35 +112,6 @@ function getImgURL($name){
 						$_REQUEST['imageURL'] = $uploadedURL['url'];	
 						$_REQUEST['imageName']='hero';
 						$_REQUEST['type']='hero';
-
-
-						$_REQUEST['weddingID']=$_REQUEST['id'];
-						$addToGallery = $gallery->update($_REQUEST);
-
-						if ($addToGallery['error']) {
-							?>
-							<div class="alert alert-danger">
-								<?php
-								foreach ($addToGallery['errorMsgs'] as $msg) {
-									if (count($msg))
-										echo $msg[0] . "<br>";
-								}
-								?>
-							</div>
-							<?php
-						} else
-							redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/preview");
-					}
-				}
-
-
-				if(isset($_POST['btn-submit'])){
-
-					controller("AWSBucket");
-					$awsObj=new AWSBucket();
-
-					if (!empty($_FILES['galleryPic']['name']) ) {
-
 					}
 				}
 				elseif (!empty($_FILES['eventPic']['name']) && !empty($_REQUEST['imageName']) ) {
@@ -196,7 +125,6 @@ function getImgURL($name){
 					}
 				}
 				elseif (!empty($_FILES['galleryPic']['name']) ) {
-
                   
 					$uploadedURL = $awsObj->uploadToAWS($_FILES,'galleryPic');
 					if($uploadedURL['error']){
