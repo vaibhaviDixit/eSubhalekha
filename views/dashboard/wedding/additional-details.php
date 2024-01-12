@@ -65,7 +65,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 					</div>
 					<?php
 				} else
-					redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/whatsapp");
+					redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/our-story");
 
 			}
 

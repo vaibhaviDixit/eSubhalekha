@@ -35,7 +35,7 @@ $story = json_decode($weddingData['story'], true);
 				</div>
 				<?php
 			} else
-				redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang'] . "/hosts");
+				redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang'] . "/whatsapp");
 
 		}
 

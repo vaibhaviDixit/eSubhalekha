@@ -121,12 +121,27 @@ function getImgURL($name){
 					</div>
 					<?php
 				} else
-					redirect("wedding/" . $_REQUEST['weddingID'] . "/" . $_REQUEST['lang'] . "/basic-details");
+					redirect("wedding/" . $_REQUEST['weddingID'] . "/" . $_REQUEST['lang'] . "/host");
 
 			}
 
 			?>
-     <div class="row">
+     <div class="row text-center">
+
+     		<!-- groom pic -->
+			    <div class="col-sm-6">
+			      <label for="groom" class="form-label" style="position: relative;">
+
+			      	Groom Photo<br>
+			      	    <img id="groomImage" src="<?php assets('img/upload.png'); ?>" alt="Groom Image" class="rounded-circle" style="width: 150px; height: 150px;">
+
+			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
+
+			      </label>
+
+			    	<input type="file" class="form-control" id="groom" accept="image/*" name="groom" required  onchange="displayGroomImage(this)" hidden>
+			    </div>
+			
      	
      	<!--  bride pic -->
 			    <div class="col-sm-6">
@@ -141,20 +156,7 @@ function getImgURL($name){
 			      <input type="file" class="form-control" id="bride" accept="image/*" name="bride" required  onchange="displayBrideImage(this)" hidden>
 
 			    </div>
-  		<!-- groom pic -->
-			    <div class="col-sm-6">
-			      <label for="groom" class="form-label" style="position: relative;">
-
-			      	Groom Photo<br>
-			      	    <img id="groomImage" src="<?php assets('img/upload.png'); ?>" alt="Groom Image" class="rounded-circle" style="width: 150px; height: 150px;">
-
-			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
-
-			      </label>
-
-			    	<input type="file" class="form-control" id="groom" accept="image/*" name="groom" required  onchange="displayGroomImage(this)" hidden>
-			    </div>
-			
+  	
      </div>
 		
 

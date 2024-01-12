@@ -64,6 +64,8 @@ function getImgURL($name){
      	<?php
 
 				if (!empty($_FILES['couple']['name'])) {
+					echo 'document.getElementById("loader-div").style.display = "block"';
+
 					controller("AWSBucket");
 					$awsObj=new AWSBucket();
 
@@ -85,14 +87,17 @@ function getImgURL($name){
 							<div class="alert alert-danger">
 								<?php
 								foreach ($addToGallery['errorMsgs'] as $msg) {
+									echo 'document.getElementById("loader-div").style.display = "none";';
 									if (count($msg))
 										echo $msg[0] . "<br>";
 								}
 								?>
 							</div>
 							<?php
-						} else
+						} else{
+							echo 'document.getElementById("loader-div").style.display = "none";';
 							redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/gallery");
+						}
 					}
 				}
 
@@ -125,7 +130,7 @@ function getImgURL($name){
 							</div>
 							<?php
 						} else
-							redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/gallery");
+							redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/preview");
 					}
 				}
 

@@ -140,8 +140,22 @@ function getImgURL($name){
 
 		?>
 
-			<div class="row">
+			<div class="row text-center">
 
+
+				<!-- groom pic -->
+			    <div class="col-sm-6">
+			      <label for="groom" class="form-label" style="position: relative;">
+
+			      	Groom Photo<br>
+			      	    <img id="groomImage" src="<?php if(getImgURL('groom')){echo getImgURL('groom');}else{ echo assets('img/upload.png');} ?>" alt="Groom Image" class="rounded-circle" style="width: 150px; height: 150px;">
+
+			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
+
+			      </label>
+
+			    	<input type="file" class="form-control" id="groom" accept="image/*" name="groom"  onchange="displayGroomImage(this)">
+			    </div>
 
      	<!--  bride pic -->
 			    <div class="col-sm-6">
@@ -157,19 +171,7 @@ function getImgURL($name){
 			      <input type="file" class="form-control" id="bride" accept="image/*" name="bride"  onchange="displayBrideImage(this)" >
 
 			    </div>
-  		<!-- groom pic -->
-			    <div class="col-sm-6">
-			      <label for="groom" class="form-label" style="position: relative;">
-
-			      	Groom Photo<br>
-			      	    <img id="groomImage" src="<?php if(getImgURL('groom')){echo getImgURL('groom');}else{ echo assets('img/upload.png');} ?>" alt="Groom Image" class="rounded-circle" style="width: 150px; height: 150px;">
-
-			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
-
-			      </label>
-
-			    	<input type="file" class="form-control" id="groom" accept="image/*" name="groom"  onchange="displayGroomImage(this)">
-			    </div>
+  		
 
 				<!-- Groom Name -->
 				<div class="mb-3 col-sm-6">

@@ -50,13 +50,7 @@ DB::close();
             Basic Details
           </a>
 
-          <a class="nav-link our-story" aria-current="page"
-            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/our-story') . queryString(); ?>">
-            <i class="bi bi-file-earmark-post"></i>
-            Our Story
-          </a>
-
-          <a class="nav-link hosts" aria-current="page"
+           <a class="nav-link hosts" aria-current="page"
             href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/hosts') . queryString(); ?>">
             <i class="bi bi-people-fill"></i>
             Hosts
@@ -72,6 +66,12 @@ DB::close();
             href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/additional-details') . queryString(); ?>">
             <i class="bi bi-pie-chart"></i>
             Additional Details
+          </a>
+
+          <a class="nav-link our-story" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/our-story') . queryString(); ?>">
+            <i class="bi bi-file-earmark-post"></i>
+            Our Story
           </a>
 
           <a class="nav-link whatsapp" aria-current="page"
