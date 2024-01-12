@@ -12,7 +12,6 @@ sort($languages);
 controller("Wedding");
 $wedding = new Wedding();
 
-
 controller("Gallery");
 $gallery = new Gallery();
 
@@ -36,11 +35,11 @@ function getImgURL($name){
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
 	<h1 class="h2">Create Wedding</h1>
 
+	<div>
 
-		<form method="post" id="form" name="createWedding" class="form-wedding" enctype="multipart/form-data">
+		<form method="post" id="form" name="createWedding" class="form-wedding">
 
 			<?php
-
 
 			if (isset($_POST['btn-submit'])) {
 
@@ -48,44 +47,7 @@ function getImgURL($name){
 				$awsObj=new AWSBucket();
 
 				$_REQUEST['host'] = App::getUser()['userID'];
-				$groomArray=array();
-				$brideArray=array();
-
-				$groomArray['weddingID']=$_REQUEST['weddingID'];
-				$brideArray['weddingID']=$_REQUEST['weddingID'];
-
-				// upload bride img to aws bucket
-				if(isset($_FILES['bride']['name'])){
-					$uploadedURL = $awsObj->uploadToAWS($_FILES,'bride');
-					if($uploadedURL['error']){
-						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
-					}
-					else{					
-						$brideArray['imageURL'] = $uploadedURL['url'];	
-						$brideArray['imageName']='bride';
-						$brideArray['type']='bride';
-					}
-					
-				}
-
-				 // upload groom img to aws bucket
-				if(isset($_FILES['groom']['name'])){
-					$uploadedURL = $awsObj->uploadToAWS($_FILES,'groom');
-					if($uploadedURL['error']){
-						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
-					}
-					else{					
-						$groomArray['imageURL'] = $uploadedURL['url'];	
-						$groomArray['imageName']='groom';
-						$groomArray['type']='groom';
-					}
-				}
-
 				$createWedding = $wedding->create($_REQUEST);
-				$addToGalleryBride = $gallery->update($brideArray);
-				$addToGalleryGroom = $gallery->update($groomArray);
-
-
 
 				if ($createWedding['error']) {
 					?>
@@ -98,34 +60,13 @@ function getImgURL($name){
 						?>
 					</div>
 					<?php
-				}else if ($addToGalleryBride['error']) {
-					?>
-					<div class="alert alert-danger">
-						<?php
-						foreach ($addToGalleryBride['errorMsgs'] as $msg) {
-							if (count($msg))
-								echo $msg[0] . "<br>";
-						}
-						?>
-					</div>
-					<?php
-				}else if ($addToGalleryGroom['error']) {
-					?>
-					<div class="alert alert-danger">
-						<?php
-						foreach ($addToGalleryGroom['errorMsgs'] as $msg) {
-							if (count($msg))
-								echo $msg[0] . "<br>";
-						}
-						?>
-					</div>
-					<?php
 				} else
 					redirect("wedding/" . $_REQUEST['weddingID'] . "/" . $_REQUEST['lang'] . "/host");
 
 			}
 
 			?>
+
      <div class="row text-center">
 
      		<!-- groom pic -->
@@ -159,7 +100,6 @@ function getImgURL($name){
   	
      </div>
 		
-
 			<div class="row">
 
 				<!-- Groom Name -->
@@ -266,43 +206,6 @@ function getImgURL($name){
 		document.querySelector('#brideName').addEventListener('focusout', updateWeddingID);
 		document.querySelector('#groomName').addEventListener('keyup', updateWeddingID);
 		document.querySelector('#brideName').addEventListener('keyup', updateWeddingID);
-  			
-  			//display bride img
-			function displayBrideImage(input) {
-			  const file = input.files[0];
-
-			  if (file) {
-			    const reader = new FileReader();
-			    
-			    reader.onload = function (e) {
-			      document.getElementById('brideImage').src = e.target.result;
-
-			    };
-
-			    reader.readAsDataURL(file);
-			  }
-			  
-			}
-
-			// display groom img
-			function displayGroomImage(input) {
-
-			  const file = input.files[0];
-
-			  if (file) {
-			    const reader = new FileReader();
-
-			    reader.onload = function (e) {
-			      document.getElementById('groomImage').src =e.target.result;
-
-			    };
-
-			    reader.readAsDataURL(file);
-			  }
-
-			}
-
-  		
 	</script>
 </main>
 

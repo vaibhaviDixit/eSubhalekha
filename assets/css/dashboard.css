@@ -210,7 +210,6 @@ textarea {
   max-height: 70px;
 }
 
-/* gallery */
 
 .capture{
     position: absolute;
@@ -224,6 +223,7 @@ textarea {
 .img-fluid{
   object-fit: cover !important;
 }
+
 
 /*loader*/
 
