@@ -140,11 +140,11 @@ function getImgURL($name){
 
 		?>
 
-			<div class="row text-center">
+			<div class="row">
 
 
 				<!-- groom pic -->
-			    <div class="col-sm-6">
+			    <div class="col-sm-6 mx-auto">
 			      <label for="groom" class="form-label" style="position: relative;">
 
 			      	Groom Photo<br>
@@ -158,7 +158,7 @@ function getImgURL($name){
 			    </div>
 
      	<!--  bride pic -->
-			    <div class="col-sm-6">
+			    <div class="col-sm-6 mx-auto">
 			      <label for="bride" class="form-label" style="position: relative;">
 
 			      	Bride Photo<br>
