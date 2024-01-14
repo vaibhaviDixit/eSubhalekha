@@ -62,6 +62,12 @@ function getImgURL($name){
      <div>
      	<?php
 
+				if (!empty($_FILES['couple']['name'])) {
+
+					echo 'document.getElementById("loader-div").style.display = "block"; ';
+
+					controller("AWSBucket");
+					$awsObj=new AWSBucket();
 			if (isset($_POST['btn-submit'])) {
                 
 				// upload img to aws bucket
