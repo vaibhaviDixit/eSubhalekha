@@ -52,35 +52,6 @@ $story = json_decode($weddingData['story'], true);
 					rows="3"><?= $_REQUEST['howWeMet'] ?? str_replace("<br>", "\r\n", $story['howWeMet']) ?></textarea>
 			</div>
 
-			<div class="row">
-
-
-				<!-- groom pic -->
-			    <div class="col-sm-6 mx-auto">
-			      <label for="groom" class="form-label" style="position: relative;">
-
-			      	Groom Photo<br>
-			      	    <img id="groomImage" src="<?php if(getImgURL('groom')){echo getImgURL('groom');}else{ echo assets('img/upload.png');} ?>" alt="Groom Image" class="rounded-circle" style="width: 150px; height: 150px;">
-
-			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
-
-			      </label>
-
-			    	<input type="file" class="form-control" id="groom" accept="image/*" name="groom"  onchange="displayGroomImage(this)">
-			    </div>
-
-     	<!--  bride pic -->
-			    <div class="col-sm-6 mx-auto">
-			      <label for="bride" class="form-label" style="position: relative;">
-
-			      	Bride Photo<br>
-			      	    <img id="brideImage" src="<?php if(getImgURL('bride')){echo getImgURL('bride');}else{ echo assets('img/upload.png');} ?>" alt="Bride Image" class="rounded-circle" style="width: 150px; height: 150px;">
-
-			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
-			      </label>
-
-			    	<input type="file" class="form-control" id="bride" accept="image/*" name="bride"  onchange="displayBrideImage(this)">
-			    </div>
 			<!-- When we met -->
 			<div class="mb-3 col-4">
 				<label for="whenWeMet" class="form-label">When We Met</label>
