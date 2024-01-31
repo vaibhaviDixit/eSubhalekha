@@ -11,6 +11,7 @@ class AWSBucket{
 	protected $bucketName = 'esubhalekha';
 	protected $IAM_KEY = 'AKIA4X3FUWUEORJBSKUT';
 	protected $IAM_SECRET = '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';
+	                           
 	protected $objects="";
 
 	 public function __construct()
@@ -40,12 +41,18 @@ class AWSBucket{
 			die("Error: " . $e->getMessage());
 			}
     }
+	
+
+    // generate random str for append to the file name.
+	function generateRandomString($length = 10) {
+    	return substr(bin2hex(random_bytes(($length + 1) / 2)), 0, $length);
+	}
 
 	
 	function uploadToAWS($filearr,$filename){
 
 		// For this, I would generate a unqiue random string for the key name. But you can do whatever.
-		$keyName = 'test_example/'.time() . basename($filearr[$filename]['name']);  
+		$keyName = 'test_example/'.$this->generateRandomString(10) . basename($filearr[$filename]['name']);  
 		$pathInS3 = 'https://s3.ap-south-1.amazonaws.com/' . $this->bucketName . '/' . $keyName;
 
 		// Add it to S3

@@ -13,7 +13,7 @@ $eventsGallery=array();
 $preweddingGallery=array();
 
 $eventsGallery=$gallery->getEventGallery($_REQUEST['id']);
-$preweddingGallery=$gallery->getPreWedGallery($_REQUEST['id'],'gallery');
+$preweddingGallery=$gallery->getPreWedGallery($_REQUEST['id']);
 
 
 function getImgURL($name){
@@ -255,7 +255,7 @@ function getImgURL($name){
 		<!--  display pre wedding images -->
   		<div>
 
-  			<div class="d-flex align-items-center gap-4 mt-3">
+  			<div class="d-flex align-items-center gap-4 mt-3 flex-wrap">
   			    <?php
                         if (!$preweddingGallery['error']){
                      		 for ($i = 0; $i < count($preweddingGallery); $i++){?>
