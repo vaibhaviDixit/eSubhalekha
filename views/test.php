@@ -1,4 +1,34 @@
 <?php
+errors(1);
+// Function to send OTP
+    function sendOTP($mobileNumber, $otp) {
+        // Account details
+        $apiKey = urlencode('NjU2ZDczNTM2NjRlNDIzMzQzNzUzOTc0NzM2ODM1Nzk=');
+        $sender = urlencode('TXTLCL');
+
+        $msg='Your OTP is: '.$otp;
+
+        // Message details
+        $numbers = array($mobileNumber);
+        $message = rawurlencode($msg);
+        $numbers = implode(',', $numbers);
+         
+        // Prepare data for POST request
+        $data = array('apikey' => $apiKey, 'numbers' => $numbers, 'sender' => $sender, 'message' => $message);
+        // Send the POST request with cURL
+        $ch = curl_init('https://api.textlocal.in/send/');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
+    }
+
+    print_r(sendOTP('919284552192',1234));
+
+    die();
 
 errors(0);
 

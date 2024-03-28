@@ -68,6 +68,12 @@ DB::close();
             Additional Details
           </a>
 
+           <a class="nav-link guests" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/guests') . queryString(); ?>">
+            <i class="bi bi-people-fill"></i>
+            Guests
+          </a>
+
           <a class="nav-link gallery" aria-current="page"
             href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/gallery') . queryString(); ?>">
             <i class="bi bi-image"></i>
@@ -147,6 +153,10 @@ DB::close();
 
         case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/timeline' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/timeline'; ?>":
         document.querySelector(".timeline").classList.toggle("active")
+        break
+
+        case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/guests' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/guests'; ?>":
+        document.querySelector(".guests").classList.toggle("active")
         break
 
         

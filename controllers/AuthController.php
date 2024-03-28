@@ -25,6 +25,7 @@ class Auth
     protected $browser;
     protected $name;
     protected $phone;
+    protected $otp;
     protected $passwordWithoutMD5;
     protected $role;
     protected $status;
@@ -127,6 +128,62 @@ class Auth
         return ['error' => true, 'errorMsg' => $this->errors];
     }
 
+// login By OTP
+
+     public function loginByOtp($phone, $otp)
+    {
+        DB::connect();
+        $this->phone = DB::sanitize($phone);
+        $this->otp = DB::sanitize($otp);
+        $this->userID = App::getUserByPhone($this->phone)['userID'];
+        DB::close();
+
+
+        DB::connect();
+        $loginQuery = DB::select('users', '*', "email = '$this->phone' and otp='$this->otp' and status <> 'deleted'")->fetchAll()[0];
+        DB::close();
+
+        // Check if user exists
+        if ($loginQuery) {
+           
+                $this->loginId = md5(sha1($this->phone) . sha1($this->otp) . sha1(time()));
+                setcookie("auth", $this->loginId, time() + (86400 * 365), "/");
+
+                $this->ip = getDevice()['ip'];
+                $this->os = getDevice()['os'];
+                $this->browser = getDevice()['browser'];
+
+                $time = date_create()->format('Y-m-d H:i:s');
+                $data = [
+                    'loginId' => $this->loginId,
+                    'userID' => $this->userID,
+                    'ip' => $this->ip,
+                    'browser' => $this->browser,
+                    'os' => $this->os,
+                    'loggedinat' => $time
+                ];
+
+                DB::connect();
+                $insertedLog = DB::insert('logs', $data);
+                DB::close();
+
+                if ($insertedLog) {
+                    if (!empty($_GET['back'])) {
+                        header("Location:" . $_GET['back']);
+                    } else {
+                        header("Location:" . route('dashboard'));
+                    }
+                } else {
+                    $this->errors = "Internal Server Error";
+                }
+            
+        } else {
+            $this->errors = "User Not Found";
+        }
+        return ['error' => true, 'errorMsg' => $this->errors];
+    }
+
+
      /**
      * Checks if an email exists for a specific role.
      *
@@ -171,6 +228,19 @@ class Auth
     }
 
 
+// get user by phone
+
+      public static function getUserByPhone($phone)
+    {   
+        DB::connect();
+        $userID = DB::sanitize($userID);
+        $getUser = DB::select('users', '*', "phone = '$phone' and status <> 'deleted'")->fetch();
+        DB::close();
+        if ($getUser)
+            return $getUser;
+        else
+            return ['error' => true, "errorMsgs" => ['user' => "User Not Found"]];
+    }
     
     /**
      * Get all users.
@@ -316,6 +386,174 @@ class Auth
         }
 
     }
+
+    // register using OTP
+
+    public function registerByOTP($phone, $otp, $role, $status = "pending")
+    {
+        // Sanitize fields
+        DB::connect();
+        $this->phone = trim(DB::sanitize($phone));
+        $this->otp = trim(DB::sanitize($otp));
+        $this->role = trim(DB::sanitize($role));
+        $this->status = trim(DB::sanitize($status));
+        DB::close();
+
+        $this->userID = md5(md5($this->phone.$this->otp).md5(time().uniqid()));
+
+        // fields array
+        $fields = [
+            'phone' => [
+                'value' => $this->phone,
+                'rules' => [
+                    [
+                        'type' => 'required',
+                        'message' => "Phone can't be empty",
+                    ],
+                    [
+                        'type' => 'phone',
+                        'message' => "Invalid Phone",
+                    ],
+                    [
+                        'type' => 'custom',
+                        'message' => 'Phone already in use',
+                        'validate' => function () {
+                            return !($this->checkPhone($this->phone, $this->role));
+                        },
+                    ],
+                ]
+            ],
+            
+        ];
+
+        // Call the Validator::validate function
+        $validate = Validator::validate($fields);
+        if ($validate['error']) {
+            return ['error' => $validate['error'], 'errorMsgs' => $validate['errorMsgs']];
+        } else {
+
+            $data = array(
+                'userID' => $this->userID,
+                'otp' => $this->otp,
+                'phone' => $this->phone,
+                'role' => $this->role,
+                'status' => $this->status,
+                'createdAt' => date('Y-m-d H:i:s'),
+            );
+
+
+            DB::connect();
+            $createUser = DB::insert('users', $data);
+            DB::close();
+
+            if ($createUser) {
+                $this->error = false;
+                $this->errorMsgs['createUser'] = '';
+            } else {
+                $this->error = true;
+                $this->errorMsgs['createUser'] = 'User account creation failed';
+            }
+
+            if ($this->error) {
+                return ['error' => $this->error, 'errorMsgs' => $this->errorMsgs];
+            } else {
+                return ['error' => $this->error, 'errorMsgs' => $this->errorMsgs, 'message' => 'Registration successful'];
+            }
+        }
+
+    }
+
+// verify OTP
+    public function verifyOTP($phone, $otp)
+{
+    DB::connect();
+    $this->userID=$this->getUserByPhone($phone)['userID'];
+    $this->phone = trim(DB::sanitize($data['phone']));
+    $this->otp = trim(DB::sanitize($data['otp']));
+    $this->status ='verified';
+    DB::close();
+
+    DB::connect();
+    $checkOTP = DB::select('users', '*', "phone = '$phone' and status <> 'deleted' and otp='$otp' ")->fetch();
+        DB::close();
+
+
+    // Define validation rules for fields
+    $fields = [
+        'userId' => [
+            'values'=> $this->userID,
+            'rules' => [
+                [
+                    'type' => 'custom',
+                    'message' => 'Invalid User',
+                    'validate' => function () {
+                        return $this->getUser($this->userID);
+                    },
+
+                ]
+            ]
+        ],
+         'phone' => [
+                'value' => $this->phone,
+                'rules' => [
+                    [
+                        'type' => 'required',
+                        'message' => "Phone can't be empty",
+                    ],
+                    [
+                        'type' => 'phone',
+                        'message' => "Invalid Phone",
+                    ],
+                    [
+                        'type' => 'custom',
+                        'message' => 'Phone already in use',
+                        'validate' => function () {
+                            return !($this->checkPhone($this->phone, $this->role));
+                        },
+                    ],
+                ]
+            ],
+    ];
+
+    // Call the validateFields function
+    $validate = Validator::validate($fields);
+
+    if ($validate['error']) {
+        return ['error' => $validate['error'], 'errorMsgs' => $validate['errorMsgs']];
+    } else {
+
+        $updateData = [
+            'phone' => $this->phone,
+            'role' => $this->role,
+            'status' => $this->status,
+            'otp'=>$this->otp,
+            'verifiedAt' => date('Y-m-d H:i:s'),
+        ];
+
+        if ($checkOTP){
+             DB::connect();
+            $updateUser = DB::update('users', $updateData, "userID = '$this->userID'");
+            DB::close();
+
+            if ($updateUser) {
+                return $updateData;
+            } else {
+                return [
+                    'error' => true,
+                    'errorMsgs' => ['updateUser' => 'Verification Failed!'],
+                ];
+            }
+        }
+        else{
+            return [
+                    'error' => true,
+                    'errorMsgs' => ['updateUser' => 'Verification Failed!'],
+                ];
+        }
+        
+    }
+}
+
 
 
         /**

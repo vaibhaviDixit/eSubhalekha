@@ -26,8 +26,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
 			if (isset($_POST['btn-submit'])) {
                 
-				$_REQUEST['host'] = App::getUser()['userID'];
-               	
+				// $_REQUEST['host'] = App::getUser()['userID'];
 
 				$createWedding = $wedding->update($_REQUEST['id'],$_REQUEST['lang'],$_REQUEST);
 

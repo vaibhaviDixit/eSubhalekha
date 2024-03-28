@@ -66,7 +66,6 @@ class DB
         }
         $set = rtrim($set, ", ");
         $query = "UPDATE $table SET $set WHERE $where";
-
         $statement = self::$connection->prepare($query);
         $statement->execute();
 

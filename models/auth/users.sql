@@ -5,6 +5,7 @@ CREATE TABLE users (
     phone VARCHAR(10) NOT NULL,
     name VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
+    otp VARCHAR(10) NOT NULL,
     role ENUM('admin', 'manager', 'partner', 'host', 'user') DEFAULT 'user',
     status ENUM('verified', 'pending', 'deleted') DEFAULT 'pending',
     createdAt DATETIME,

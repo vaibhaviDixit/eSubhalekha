@@ -1,26 +1,12 @@
 <?php
+// errors(1);
 $config['APP_TITLE'] = "Register | ".$config['APP_TITLE'];
 DB::connect();
 $customers = DB::select('users', '*', "status <> 'deleted'")->fetchAll();
 DB::close();
-
-if (isset($_REQUEST['btn-register'])) {
-  errors(1);
-  csrfCheck();
-  controller("Auth");
-  $user = new Auth();
-  $register = $user->register($_REQUEST['name'], $_REQUEST['email'], $_REQUEST['phone'], $_REQUEST['password'], 'user');
-  if ($register){ 
-    $user = new Auth();
-    $user->login($_REQUEST['email'], $_REQUEST['password']);
-    redirect('/');
-  }
-} else {
-  if (App::getSession())
-    redirect('/');
-}
-
 ?>
+
+
 <!doctype html>
 <html lang="en">
 
@@ -88,114 +74,123 @@ if (isset($_REQUEST['btn-register'])) {
     <a href="<?php echo home() ?>"><img src="<?php echo home() . $config['APP_ICON']; ?>" alt="GraphenePHP"
         class="img-fluid"></a>
   </div>
-  <form method="POST" name="Register" class="form-signin">
+
+  <form method="POST" name="Register" class="form-signin" id="loginForm">
     <h2 class="mb-3 fw-bolder">User Registration </h1>
 
       <?php csrf() ?>
-
-      <div class="mb-3">
-        <input name="name" type="name" id="name" class="form-control" placeholder="Name"
-          value="<?php echo (!empty($_REQUEST['name'])) ? $_REQUEST['name'] : ''; ?>" required>
-        <strong id="nameMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-      </div>
-
-      <div class="mb-3">
-        <input name="email" type="email" id="email" class="form-control" placeholder="Email"
-          value="<?php echo (!empty($_REQUEST['email'])) ? $_REQUEST['email'] : ''; ?>" required>
-        <strong id="emailMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-      </div>
-
-
-      <div class="mb-3">
+        <label for="phone">Phone Number</label>
         <input name="phone" type="phone" id="phone" class="form-control" placeholder="phone"
-          value="<?php echo (!empty($_REQUEST['phone'])) ? $_REQUEST['phone'] : ''; ?>" required>
-        <strong id="phoneMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-      </div>
-
-      <div class="text-end">
-        <span class="text-graphene user-select-none" id="eye"></span>
-      </div>
-      <div class="mb-3">
-        <input type="password" name="password" id="password" class="form-control" placeholder="Password"
-          value="<?php echo (!empty($_REQUEST['password'])) ? $_REQUEST['password'] : ''; ?>" required>
-        <strong id="passwordMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-      </div>
+                    value="<?php echo (!empty($_REQUEST['phone'])) ? $_REQUEST['phone'] : '9684552192'; ?>" required>
+                  <strong id="phoneMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 
 
-      <button class="btn btn-lg btn-primary btn-block rounded-pill" id="btn-register" name="btn-register" type="register"
-        disabled>Register</button>
+        <div id="otpInput" style="display: none;">
+            <label for="otp">OTP</label>
+            <input type="text" name="otp" id="otp" class="form-control" placeholder="OTP"
+            value="<?php echo (!empty($_REQUEST['otp'])) ? $_REQUEST['otp'] : ''; ?>" required>
 
-      <p class="mt-3">Already Have an account? <a href="<?php echo route('login'); ?>">Login Now</a></p>
-  </form>
+          <strong id="otpMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+          <br><br>
+        </div>
+        <button class="btn btn-lg btn-primary rounded-pill" id="btn-register" type="button" onclick="registerUser()">Register</button>
+
+        <p class="mt-3">Already Have an account? <a href="<?php echo route('login'); ?>">Login Now</a></p>
+
+    </form>
+
+    <script>
+        function registerUser() {
+            var phone = document.getElementById("phone").value;
+            var otp = document.getElementById("otp").value;
+
+            console.log("Phone Number:", phone);
+            console.log("OTP:", otp);
+
+            // You can do further processing here, like sending the data to a server
+            var xhr = new XMLHttpRequest();
+    var url = "registerUser";
+    var params = "phone=" + phone + "&otp=" + otp;
+    xhr.open("POST", url, true);
+
+    // Set up the callback function
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                // Request was successful, handle response here
+                console.log(xhr.responseText);
+                // Reset form inputs
+                document.getElementById("loginForm").reset();
+                // If you want to enable the OTP input again for another registration
+                document.getElementById("otpInput").style.display = "none";
+                document.getElementById("phone").disabled = false;
+            } else {
+                // Request failed, handle error here
+                console.error("Request failed with status:", xhr.status);
+            }
+        }
+    };
+
+    // Set the appropriate headers
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    // Send the request
+    xhr.send(params);
+
+          
+  }
+
+   
+    </script>
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
 
+
+<?php
+  
+  if(isset($_REQUEST['btn-register'])){
+
+    echo `<script>
+        document.getElementById('btn-register').style.display='none'; 
+        document.getElementById('otpBlock').style.display='block'; 
+        document.getElementById('phone').disabled=true; 
+        </script>`;
+
+         controller("Auth");
+          $user = new Auth();
+
+          //send otp
+          $otp = rand(1000, 9999);
+          $phone=$_REQUEST['phone'];
+
+          // echo "<script>alert('OTP has been sent to: ".$phone." ')</script>";
+
+          // $register = $user->registerByOTP($phone,$otp,'user');
+
+
+  }
+
+
+?>
+
   <script>
 
-    let nameError = true;
-    let emailError = true;
     let phoneError = true;
-    let passwordError = true;
-
-    let name = document.querySelector("#name");
-    let email = document.querySelector("#email");
     let phone = document.querySelector("#phone");
-    let password = document.querySelector("#password");
 
-    let emails = []
     let phones = []
 
     <?php
     foreach ($customers as $email) {
-      echo "emails.push('" . md5($email['email']) . "')\n";
       echo "phones.push('" . md5($email['phone']) . "')\n";
     }
     ?>
-    let eye = document.querySelector('#eye')
-    eye.innerHTML = '<i class="bi bi-eye-fill"></i> Show Password'
-    eye.addEventListener('click', passwordToggle)
-    function passwordToggle() {
-      if (password.type == "password") {
-        password.type = "text";
-        eye.innerHTML = '<i class="bi bi-eye-slash-fill"></i> Hide Password'
-      } else {
-        password.type = "password";
-        eye.innerHTML = '<i class="bi bi-eye-fill"></i> Show Password'
-      }
-    }
 
+  
     checkErrors();
 
-
-    function validateName() {
-      let nameValue = name.value
-      let nameMsg = document.querySelector("#nameMsg")
-      if (nameValue == "") {
-        nameError = true
-        checkErrors()
-        nameMsg.innerText = "Name can't be empty"
-        name.classList.add("is-invalid")
-      } else if (nameValue.trim().length <= 5) {
-        nameError = true
-        checkErrors()
-        nameMsg.innerText = "Name can't be less than 6 Characters"
-        name.classList.add("is-invalid")
-      } else {
-        nameError = false
-        checkErrors()
-        name.classList.remove("is-invalid")
-        name.classList.add("is-valid")
-        nameMsg.innerText = ""
-      }
-    }
-
-    name.addEventListener("focusout", function () {
-      validateName()
-    })
-    name.addEventListener("keyup", function () {
-      validateName()
-    })
 
     function validateMobile(mobilenumber) {
       var regmm = "^([6-9][0-9]{9})$";
@@ -243,116 +238,48 @@ if (isset($_REQUEST['btn-register'])) {
       validatephone();
     });
 
-    function checkEmailPattern(email) {
-      const re =
-        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
-    }
-
-    function validateEmail() {
-      let emailValue = email.value.trim().toLowerCase()
-
-      let emailMsg = document.querySelector("#emailMsg")
-      if (emailValue == "") {
-        emailError = true
-        checkErrors()
-        emailMsg.innerText = "Email can't be empty"
-        email.classList.add("is-invalid")
-      } else if (emails.includes(CryptoJS.MD5(emailValue).toString())) {
-        emailError = true
-        checkErrors()
-        emailMsg.innerText = "Email already in use"
-        email.classList.add("is-invalid")
-      } else if (!checkEmailPattern(emailValue)) {
-        emailError = true
-        checkErrors()
-        emailMsg.innerText = "Email is invalid"
-        email.classList.add("is-invalid")
-      }
-      else {
-        emailError = false
-        checkErrors()
-        email.classList.remove("is-invalid")
-        email.classList.add("is-valid")
-        emailMsg.innerText = ""
-      }
-    }
-
-    email.addEventListener("focusout", function () {
-      validateEmail()
-    })
-    email.addEventListener("keyup", function () {
-      validateEmail()
-    })
-
-
-
-
-
-
-    function validatePassword() {
-      let passwordValue = password.value
-      let passwordMsg = document.querySelector("#passwordMsg")
-      if (passwordValue.length <= 5) {
-        passwordError = true
-        checkErrors()
-        passwordMsg.innerHTML = "Password must be atleast 6 charecters"
-        password.classList.add("is-invalid")
-      } else if (passwordValue.search(/[a-z]/i) < 0) {
-        passwordError = true
-        checkErrors()
-        passwordMsg.innerHTML = "Must contain atleast one lowercase alphabet"
-        password.classList.add("is-invalid")
-      } else if (passwordValue.search(/[0-9]/) < 0) {
-        passwordError = true
-        checkErrors()
-        passwordMsg.innerHTML = "Must contain atleast one number"
-        password.classList.add("is-invalid")
-      } else if (passwordValue.search(/\W|_/g) < 0) {
-        passwordError = true
-        checkErrors()
-        passwordMsg.innerHTML = "Must contain atleast one special character"
-        password.classList.add("is-invalid")
-      } else if (passwordValue.search(/[A-Z]/) < 0) {
-        passwordError = true
-        checkErrors()
-        passwordMsg.innerHTML = "Must contain atleast one uppercase alphabet"
-        password.classList.add("is-invalid")
-      } else {
-        passwordError = false
-        checkErrors()
-        password.classList.remove("is-invalid")
-        password.classList.add("is-valid")
-        passwordMsg.innerText = ""
-      }
-    }
-
-    password.addEventListener("focusout", function () {
-      validatePassword()
-    })
-    password.addEventListener("keyup", function () {
-      validatePassword()
-    })
-
-
+   
     function checkErrors() {
-      errors = nameError + emailError + phoneError + passwordError
+      errors = phoneError
       if (errors) {
         document.querySelector("#btn-register").disabled = true;
       } else {
         document.querySelector("#btn-register").disabled = false;
+        document.getElementById("phone").disabled = true;
+        document.getElementById("otpInput").style.display = "block";
       }
     }
 
 
-      <?php if ($register['error']) { ?>
-        validateName()
-        validateEmail()
-        validatephone()
-        validatePassword()
-        <?php } ?>
+     
 
   </script>
 </body>
 
 </html>
+
+<?php
+
+
+// verify OTP
+if (isset($_REQUEST['btn-verify'])) {
+  
+  // code to verify otp
+
+  $phone=$_REQUEST['phone'];
+  $otp=$_REQUEST['otp'];
+
+  errors(1);
+  controller("Auth");
+  $user = new Auth();
+
+  $verify_otp = $user->verifyOTP($phone, $otp);
+  if ($verify_otp){ 
+    $user = new Auth();
+    $user->loginByOtp($phone, $otp);
+    redirect('/');
+  }
+
+} 
+
+?>
