@@ -24,6 +24,7 @@ $hosts = json_decode($weddingData['hosts'], true);
     	
 			<?php
 if (isset($_REQUEST['btn-submit'])) {
+	
 	$updateWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
 
 	if ($updateWedding['error']) {

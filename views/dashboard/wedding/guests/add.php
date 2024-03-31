@@ -1,4 +1,5 @@
 <?php
+die();
 errors(1);
 
 locked(['user', 'host', 'manager', 'admin']);

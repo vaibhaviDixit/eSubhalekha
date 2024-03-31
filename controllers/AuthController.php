@@ -20,6 +20,7 @@ class Auth
     protected $userID;
     protected $email;
     protected $password;
+    protected $gender;
     protected $ip;
     protected $os;
     protected $browser;
@@ -40,6 +41,23 @@ class Auth
     {
         $this->errors = "";
     }
+
+
+
+     // get user by phone
+
+      public static function getUserByPhone($phone)
+    {   
+        DB::connect();
+        $phone =$phone;
+        $getUser = DB::select('users', '*', "phone = '$phone' and status <> 'deleted'")->fetch();
+        DB::close();
+        if ($getUser)
+            return $getUser;
+        else
+            return ['error' => true, "errorMsgs" => ['user' => "User Not Found"]];
+    }
+    
 
      /**
      * Checks the validity of the session.
@@ -133,14 +151,14 @@ class Auth
      public function loginByOtp($phone, $otp)
     {
         DB::connect();
-        $this->phone = DB::sanitize($phone);
-        $this->otp = DB::sanitize($otp);
-        $this->userID = App::getUserByPhone($this->phone)['userID'];
+        $this->phone = $phone;
+        $this->otp = $otp;
+        $this->userID = $this->getUserByPhone($phone)['userID'];
         DB::close();
 
 
         DB::connect();
-        $loginQuery = DB::select('users', '*', "email = '$this->phone' and otp='$this->otp' and status <> 'deleted'")->fetchAll()[0];
+        $loginQuery = DB::select('users', '*', "phone = '$this->phone' and otp='$this->otp' and status <> 'deleted'")->fetchAll()[0];
         DB::close();
 
         // Check if user exists
@@ -228,20 +246,6 @@ class Auth
     }
 
 
-// get user by phone
-
-      public static function getUserByPhone($phone)
-    {   
-        DB::connect();
-        $userID = DB::sanitize($userID);
-        $getUser = DB::select('users', '*', "phone = '$phone' and status <> 'deleted'")->fetch();
-        DB::close();
-        if ($getUser)
-            return $getUser;
-        else
-            return ['error' => true, "errorMsgs" => ['user' => "User Not Found"]];
-    }
-    
     /**
      * Get all users.
      * @return array The result of the select query.
@@ -464,12 +468,12 @@ class Auth
     }
 
 // verify OTP
-    public function verifyOTP($phone, $otp)
+public function verifyOTP($phone, $otp)
 {
     DB::connect();
     $this->userID=$this->getUserByPhone($phone)['userID'];
-    $this->phone = trim(DB::sanitize($data['phone']));
-    $this->otp = trim(DB::sanitize($data['otp']));
+    $this->phone = $phone;
+    $this->otp =$otp;
     $this->status ='verified';
     DB::close();
 
@@ -565,12 +569,13 @@ class Auth
 {
     DB::connect();
     $this->name = trim(DB::sanitize($data['name']));
+    $this->gender = trim(DB::sanitize($data['gender']));
     $this->userID = trim(DB::sanitize($userID));
     $this->email = trim(DB::sanitize($data['email']));
     $this->phone = trim(DB::sanitize($data['phone']));
-    $this->password = DB::sanitize($data['password']);
-    $this->role = trim(DB::sanitize($data['role']));
-    $this->status = trim(DB::sanitize($data['status']));
+    // $this->password = DB::sanitize($data['password']);
+    // $this->role = trim(DB::sanitize($data['role']));
+    // $this->status = trim(DB::sanitize($data['status']));
     DB::close();
 
     // Define validation rules for fields
@@ -655,8 +660,8 @@ class Auth
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'role' => $this->role,
-            'status' => $this->status,
+            'gender' => $this->gender,
+            // 'status' => $this->status,
             'verifiedAt' => date('Y-m-d H:i:s'),
         ];
         

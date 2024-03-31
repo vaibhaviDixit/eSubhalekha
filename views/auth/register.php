@@ -1,9 +1,14 @@
 <?php
-// errors(1);
+errors(1);
 $config['APP_TITLE'] = "Register | ".$config['APP_TITLE'];
 DB::connect();
 $customers = DB::select('users', '*', "status <> 'deleted'")->fetchAll();
 DB::close();
+
+if (App::getSession())
+  redirect('/');
+
+
 ?>
 
 
@@ -75,105 +80,113 @@ DB::close();
         class="img-fluid"></a>
   </div>
 
-  <form method="POST" name="Register" class="form-signin" id="loginForm">
-    <h2 class="mb-3 fw-bolder">User Registration </h1>
+<form method="POST" name="Register" class="form-signin" id="loginForm">
+    <h2 class="mb-3 fw-bolder">User Registration </h2>
 
       <?php csrf() ?>
         <label for="phone">Phone Number</label>
-        <input name="phone" type="phone" id="phone" class="form-control" placeholder="phone"
-                    value="<?php echo (!empty($_REQUEST['phone'])) ? $_REQUEST['phone'] : '9684552192'; ?>" required>
-                  <strong id="phoneMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+        
+        <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" value="<?php echo (!empty($_REQUEST['phone'])) ? $_REQUEST['phone'] : ''; ?>" required <?php if(!empty($_REQUEST['phone'])){echo "readonly";}else{echo ""; } ?> >
 
+        <strong id="phoneMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 
-        <div id="otpInput" style="display: none;">
+        <?php if(isset($_POST["action"]) && $_POST["action"] == "verifyUser"){ ?>
+        <div id="otpInput">
             <label for="otp">OTP</label>
-            <input type="text" name="otp" id="otp" class="form-control" placeholder="OTP"
-            value="<?php echo (!empty($_REQUEST['otp'])) ? $_REQUEST['otp'] : ''; ?>" required>
+            <input type="text" name="otp" id="otp" class="form-control" placeholder="OTP" required>
 
           <strong id="otpMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-          <br><br>
+          <br>
+
         </div>
-        <button class="btn btn-lg btn-primary rounded-pill" id="btn-register" type="button" onclick="registerUser()">Register</button>
+        <button class="btn btn-lg btn-primary rounded-pill" type="submit" name="action" value="registerUser">Register</button>
+        <?php }else{ ?>
+
+        <button class="btn btn-lg btn-primary rounded-pill" id="btn-register" type="submit" name="action" value="verifyUser">Verify</button>
+      <?php } ?>
 
         <p class="mt-3">Already Have an account? <a href="<?php echo route('login'); ?>">Login Now</a></p>
 
     </form>
 
-    <script>
-        function registerUser() {
-            var phone = document.getElementById("phone").value;
-            var otp = document.getElementById("otp").value;
+<?php
+ 
 
-            console.log("Phone Number:", phone);
-            console.log("OTP:", otp);
+function registerUser()
+{
+    controller("Auth");
+    $user = new Auth();
 
-            // You can do further processing here, like sending the data to a server
-            var xhr = new XMLHttpRequest();
-    var url = "registerUser";
-    var params = "phone=" + phone + "&otp=" + otp;
-    xhr.open("POST", url, true);
+    $phone = $_POST["phone"];
+    $otp = $_POST["otp"];
 
-    // Set up the callback function
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                // Request was successful, handle response here
-                console.log(xhr.responseText);
-                // Reset form inputs
-                document.getElementById("loginForm").reset();
-                // If you want to enable the OTP input again for another registration
-                document.getElementById("otpInput").style.display = "none";
-                document.getElementById("phone").disabled = false;
-            } else {
-                // Request failed, handle error here
-                console.error("Request failed with status:", xhr.status);
-            }
+    $register=$user->verifyOTP($phone,$otp);
+
+    if( isset($register['phone']) || (isset($register['error']) && !$register['error'])){
+
+        $login=$user->loginByOtp($phone,$otp);
+        echo "<script>alert('Login Successful!');</script>";
+        print_r($login); //debug
+        die(); // debug
+        // redirect to user profile page here
+        redirect("esubhalekha/user/profile");
+        
+    }
+    else{
+        echo "<script>alert('Login Failed!');</script>"; 
+    }
+}
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    if ($_POST["action"] == "verifyUser") {
+        // send otp
+        controller("Auth");
+        $user = new Auth();
+
+        $phone = $_POST["phone"];
+        echo $phone;
+        // generate OTP and store in DB
+        $otp = rand(1000, 9999);
+        //otp send here
+
+        $getUser=$user->getUserByPhone($phone);
+        if($getUser['phone']){
+              
+          $userID=$getUser['userID'];
+              
+          $updateData = [
+              'phone' => $phone,
+              'otp'=>$otp
+          ];
+
+
+          DB::connect();
+          $updateOTP = DB::update('users', $updateData, "userID = '$userID'");
+          DB::close();
+
+          if($updateOTP){
+            echo "<script>alert('OTP Sent Successfully !');</script>";
+          }
+
+        }else{
+          $register = $user->registerByOTP($phone,$otp,'user');   
+          if($register){
+            echo "<script>alert('OTP Sent Successfully !');</script>";
+          } 
         }
-    };
 
-    // Set the appropriate headers
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-    // Send the request
-    xhr.send(params);
+    } elseif ($_POST["action"] == "registerUser") {
+        registerUser(); // verify otp and register
+    }
+}
 
-          
-  }
-
-   
-    </script>
-
+?>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
-
-
-<?php
-  
-  if(isset($_REQUEST['btn-register'])){
-
-    echo `<script>
-        document.getElementById('btn-register').style.display='none'; 
-        document.getElementById('otpBlock').style.display='block'; 
-        document.getElementById('phone').disabled=true; 
-        </script>`;
-
-         controller("Auth");
-          $user = new Auth();
-
-          //send otp
-          $otp = rand(1000, 9999);
-          $phone=$_REQUEST['phone'];
-
-          // echo "<script>alert('OTP has been sent to: ".$phone." ')</script>";
-
-          // $register = $user->registerByOTP($phone,$otp,'user');
-
-
-  }
-
-
-?>
 
   <script>
 
@@ -245,41 +258,14 @@ DB::close();
         document.querySelector("#btn-register").disabled = true;
       } else {
         document.querySelector("#btn-register").disabled = false;
-        document.getElementById("phone").disabled = true;
-        document.getElementById("otpInput").style.display = "block";
+        // document.getElementById("phone").disabled = true;
+        // document.getElementById("otpInput").style.display = "block";
+        
       }
     }
-
-
      
 
   </script>
 </body>
 
 </html>
-
-<?php
-
-
-// verify OTP
-if (isset($_REQUEST['btn-verify'])) {
-  
-  // code to verify otp
-
-  $phone=$_REQUEST['phone'];
-  $otp=$_REQUEST['otp'];
-
-  errors(1);
-  controller("Auth");
-  $user = new Auth();
-
-  $verify_otp = $user->verifyOTP($phone, $otp);
-  if ($verify_otp){ 
-    $user = new Auth();
-    $user->loginByOtp($phone, $otp);
-    redirect('/');
-  }
-
-} 
-
-?>

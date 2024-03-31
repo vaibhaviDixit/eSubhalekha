@@ -31,8 +31,10 @@ $Guest=$guest->getGuest($_REQUEST['weddingID'],$_REQUEST['guestID']);
 </head>
 <!--Main Start-->
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
-    <h1 class="h2">Update Guest</h1>
+    
+    <a href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/guests'); ?>" class="btn btn-primary">Back</a>
 
+    <h1 class="h2">Update Guest</h1>
      <div>
      	
      	<form  method="post">
@@ -40,10 +42,11 @@ $Guest=$guest->getGuest($_REQUEST['weddingID'],$_REQUEST['guestID']);
      		<?php
 
 			if (isset($_POST['btn-submit'])) {
-				
+				// print_r($_REQUEST);
 				$createGuest = $guest->updateGuest($_REQUEST);
-				print_r($_REQUEST);
-				die();
+				
+                // print_r($createGuest);
+				// die();
 
 				if ($createGuest['error']) {
 					?>

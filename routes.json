@@ -50,9 +50,6 @@
   "register": {
     "path": "views/auth/register.php"
   },
-  "registerUser":{
-    "path": "views/auth/registerUser.php"
-  },
   "verify": {
     "path": "views/auth/verify.php"
   },
@@ -103,6 +100,9 @@
   },
   "wedding/{id}/{lang}/preview": {
     "path": "views/dashboard/wedding/preview.php"
+  },
+  "user/profile": {
+    "path": "views/account/profile.php"
   },
   "{id}/{lang}": {
     "path": "views/wedding.php"
