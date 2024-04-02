@@ -101,25 +101,28 @@
   "wedding/{id}/{lang}/preview": {
     "path": "views/dashboard/wedding/preview.php"
   },
+  "user/profile": {
+    "path": "views/account/profile.php"
+  },
   "{id}/{lang}": {
     "path": "views/wedding.php"
   },
-  "wedding/{id}/guests": {
+  "wedding/{id}/{lang}/guests": {
     "path": "views/dashboard/wedding/guests/index.php"
   },
-  "wedding/{id}/guests/add": {
+  "wedding/{id}/{lang}/guests/add": {
     "path": "views/dashboard/wedding/guests/add.php"
   },
-  "wedding/{id}/guests/{guestID}": {
+  "wedding/{id}/{lang}/guests/{guestID}": {
     "path": "views/dashboard/wedding/guests/guest.php"
   },
-  "wedding/{id}/guests/{guestID}/delete": {
+  "wedding/{id}/{lang}/guests/{guestID}/delete": {
     "path": "views/dashboard/wedding/guests/delete.php"
   },
-  "wedding/{id}/guests/groups": {
+  "wedding/{id}/{lang}/guests/groups": {
     "path": "views/dashboard/wedding/guests/groups/index.php"
   },
-  "wedding/{id}/guests/groups/{group}": {
+  "wedding/{id}/{lang}/guests/groups/{group}": {
     "path": "views/dashboard/wedding/guests/groups/group.php"
   },
   "wedding/{id}/analytics": {

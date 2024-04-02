@@ -2,6 +2,7 @@
 CREATE TABLE guests(
     guestID VARCHAR(255) PRIMARY KEY NOT NULL,
     weddingID VARCHAR(255),
+    lang ENUM('as', 'bn', 'gu', 'hi', 'kn', 'ml', 'mr', 'ne', 'or', 'pa', 'ta', 'te', 'ur', 'en') DEFAULT 'en',
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255),
     phone VARCHAR(255) NOT NULL,

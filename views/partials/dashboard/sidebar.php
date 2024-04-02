@@ -1,8 +1,7 @@
 <?php
 $currentEMail = App::getUser()['email'];
-DB::connect();
 
-DB::close();
+
 ?>
 
 
@@ -20,6 +19,10 @@ DB::close();
       <ul class="dropdown-menu text-small shadow" id="Menu"
         style="z-index: 1000000 !important; transform: translate3d(110px, 30px, 10px) !important;"
         aria-labelledby="dropdownUser2">
+
+        <li><a href="<?php echo route('user/profile'); ?>" class="dropdown-item">
+            <i class="bi bi-person-fill"></i> Profile</a></li>
+
         <li><a href="<?php echo route('admin/user/password'); ?>" class="dropdown-item">
             <i class="bi bi-key-fill"></i> Change Password</a></li>
         <li><a class="dropdown-item text-danger fw-bold mt-3" id="logout" href="<?php echo route('logout'); ?>"><i
@@ -66,6 +69,12 @@ DB::close();
             href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/additional-details') . queryString(); ?>">
             <i class="bi bi-pie-chart"></i>
             Additional Details
+          </a>
+
+           <a class="nav-link guests" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/guests') . queryString(); ?>">
+            <i class="bi bi-people-fill"></i>
+            Guests
           </a>
 
           <a class="nav-link gallery" aria-current="page"
@@ -147,6 +156,10 @@ DB::close();
 
         case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/timeline' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/timeline'; ?>":
         document.querySelector(".timeline").classList.toggle("active")
+        break
+
+        case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/guests' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/guests'; ?>":
+        document.querySelector(".guests").classList.toggle("active")
         break
 
         
