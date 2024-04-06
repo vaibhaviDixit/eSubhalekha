@@ -109,74 +109,46 @@ if (App::getSession())
 
 <?php
  
-function registerUser()
-{
-    controller("Auth");
-    $user = new Auth();
-
-    $phone = $_POST["phone"];
-    $otp = $_POST["otp"];
-
-    $register=$user->verifyOTP($phone,$otp);
-
-    if( isset($register['phone']) || (isset($register['error']) && !$register['error'])){
-
-        $login=$user->loginByOtp($phone,$otp);
-        echo "<script>alert('Registration Successful!');</script>";
-        print_r($login); //debug
-        die(); // debug
-        // redirect to user profile page here
-        redirect("esubhalekha/user/profile");
-        
-    }
-    else{
-        echo "<script>alert('Registration Failed!');</script>"; 
-    }
-}
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($_POST["action"] == "verifyUser") {
         // send otp
         controller("Auth");
         $user = new Auth();
-
         $phone = $_POST["phone"];
 
-        // generate OTP and store in DB
-        $otp = rand(1000, 9999);
-        //otp send here
+        $sendOTP=$user->sendOTP($phone);
 
-        $getUser=$user->getUserByPhone($phone);
-        if($getUser['phone']){
-              
-          $userID=$getUser['userID'];
-              
-          $updateData = [
-              'phone' => $phone,
-              'otp'=>$otp
-          ];
-
-
-          DB::connect();
-          $updateOTP = DB::update('users', $updateData, "userID = '$userID'");
-          DB::close();
-
-          if($updateOTP){
-            echo "<script>alert('OTP Sent Successfully !');</script>";
-          }
-
+        if(!$sendOTP['error']){
+            $register = $user->register($phone,$otp,'user');   
+            if($register){
+                echo "<script>alert('OTP Sent Successfully!');</script>";
+            } 
         }else{
-          $register = $user->registerByOTP($phone,$otp,'user');   
-          if($register){
-            echo "<script>alert('OTP Sent Successfully !');</script>";
-          } 
+          echo "<script>alert('Unable to send OTP!');</script>";
         }
-
-
     } elseif ($_POST["action"] == "registerUser") {
-        registerUser(); // verify otp and register
+        // verify OTP and then register
+        controller("Auth");
+        $user = new Auth();
+
+        $phone = $_POST["phone"];
+        $otp = $_POST["otp"];
+
+        $register=$user->verifyOTP($phone,$otp);
+
+        if( isset($register['phone']) || (isset($register['error']) && !$register['error'])){
+
+            $login=$user->login($phone,$otp);
+            print_r($login);
+            die();
+            echo "<script>alert('Login Successful!');</script>";
+            redirect("user/profile");
+            
+        }
+        else{
+            echo "<script>alert('Login Failed!');</script>"; 
+        }
     }
 }
 
