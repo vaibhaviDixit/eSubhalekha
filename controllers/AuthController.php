@@ -47,7 +47,6 @@ class Auth
       public static function getUserByPhone($phone)
     {   
         DB::connect();
-        $phone =$phone;
         $getUser = DB::select('users', '*', "phone = '$phone' and status <> 'deleted'")->fetch();
         DB::close();
         if ($getUser)
@@ -92,15 +91,14 @@ class Auth
 
     
         DB::connect();
-        $loginQuery = DB::select('users', '*', "phone = '$this->phone' and otp='$this->otp' and status <> 'deleted'")->fetchAll()[0];
+        $loginQuery = DB::select('users', '*', "phone = '$this->phone' and otp = '$this->otp' and status <> 'deleted'")->fetchAll()[0];
         DB::close();
         
         // Check if user exists
         if ($loginQuery) {
                 $this->loginId = md5(sha1($this->phone) . sha1($this->otp) . sha1(time()));
-                setcookie("auth", $this->loginId, time() + (86400 * 365), "/");
-
                 
+
 
                 $this->ip = getDevice()['ip'];
                 $this->os = getDevice()['os'];
@@ -121,21 +119,19 @@ class Auth
                 DB::close();
 
                 if ($insertedLog) {
-
+                    setcookie("auth", $this->loginId, time() + (86400 * 365), "/");
                     if (!empty($_GET['back'])) {
                         header("Location:" . $_GET['back']);
                     } else {
-                        header("Location:" . route('dashboard'));
+                        header("Location:" . route(''));
                     }
-                } else {
-                    $this->errors = "Internal Server Error";
-                }
+                    
+                } else $this->errors = "Internal Server Error";
+                
             
-        } else {
-            $this->errors = "User Not Found";
-        }
-        else
-            return ['error' => $this->error, 'errorMsg' => $this->errors];
+        } else $this->errors = "User Not Found";
+            
+            return ['error' => true, 'errorMsg' => $this->errors];
     }
 
 

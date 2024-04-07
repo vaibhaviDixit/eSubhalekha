@@ -8,6 +8,41 @@ DB::close();
 if (App::getSession())
   redirect('/');
 
+  
+?>
+
+<?php
+ 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    if ($_POST["action"] == "verifyUser") {
+        // send otp
+        controller("Auth");
+        $user = new Auth();
+        $phone = $_POST["phone"];
+
+        $sendOTP=$user->sendOTP($phone);
+
+        if(!$sendOTP['error'])  $register = $user->register($phone,$otp,'user');   
+        
+    } elseif ($_POST["action"] == "registerUser") {
+        // verify OTP and then register
+        controller("Auth");
+        $user = new Auth();
+
+        $phone = $_POST["phone"];
+        $otp = $_POST["otp"];
+
+        $register=$user->verifyOTP($phone,$otp);
+
+        if( isset($register['phone']) || (isset($register['error']) && !$register['error'])){
+
+            $login=$user->login($phone,$otp);
+            
+        }
+    }
+}
+
 ?>
 
 <!doctype html>
@@ -107,52 +142,7 @@ if (App::getSession())
       <p class="mt-3">Don't Have an account? <a href="<?php echo route('register').queryString(); ?>">Create Account</a></p>
   </form>
 
-<?php
- 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    if ($_POST["action"] == "verifyUser") {
-        // send otp
-        controller("Auth");
-        $user = new Auth();
-        $phone = $_POST["phone"];
-
-        $sendOTP=$user->sendOTP($phone);
-
-        if(!$sendOTP['error']){
-            $register = $user->register($phone,$otp,'user');   
-            if($register){
-                echo "<script>alert('OTP Sent Successfully!');</script>";
-            } 
-        }else{
-          echo "<script>alert('Unable to send OTP!');</script>";
-        }
-    } elseif ($_POST["action"] == "registerUser") {
-        // verify OTP and then register
-        controller("Auth");
-        $user = new Auth();
-
-        $phone = $_POST["phone"];
-        $otp = $_POST["otp"];
-
-        $register=$user->verifyOTP($phone,$otp);
-
-        if( isset($register['phone']) || (isset($register['error']) && !$register['error'])){
-
-            $login=$user->login($phone,$otp);
-            print_r($login);
-            die();
-            echo "<script>alert('Login Successful!');</script>";
-            redirect("user/profile");
-            
-        }
-        else{
-            echo "<script>alert('Login Failed!');</script>"; 
-        }
-    }
-}
-
-?>
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
