@@ -122,6 +122,7 @@ class Auth
 
                     DB::connect();
                         $checkData = DB::select('users', '*', "phone = '$this->phone' and name IS NULL OR email IS NULL OR gender IS NULL")->fetchAll()[0];
+
                     DB::close();
 
                     if ($checkData['name']=='' OR $checkData['email']=='' OR $checkData['gender']=='') {
@@ -133,7 +134,7 @@ class Auth
                 } else $this->errors = "Internal Server Error";
                 
             
-        } else $this->errors = "User Not Found";
+        } else $this->errors = "User Not Found ";
             
             return ['error' => true, 'errorMsg' => $this->errors];
     }

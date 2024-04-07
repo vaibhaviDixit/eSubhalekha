@@ -20,7 +20,7 @@ $loginMsg=array();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($_POST["action"] == "verifyUser") {
-        // send otp
+        // send otp to user
         $phone = $_POST["phone"];
 
         $sendOTP=$user->sendOTP($phone);
