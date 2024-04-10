@@ -8,6 +8,10 @@ DB::close();
 if (App::getSession())
   redirect('/');
 
+controller("Auth");
+$user = new Auth();
+
+$loginMsg=array();
   
 ?>
 
@@ -16,30 +20,39 @@ if (App::getSession())
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($_POST["action"] == "verifyUser") {
-        // send otp
-        controller("Auth");
-        $user = new Auth();
+        // send otp to user
         $phone = $_POST["phone"];
 
         $sendOTP=$user->sendOTP($phone);
 
-        if(!$sendOTP['error'])  $register = $user->register($phone,$otp,'user');   
+       if(!$sendOTP['error']){
+            $register = $user->register($phone,$otp,'user');   
+            if($register){
+                $loginMsg['msg']="OTP Sent Successfully!";
+            } 
+        }else{
+          $loginMsg['msg']="Unable to send OTP!";
+        }
         
     } elseif ($_POST["action"] == "registerUser") {
         // verify OTP and then register
-        controller("Auth");
-        $user = new Auth();
 
         $phone = $_POST["phone"];
         $otp = $_POST["otp"];
 
         $register=$user->verifyOTP($phone,$otp);
 
-        if( isset($register['phone']) || (isset($register['error']) && !$register['error'])){
+         if( isset($register['phone']) || (isset($register['error']) && !$register['error'])){
 
             $login=$user->login($phone,$otp);
+            $loginMsg['msg']="Login Successful!";
             
         }
+        else{
+            $loginMsg['msg']="Login Failed!";
+        }
+
+
     }
 }
 
@@ -104,14 +117,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <form  method="POST" name="Login" class="form-signin" id="loginForm">
 
     <h2 class="mb-3 fw-bolder">Log In</h1>
-      <?php if ($_GET['loggedout']) { ?>
+      <?php if ($_GET['loggedout'] && !isset($loginMsg['msg'])) { ?>
         <div class="alert alert-success" role="alert">
           <?php echo "Logged Out Successfully"; ?>
         </div>
       <?php } ?>
-      <?php if ($user['error']) { ?>
+      <?php if (isset($loginMsg['msg'])) { ?>
         <div class="alert alert-danger" role="alert">
-          <?php echo $user['errorMsg']; ?>
+          <?php echo $loginMsg['msg']; ?>
         </div>
       <?php } ?>
 

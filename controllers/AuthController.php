@@ -99,7 +99,6 @@ class Auth
                 $this->loginId = md5(sha1($this->phone) . sha1($this->otp) . sha1(time()));
                 
 
-
                 $this->ip = getDevice()['ip'];
                 $this->os = getDevice()['os'];
                 $this->browser = getDevice()['browser'];
@@ -120,8 +119,14 @@ class Auth
 
                 if ($insertedLog) {
                     setcookie("auth", $this->loginId, time() + (86400 * 365), "/");
-                    if (!empty($_GET['back'])) {
-                        header("Location:" . $_GET['back']);
+
+                    DB::connect();
+                        $checkData = DB::select('users', '*', "phone = '$this->phone' and name IS NULL OR email IS NULL OR gender IS NULL")->fetchAll()[0];
+
+                    DB::close();
+
+                    if ($checkData['name']=='' OR $checkData['email']=='' OR $checkData['gender']=='') {
+                        header("Location:" . route('')."user/profile");
                     } else {
                         header("Location:" . route(''));
                     }
@@ -129,7 +134,7 @@ class Auth
                 } else $this->errors = "Internal Server Error";
                 
             
-        } else $this->errors = "User Not Found";
+        } else $this->errors = "User Not Found ";
             
             return ['error' => true, 'errorMsg' => $this->errors];
     }
