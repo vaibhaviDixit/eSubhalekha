@@ -107,6 +107,9 @@
   "{id}/{lang}": {
     "path": "views/wedding.php"
   },
+  "{id}/{lang}/{type}": {
+    "path": "views/wedding.php"
+  },
   "wedding/{id}/{lang}/guests": {
     "path": "views/dashboard/wedding/guests/index.php"
   },
