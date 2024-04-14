@@ -114,7 +114,7 @@ function getImgURL($name){
                         ];
                     }
 
-                    $awsObj->deleteFromAWS(getImgURL($_REQUEST['event'][$i]));
+                    // $awsObj->deleteFromAWS(getImgURL($_REQUEST['event'][$i]));
                         
                         $timeline[$i] = [
                             'event' => $_REQUEST['event'][$i],
