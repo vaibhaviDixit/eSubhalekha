@@ -95,6 +95,13 @@ $currentEMail = App::getUser()['email'];
             Whatsapp Setup
           </a>
 
+          <a class="nav-link theme" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/theme') . queryString(); ?>">
+            <i class="bi bi-file-image-fill"></i>
+             Theme
+          </a>
+
+
 
           <a class="nav-link preview" target="_blank" aria-current="page"
             href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/preview') . queryString(); ?>">
@@ -173,6 +180,10 @@ $currentEMail = App::getUser()['email'];
         
       case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/whatsapp' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/whatsapp'; ?>":
         document.querySelector(".whatsapp").classList.toggle("active")
+        break
+
+       case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/whatsapp' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/theme'; ?>":
+        document.querySelector(".theme").classList.toggle("active")
         break
 
         case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/checkout' : '/wedding/' . $_REQUEST['id'] .  '/checkout'; ?>":

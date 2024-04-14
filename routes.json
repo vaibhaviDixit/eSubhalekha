@@ -98,6 +98,9 @@
   "wedding/{id}/{lang}/gallery": {
     "path": "views/dashboard/wedding/gallery.php"
   },
+  "wedding/{id}/{lang}/theme": {
+    "path": "views/dashboard/wedding/theme.php"
+  },
   "wedding/{id}/{lang}/preview": {
     "path": "views/dashboard/wedding/preview.php"
   },
