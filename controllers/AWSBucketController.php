@@ -52,7 +52,8 @@ class AWSBucket{
 	function uploadToAWS($filearr,$filename){
 
 		// For this, I would generate a unqiue random string for the key name. But you can do whatever.
-		$keyName = 'test_example/'.$this->generateRandomString(10) . basename($filearr[$filename]['name']);  
+		$name=md5(strtolower(basename($filearr[$filename]['name'])));
+		$keyName = 'test_example/'.$this->generateRandomString(10) . $name;  
 		$pathInS3 = 'https://s3.ap-south-1.amazonaws.com/' . $this->bucketName . '/' . $keyName;
 
 		// Add it to S3

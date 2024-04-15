@@ -151,7 +151,7 @@ function getImgURL($name){
 					    $_REQUEST['imageName'] = $_FILES['galleryPic']['name'].time();					
 						$_REQUEST['imageURL'] = $uploadedURL['url'];
 						$_REQUEST['type']='gallery';
-						 $_REQUEST['weddingID']=$_REQUEST['id'];
+						$_REQUEST['weddingID']=$_REQUEST['id'];
 						$addToGallery = $gallery->update($_REQUEST);
 
 						if ($addToGallery['error']) {
