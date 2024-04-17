@@ -90,7 +90,8 @@ function assets($path)
 
 function themeAssets($template,$path)
 {
-  echo home() . "views/templates/".$template."/assets/" . $path;
+  // echo home() . "views/templates/".$template."/assets/" . $path;
+  echo home() . "themes/".$template."/assets/" . $path;
 }
 
 function view($fileName)

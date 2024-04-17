@@ -148,7 +148,8 @@ function getImgURL($name){
 			      <label for="groom" class="form-label" style="position: relative;">
 
 			      	Groom Photo<br>
-			      	    <img id="groomImage" src="<?php if(getImgURL('groom')){echo getImgURL('groom');}else{ echo assets('img/upload.png');} ?>" alt="Groom Image" class="rounded-circle" style="width: 150px; height: 150px;">
+			      	    <img id="groomImage" src="<?php if(getImgURL('groom')){echo getImgURL('groom');}else{ echo assets('img/upload.png');} ?>" 
+			      	    alt="Groom Image" class="rounded-circle" style="width: 150px; height: 150px;">
 
 			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
 
