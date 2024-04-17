@@ -118,6 +118,7 @@ class DB
         }
 
         $statement = self::$connection->prepare($query);
+
         $statement->execute();
 
         return $statement;
