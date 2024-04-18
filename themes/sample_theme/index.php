@@ -328,7 +328,7 @@ function getImgURL($name){
     		for ($i = 0; $i < count($preweddingGallery); $i++){?>
 
         <div class="item ">
-          <img src="<?= $preweddingGallery[$i]['imageURL'] ?>" class="galleyImg" style="border-radius: 40px;">
+          <img src="<?= $preweddingGallery[$i]['imageURL'] ?>" class="gallery-images" style="border-radius: 40px;">
         </div>
 
     <?php 
