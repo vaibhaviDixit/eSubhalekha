@@ -85,7 +85,8 @@ $_REQUEST['weddingID']=$_REQUEST['id'];
 		    <!-- Phone -->
 		    <div class="mb-1 col-sm-6">
 		        <label for="phone" class="form-label">Phone</label>
-		        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter Phone" value="<?= $_REQUEST['phone'] ?? '' ?>" required>
+		        <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Phone" value="<?= $_REQUEST['phone'] ?? '' ?>" required>
+		        <strong id="phoneMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 		    </div>
 		   
 		</div>
@@ -93,7 +94,8 @@ $_REQUEST['weddingID']=$_REQUEST['id'];
 			     <!-- Email -->
 		    <div class="mb-1 col-sm-4">
 		        <label for="email" class="form-label">Email</label>
-		        <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" value="<?= $_REQUEST['email'] ?? '' ?>">
+		        <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email" value="<?= $_REQUEST['email'] ?? '' ?>">
+		        <strong id="emailMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 		    </div>
 		    	<!-- Language -->
 				<div class="mb-1 col-sm-4">
@@ -245,6 +247,133 @@ $_REQUEST['weddingID']=$_REQUEST['id'];
 		</div>
 
 	</div>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
+  
+<script type="text/javascript">
+	
+	 let phoneError = true;
+	 let emailError = true;
+    let phone = document.querySelector("#phone");
+    let email = document.querySelector("#email");
+
+    let phones = []
+    let emails = []
+
+    <?php
+    foreach ($guests as $data) {
+      echo "phones.push('" . md5($data['phone']) . "')\n";
+      echo "emails.push('" . md5($data['email']) . "')\n";
+    }
+    ?>
+
+ checkErrors();
+
+    function validateMobile(mobilenumber) {
+      var regmm = "^([6-9][0-9]{9})$";
+      var regmob = new RegExp(regmm);
+      if (regmob.test(mobilenumber)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function validateEmail(email) {
+	  var regEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  	  return regEx.test(email);
+	}
+
+
+    function validatephone() {
+      let phoneValue = phone.value.trim();
+      let phoneMsg = document.querySelector("#phoneMsg")
+      if (phone.value.trim() == "") {
+        phoneError = true;
+        checkErrors();
+        phoneMsg.innerText = "Mobile number can't be empty";
+        phone.classList.add("is-invalid");
+      }
+      else if (!validateMobile(phoneValue)) {
+        phoneError = true;
+        checkErrors();
+        phoneMsg.innerText =
+          "Mobile number is invalid (10 digits only)";
+        phone.classList.add("is-invalid");
+      } else if (phones.includes(CryptoJS.MD5(phoneValue).toString())) {
+        phoneError = true
+        checkErrors()
+        phoneMsg.innerText = "Phone already in use"
+        phone.classList.add("is-invalid")
+      } else {
+        phoneError = false;
+        checkErrors();
+        phone.classList.remove("is-invalid");
+        phone.classList.add("is-valid");
+        phoneMsg.innerText = "";
+      }
+    }
+
+    phone.addEventListener("focusout", function () {
+      validatephone();
+    });
+    phone.addEventListener("keyup", function () {
+      validatephone();
+    });
+
+    function validateemail() {
+      let emailValue = email.value.trim();
+      let emailMsg = document.querySelector("#emailMsg")
+      if (email.value.trim() == "") {
+        emailError = true;
+        checkErrors();
+        emailMsg.innerText = "Email number can't be empty";
+        email.classList.add("is-invalid");
+      }
+      else if (!validateEmail(emailValue)) {
+        emailError = true;
+        checkErrors();
+        emailMsg.innerText =
+          "Invalid email";
+        email.classList.add("is-invalid");
+      } else if (emails.includes(CryptoJS.MD5(emailValue).toString())) {
+        emailError = true
+        checkErrors()
+        emailMsg.innerText = "Email already in use"
+        email.classList.add("is-invalid")
+      } else {
+        emailError = false;
+        checkErrors();
+        email.classList.remove("is-invalid");
+        email.classList.add("is-valid");
+        emailMsg.innerText = "";
+      }
+    }
+
+    email.addEventListener("focusout", function () {
+      validateemail();
+    });
+    email.addEventListener("keyup", function () {
+      validateemail();
+    });
+
+
+   
+    function checkErrors() {
+      errors = phoneError+emailError
+      if (errors) {
+        document.querySelector("#submit-btn").disabled = true;
+      } else {
+        
+        document.querySelector("#submit-btn").disabled = false;
+        
+      }
+    }
+     
+
+</script>
+
+
 
 	<script>
 		  $(document).ready( function () {
