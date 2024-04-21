@@ -16,8 +16,10 @@ controller("Wedding");
 $wedding = new Wedding();
 $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 $weddingID=$_REQUEST['id'];
+$lang=$_REQUEST['lang'];
+
 DB::connect();
-$guests = DB::select('guests', '*', " weddingID='$weddingID' ")->fetchAll();
+$guests = DB::select('guests', '*', " weddingID='$weddingID' AND lang='$lang' ")->fetchAll();
 DB::close();
 
 controller("Guest");

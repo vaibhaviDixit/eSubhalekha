@@ -39,7 +39,8 @@ class DB
         $columns = implode(", ", array_keys($data));
         $placeholders = ":" . implode(", :", array_keys($data));
         $query = "INSERT INTO $table ($columns) VALUES ($placeholders)";
-
+        print_r($data);
+        echo $query;
         $statement = self::$connection->prepare($query);
 
         foreach ($data as $column => &$value) {
