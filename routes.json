@@ -92,6 +92,12 @@
   "wedding/{id}/{lang}/whatsapp": {
     "path": "views/dashboard/wedding/whatsapp.php"
   },
+  "wedding/{id}/{lang}/messages": {
+    "path": "views/dashboard/wedding/messages.php"
+  },
+  "wedding/{id}/{lang}/messages/{messageID}": {
+    "path": "views/dashboard/wedding/message.php"
+  },
   "wedding/{id}/{lang}/additional-details": {
     "path": "views/dashboard/wedding/additional-details.php"
   },
