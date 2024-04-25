@@ -1,5 +1,5 @@
 <?php
-// errors(1);
+
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');

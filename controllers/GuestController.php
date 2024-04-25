@@ -167,7 +167,8 @@ class Guest
 
             // Insert data into the 'guests' table
             DB::connect();
-            $createGuest = DB::insert('guests', $data); DB::close();
+            $createGuest = DB::insert('guests', $data); 
+            DB::close();
 
             // Handle success/failure
             if ($createGuest) {

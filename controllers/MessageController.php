@@ -33,14 +33,15 @@ class Message
         $this->updatedAt = date('Y-m-d H:i:s');
 
         if($this->check($this->weddingID,$this->type,$this->lang)){
-            
              DB::connect();
             $result = DB::select('messages','*',"weddingID = '$this->weddingID' AND type = '$this->type' AND lang = '$this->lang'")->fetchAll();
             DB::close();
             $data['messageID']=$result[0]['messageID'];
+
             return $this->update($data);
         }
-        
+        DB::close();
+
         // Validation Rules
         $fields = [
             'weddingID' => [
@@ -104,7 +105,9 @@ class Message
             ];
 
             // Insert data into the 'messages' table
+            DB::connect();
             $createMessage = DB::insert('messages', $data);
+            DB::close();
 
 
             // Handle success/failure
@@ -127,7 +130,6 @@ class Message
     // update
     public function update(array $data)
 {
-    echo $messageID;
     // sanitize and assign values
     DB::connect();
     $this->messageID = trim(DB::sanitize($data['messageID']));
