@@ -30,6 +30,12 @@ $guest=new Guest();
 
 <head>
 
+<style type="text/css">
+    .infobtns .btn{
+        border-radius: 0;
+        border-color: darkgray;
+    }
+</style>
 
 </head>
 <!--Main Start-->
@@ -37,36 +43,21 @@ $guest=new Guest();
 
 <h1 class="h2"><?php echo strtoupper($messageguests[0]['type']); ?>  Message</h1>
 
-<?php
-
-			if (isset($_POST['btn-submit'])) {
-
-				$_REQUEST['weddingID']=$_REQUEST['id'];
-
-				$createMessage = $message->create($_REQUEST);
-
-				if ($createMessage['error']) {
-					?>
-					<div class="alert alert-danger">
-						<?php
-						foreach ($createMessage['errorMsgs'] as $msg) {
-							if (count($msg))
-								echo $msg[0] . "<br>";
-						}
-						?>
-					</div>
-					<?php
-				} else{
-					redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/messages");
-				}
-
-			}
-
-			?>
-
 	 <div class="container mt-4">
 
         <p class="bg-light p-3"><?= $messageguests[0]['text_']; ?></p>
+
+        <div class="d-flex justify-content-end infobtns">
+          <div class="">
+            <a href="<?php echo $messageID.'/all'; ?>" class="btn btn-sm btn-outline-success">All</a>
+          </div>
+          <div class="">
+            <a href="<?php echo $messageID.'/sent'; ?>" class="btn btn-sm btn-outline-warning">Sent</a>
+          </div>
+          <div class="">
+            <a href="<?php echo $messageID.'/unsent'; ?>" class="btn btn-sm btn-outline-danger">Unsent</a>
+          </div>
+        </div>
 
         <h5>Guests</h5>
 
