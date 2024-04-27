@@ -68,6 +68,18 @@ $guest=new Guest();
 
         <p class="bg-light p-3"><?= $messageguests[0]['text_']; ?></p>
 
+        <div class="d-flex justify-content-end infobtns">
+          <div class="">
+            <a href="all" class="btn btn-sm btn-outline-success">All</a>
+          </div>
+          <div class="">
+            <a href="sent" class="btn btn-sm btn-outline-warning">Sent</a>
+          </div>
+          <div class="">
+            <a href="unsent" class="btn btn-sm btn-outline-danger">Unsent</a>
+          </div>
+        </div>
+
         <h5>Guests</h5>
 
 <div class="table-responsive" style="clear: both;">
