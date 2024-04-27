@@ -95,6 +95,9 @@
   "wedding/{id}/{lang}/messages": {
     "path": "views/dashboard/wedding/messages.php"
   },
+  "wedding/{id}/{lang}/messages/{messageID}/{messageType}": {
+    "path": "views/dashboard/wedding/messagesent.php"
+  },
   "wedding/{id}/{lang}/messages/{messageID}": {
     "path": "views/dashboard/wedding/message.php"
   },
