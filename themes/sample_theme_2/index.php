@@ -45,8 +45,8 @@ function getImgURL($name){
 
     <!-- Floating Button using Bootstrap -->
     <div class="fixed-button">
-        <button type="button" class="btn btn-primary text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            RSVP
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            R<br>S<br>V<br>P
                         </button>
     </div>
 
@@ -95,10 +95,12 @@ function getImgURL($name){
                
           <div id="heroCarousel" class="owl-carousel owl-theme">
             <!-- Slide 1 -->
-            <div class="item" style="background-image: url('https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg');">
+            <div class="item" style="background-image: url('https://images.pexels.com/photos/933118/pexels-photo-933118.jpeg');">
               <div class="carousel-caption">
-                <p class="text-secondary"><span class="lines">The Wedding Of</span></p>
-                <h1 class="text-primary"><?= $weddingData['groomName'] ?> & <?= $weddingData['brideName'] ?></h1>
+                <p class="text-secondary">We are inviting you for the Wedding of</span></p>
+                <h1 class="text-hero"><div class="bride"><?= $weddingData['groomName'] ?></div> <div class="and">&</div> <div class="groom"><?= $weddingData['brideName'] ?></div> </h1>
+            
+              </div>
                 <div class="d-flex justify-content-center align-items-center text-secondary gap-3" id="countdown">
                     <div>
                         <span class="days">03</span><br>
@@ -118,8 +120,6 @@ function getImgURL($name){
                     </div>
                     
                 </div>
-
-              </div>
             </div>
 
            
@@ -130,69 +130,59 @@ function getImgURL($name){
  <?php require('nav.php'); ?>
 
         <!-- about start -->
-        <section class="container" id="aboutSection">
-
-            <div class="container">
-                <div class="row align-items-center justify-content-center text-center gap-2">
-                    <!-- First Column - Image -->
-                    <div class="col-lg-4 image-column" style="width: auto;">
-                        <img src="<?php if(getImgURL('couple')){echo getImgURL('couple');}else{ echo assets('img/upload.png');} ?>" class="img-fluid coupleImg" alt="couple">
-                        <div class="img-bg"></div>
-                    </div>
-
-                    <!-- Second Column - Text -->
-                    <div class="col-lg-6 text-center">
-                        <p class="small text-secondary text-center">Join us to celebrate <br>The wedding of</p>
-                        <h3 class="text-primary text-center"><?= $weddingData['groomName'] ?> & <?= $weddingData['brideName'] ?></h3>
-
-                        <!-- Row with three texts separated by vertical line -->
-                        <div class="d-flex justify-content-center align-items-center gap-3 mt-2 text-secondary">
-                            <div class="">FEB</div>
-                            <div class=""><span class="vertical-lines">19</span></div>
-                            <div class="">2024</div>
-                        </div>
-
-                        <!-- Small Paragraph -->
-                        <p class="mt-2 w-50 mx-auto">Fulai Garden, Sadashiv Peth, Pune</p>
-                    </div>
+        <section class="container-fluid text-primary" id="aboutSection">
+                <div class="text-center" style="padding-bottom: 65px;">
+                  <h1 class="text-primary-3">Save the Date</h1>
+                  <h3>FEB | 19 | 2024</h3>
                 </div>
-            </div>
-
 
         </section>
         <!-- about ends -->
 
         <!-- bride groom start -->
-        <section class="container" id="coupleSection">
+        <section class="container mt-4" id="coupleSection">
 
-            <h1 class="section-head">Bride & Groom</h1>
+            <h1 class="section-head text-primary">Bride & Groom</h1>
 
-            <div class="container mt-5">
-                <div class="row">
+            <div class="container mt-6 brideGroomCont">
+                <div class="row align-items-center">
                     <!-- Column 1 -->
-                    <div class="col-lg-6 mb-4">
-                        <div class="text-center">
+                    <div class="col-sm-5 bg-primary" style="border-radius: 0 0 25% 0;">
+                        <div class="text-center b_img_div">
                             <img src="<?php if(getImgURL('bride')){echo getImgURL('bride');}else{ echo assets('img/upload.png');} ?>"
                             alt="Person 1" class="img-fluid brideImg">
                         </div>
-                        <h3 class="mt-3 text-center"><?= $weddingData['brideName'] ?></h3>
-                        <p class="text-center">
-                        	<b class="text-center d-block"><?= $weddingData['brideQualifications'] ?></b>
-                        	<?= $weddingData['brideBio'] ?>
-                    	</p>
+                        <div class="text-center">
+                          <h3 class="text-secondary"><?= $weddingData['brideName'] ?> <small class="text-center fs-6">( <?= $weddingData['brideQualifications'] ?> )</small></sub>
+                        </h3>
+                        <p class="text-left">
+                          
+                          <?= $weddingData['brideBio'] ?>
+                        </p>
+                        
                     </div>
+                    </div>
+
+                  <div class="text-center col-sm-2"><img src="<?php themeAssets('sample_theme_2','img/heart.png') ?>" class="img-fluid" width="200"></div>
 
                     <!-- Column 2 -->
-                    <div class="col-lg-6 mb-4">
-                        <div class="text-center">
+                    <div class="col-sm-5 mb-4 bg-primary" style="border-radius: 0 0 0 25%;margin-top: 20%;">
+
+                      <div class="text-center g_img_div">
                             <img src="<?php if(getImgURL('groom')){echo getImgURL('groom');}else{ echo assets('img/upload.png');} ?>" alt="Person 2" class="img-fluid groomImg">
                         </div>
-                        <h3 class="mt-3 text-center"><?= $weddingData['groomName'] ?></h3>
-                        <p class="text-center">
-                        	<b class="text-center d-block"><?= $weddingData['groomQualifications'] ?></b>
 
-                        	<?= $weddingData['groomBio'] ?></p>
+                        <div class="text-center">
+                          <h3 class=" text-secondary"><?= $weddingData['groomName'] ?> <small class="text-center fs-6">( <?= $weddingData['groomQualifications'] ?> )</small></sub>
+                            </h3>
+                            <p class="text-right">
+                              
+                              <?= $weddingData['groomBio'] ?>
+                          </p>
+                        </div>
+
                     </div>
+
                 </div>
             </div>
 
@@ -201,48 +191,52 @@ function getImgURL($name){
         <!--  bride groom ends -->
 
 
+
  <!-- Our story start -->
         <section class="container" id="ourStorySection">
 
             <h1 class="section-head">Our Story</h1>
 
-            <div class="container mt-2">
-                <div class="row">
-                    <div class="col-lg-8 mx-auto">
-                        <div class="timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-content">
-                                    <div class="text-secondary"><?= $story['whenWeMet'] ?></div>
-                                    <h6 class="text-capitalize text-primary">how we meet</h6>
-                                    <p><?= $story['howWeMet'] ?></p>
-                                    <div class="timeline-layout"></div>
-                                </div>
-                            </div>
+  <div class="container py-5">
+    <div class="main-timeline-2">
+      
+      <div class="timeline-2 left-2">
+        <div class="card">
+          <img src="https://images.pexels.com/photos/2959192/pexels-photo-2959192.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top"
+            alt="Responsive image">
+          <div class="card-body p-4">
+            <h4 class="fw-bold mb-4">How We Meet</h4>
+            <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i> <?= $story['whenWeMet'] ?></p>
+            <p class="mb-0"><?= $story['howWeMet'] ?></p>
+          </div>
+        </div>
+      </div>
 
-                            <div class="timeline-item">
-                                <div class="timeline-content">
-                                    <div class="text-secondary"><?= $story['engagementYear'] ?></div>
-                                    <h6 class="text-capitalize text-primary">Engagement</h6>
-                                    <p><?= $story['engagement'] ?></p>
-                                    <div class="timeline-layout"></div>
-                                </div>
-                            </div>
+      <div class="timeline-2 right-2">
+        <div class="card">
+          <img src="https://images.pexels.com/photos/3156648/pexels-photo-3156648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top"
+            alt="Responsive image">
+          <div class="card-body p-4">
+            <h4 class="fw-bold mb-4">Engagement</h4>
+            <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i> <?= $story['engagementYear'] ?></p>
+            <p class="mb-0"><?= $story['engagement'] ?></p>
+          </div>
+        </div>
+      </div>
 
-                              <div class="timeline-item">
-                                <div class="timeline-content">
-                                    <h6 class="text-capitalize text-primary">Memorable Moments</h6>
-                                    <p><?= $story['memorableMoments'] ?></p>
-                                    <div class="timeline-layout"></div>
-                                </div>
-                            </div>
-
-                            <!-- Add more timeline items as needed -->
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+      <div class="timeline-2 left-2">
+        <div class="card">
+          <img src="https://images.pexels.com/photos/5086401/pexels-photo-5086401.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top"
+            alt="Responsive image">
+          <div class="card-body p-4">
+            <h4 class="fw-bold mb-4">Memorable Moments</h4>
+            <p class="mb-0"><?= $story['memorableMoments'] ?></p>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
 
         </section>
         <!--  our story ends -->
@@ -264,15 +258,24 @@ function getImgURL($name){
                                 ?>
                             
         <div class="item ">
-          <div class="card pink-border ">
+          <div class="card bg-primary">
          <img src="<?php echo getImgURL($timeline[$i]['event']); ?>" class="eventImgDiv card-img-top" alt="Reception">
             <div class="card-body text-center">
-              <h3 class="text-primary"><?= $timeline[$i]['event'] ?></h3>
+              <h3 class="text-secondary"><?= $timeline[$i]['event'] ?></h3>
           
               <p class="card-text "><?php echo $from."<br> To <br> ".$to; ?>   </p>
-              <p class="card-text"><?= $timeline[$i]['venue'] ?><br> 
-              <?= str_replace("<br>", "\r\n", $timeline[$i]['address']) ?></p>
-              <a href="<?= $timeline[$i]['locationURL'] ?>" target="_blank"><button class="btn-sm btn-primary">Location</button></a>
+              <div class="card-text d-flex align-items-center justify-content-center gap-2">
+
+              <div> <?= $timeline[$i]['venue'] ?><br> 
+              <?= str_replace("<br>", "\r\n", $timeline[$i]['address']) ?>
+              </div>
+
+              <div> <a href="<?= $timeline[$i]['locationURL'] ?>" target="_blank">
+                <button class="btn-sm btn-secondary"><i class="bi bi-pin-map-fill"></i></button>
+              </a> </div>
+
+            </div>
+
               
             </div>
           </div>
@@ -293,17 +296,15 @@ function getImgURL($name){
 
       <div class="row align-items-center">
         
-        <div class="col-sm-4 text-start">
+        <div class="col-sm-12 text-start row align-items-center wavy-bottom">
             <h4 class="text-primary">Accomodation</h4>
-            <p><?= $weddingData['accommodation'] ?></p>
+            <p class=""><?= $weddingData['accommodation'] ?></p>
 
         </div>
+    
+    <div class="text-center"><img src="<?php themeAssets('sample_theme_2','img/car.gif') ?>" class="img-fluid" width="200"></div>
 
-        <div class="col-sm-4 text-center">
-          <img src="<?php themeAssets('sample_theme','img/accomodation.png') ?>" class="img-fluid" width="100" height="100">
-        </div>
-
-        <div class="col-sm-4 text-end">
+        <div class="col-sm-12 text-end row align-items-center">
             <h4 class="text-primary">Travel</h4>
             <p><?= $weddingData['travel'] ?></p>
 
@@ -327,8 +328,8 @@ function getImgURL($name){
 		if (!$preweddingGallery['error']){
     		for ($i = 0; $i < count($preweddingGallery); $i++){?>
 
-        <div class="item ">
-          <img src="<?= $preweddingGallery[$i]['imageURL'] ?>" class="gallery-images" style="border-radius: 40px;">
+        <div class="item">
+          <img src="<?= $preweddingGallery[$i]['imageURL'] ?>">
         </div>
 
     <?php 
@@ -401,9 +402,8 @@ function getImgURL($name){
     </script>
 
                 <script>
-                
                   // Set the end time for the countdown (year, month (0-indexed), day, hour, minute, second)
-                  var endTime = new Date("2024-02-10T12:00:00Z").getTime();
+                  var endTime = new Date("2024-12-10T12:00:00Z").getTime();
                     var now = new Date().getTime();
                    // Calculate the time difference
                     var timeDifference = endTime - now;
