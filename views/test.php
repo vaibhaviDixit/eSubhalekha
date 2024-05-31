@@ -19,7 +19,7 @@ controller('BrevoSMS');
 $brevoSms = new BrevoSMS();
 $sender = 'Vaibhavi';
 $recipient = '+918767431102';
-$message = 'Hello, this is a test message!';
+$message = 'Hello OTP: 34563!';
 $webUrl = '';
 $brevoSms->sendTransactionalSms($sender, $recipient, $message);
 
