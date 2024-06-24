@@ -1,4 +1,5 @@
 <?php
+
 $config['APP_TITLE'] = "Register | ".$config['APP_TITLE'];
 DB::connect();
 $customers = DB::select('users', '*', "status <> 'deleted'")->fetchAll();
@@ -28,9 +29,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $register = $user->register($phone,$otp,'user');   
             if($register){
                 $loginMsg['msg']="OTP Sent Successfully!";
+                $loginMsg['class']="success";
             } 
         }else{
           $loginMsg['msg']="Unable to send OTP!";
+          $loginMsg['class']="danger";
         }
         
     } elseif ($_POST["action"] == "registerUser") {
@@ -43,11 +46,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
          if( isset($register['phone']) || (isset($register['error']) && !$register['error'])){
 
-            $login=$user->login($phone,$otp);
+            $login=$user->login($phone);
             $loginMsg['msg']="Registration Successful!";
+            $loginMsg['class']="success";
         }
         else{
             $loginMsg['msg']="Registration Failed!";
+            $loginMsg['class']="danger";
         }
 
 
@@ -130,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
       <?php if (isset($loginMsg['msg'])) { ?>
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-<?php echo $loginMsg['class'];?>" role="alert">
           <?php echo $loginMsg['msg']; ?>
         </div>
       <?php } ?>

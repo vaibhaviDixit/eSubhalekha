@@ -9,7 +9,7 @@ class BrevoSMS {
 
     public function __construct() {
 
-        $this->config = SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', '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');
+        $this->config = SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', 'xsmtpsib-1ce3c75ada664bf463ba02a19d64c7ca14314cbe7c4be28d5192384d9810bd24-NkcjYP4DKaUpFdW8');
 
 		$this->apiInstance = new SendinBlue\Client\Api\TransactionalSMSApi(
 		    new GuzzleHttp\Client(),

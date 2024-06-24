@@ -81,17 +81,17 @@ class Auth
 
     // login By OTP
 
-     public function login($phone, $otp)
+     public function login($phone)
     {
         DB::connect();
         $this->phone = $phone;
-        $this->otp = $otp;
+        // $this->otp = $otp;
         $this->userID = $this->getUserByPhone($phone)['userID'];
         DB::close();
 
     
         DB::connect();
-        $loginQuery = DB::select('users', '*', "phone = '$this->phone' and otp = '$this->otp' and status <> 'deleted'")->fetchAll()[0];
+        $loginQuery = DB::select('users', '*', "phone = '$this->phone' and status <> 'deleted'")->fetchAll()[0];
         DB::close();
         
         // Check if user exists
@@ -265,10 +265,13 @@ class Auth
     // Send OTP
     public function sendOTP($phone){
 
-          $getUser=$this->getUserByPhone($phone);
+        $getUser=$this->getUserByPhone($phone);
 
-          // generate OTP and store in DB
-          $otp = rand(1000, 9999);
+        controller('OTPLess');
+        $sms = new OTPLess();
+        $message = $sms->sendOTP("+91".$phone);
+        $result = json_decode($message, true);
+        // print_r($result);
 
         if($getUser['phone']){
 
@@ -276,7 +279,7 @@ class Auth
 
           $updateData = [
               'phone' => $phone,
-              'otp'=>$otp
+              'otp'=>$result['orderId']
           ];
 
 
@@ -319,13 +322,13 @@ public function verifyOTP($phone, $otp)
     DB::connect();
     $this->userID=$this->getUserByPhone($phone)['userID'];
     $this->phone = $phone;
-    $this->otp =$otp;
+    $this->otp =$orderId;
     $this->status ='verified';
     DB::close();
 
     DB::connect();
-    $checkOTP = DB::select('users', '*', "phone = '$phone' and status <> 'deleted' and otp='$otp' ")->fetch();
-        DB::close();
+    $checkOTP = DB::select('users', '*', "phone = '$phone' and status <> 'deleted' ")->fetch();
+    DB::close();
 
 
     // Define validation rules for fields
@@ -376,11 +379,16 @@ public function verifyOTP($phone, $otp)
             'phone' => $this->phone,
             'role' => $this->role,
             'status' => $this->status,
-            'otp'=>$this->otp,
+            'otp'=>$this->orderId,
             'verifiedAt' => date('Y-m-d H:i:s'),
         ];
 
+        controller('OTPLess');
+        $sms = new OTPLess();
+        $message = $sms->verifyOTP($this->phone,$otp,$checkOTP['otp']);
+
         if ($checkOTP){
+            
              DB::connect();
             $updateUser = DB::update('users', $updateData, "userID = '$this->userID'");
             DB::close();
