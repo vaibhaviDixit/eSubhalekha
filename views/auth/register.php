@@ -24,9 +24,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $phone = $_POST["phone"];
 
         $sendOTP=$user->sendOTP($phone);
+        // print_r($sendOTP);
 
        if(!$sendOTP['error']){
-            $register = $user->register($phone,$otp,'user');   
+            $register = $user->register($phone,$otp,'user');  
+
             if($register){
                 $loginMsg['msg']="OTP Sent Successfully!";
                 $loginMsg['class']="success";

@@ -1,5 +1,5 @@
 <?php
-
+// errors(1);
 $config['APP_TITLE'] = "Login | ".$config['APP_TITLE'];
 
 DB::connect();
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sendOTP=$user->sendOTP($phone);
 
        if(!$sendOTP['error']){
-            $register = $user->register($phone,$otp,'user');   
+            $register = $user->register($phone,$otp,'user');  
             if($register){
                 $loginMsg['msg']="OTP Sent Successfully!";
                 $loginMsg['class']="success";
