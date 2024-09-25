@@ -20,8 +20,8 @@
 	    <div class="row pb-0 pe-lg-0 pt-lg-3 align-items-center justify-content-center d-flex flex-wrap-reverse">
 
 	      <div class="col-lg-6 p-3 p-lg-4 pt-lg-3">
-	        <h1 class="display-8 fw-bold lh-1 text-primary">Get Personalized Wedding Invitation Websites</h1>
-	        <p class="lead">Start your journey with us, and let's create an invitation that tells your unique love story.</p>
+	        <h1 class="display-8 fw-bold lh-1 text-primary">Personalized Event Experiences</h1>
+	        <p class="lead">Transform, Celebrate, Relive, <strong class="fw-bold text-primary">your memorable moments</strong></p>
 	        <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
 	          <a href="#" class="btn btn-primary">Start Now</a>
 	        </div>
@@ -40,10 +40,10 @@
         <section class="container-fluid about">
         	<div class="row align-items-center justify-content-center gap-4">
         		
-        		<div class="col-sm-3 img-col logo-img">
-        			<img class="img-fluid" src="<?php assets('img/eSubhalekha.png') ?>" alt="">
-        		</div>
-        		<div class="col-sm-5">
+				<div class="logo-img">
+					<img class="img-fluid" src="<?php assets('img/banner.png') ?>" alt="" style="width: 80vw; height: 10vh !important; object-fit: cover;">
+				</div>
+        		<div class="d-none col-sm-5">
         			<h3 class="">eSubhalekha.com</h3>
         			<p class="">Where Tradition Meets Technology</p>
         		</div>

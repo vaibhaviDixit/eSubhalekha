@@ -3,9 +3,26 @@ locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
 
-DB::connect();
-$weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
-DB::close();
+$suerID = App::getUser()['userID'];
+if(App::getUser()['role'] == "admin"){
+    DB::connect();
+    $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
+    DB::close();
+}elseif(App::getUser()['role'] == "manager"){
+    DB::connect();
+    $weddings = DB::select('weddings', '*', "lang = 'en' and manager = '$suerID'")->fetchAll();
+    DB::close();
+}elseif(App::getUser()['role'] == "partner"){
+    DB::connect();
+    $weddings = DB::select('weddings', '*', "lang = 'en' and partner = '$suerID'")->fetchAll();
+    DB::close();
+}
+else{
+    DB::connect();
+    $weddings = DB::select('weddings', '*', "lang = 'en' and host = '$suerID'")->fetchAll();
+    DB::close();
+}
+
 ?>
 
 <head>

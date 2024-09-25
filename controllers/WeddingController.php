@@ -294,7 +294,7 @@ class Wedding
                         'message' => 'Invalid YouTube Live URL',
                         'validate' => function () {
                             // Replace this with your validation logic for YouTube embed URL
-                            return preg_match("/^(https?:\/\/)?(www\.)?(youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/", $this->youtube);
+                            return preg_match("/^(https?:\/\/)?(www\.)?(youtube\.com\/|youtu\.be\/)/", $this->youtube);
                         },
                     ]
                 ],
@@ -413,6 +413,7 @@ class Wedding
     // create function ends
 
     // Update operation
+    
     public function update($weddingID, $lang, array $data)
     {
 
@@ -551,23 +552,9 @@ class Wedding
             ],
             'brideBio' => [
                 'value' => $this->brideBio,
-                'rules' => [
-                    [
-                        'type' => 'minLength',
-                        'message' => 'Invalid Bride Bio',
-                        'minLength' => 3
-                    ]
-                ],
             ],
             'groomBio' => [
                 'value' => $this->groomBio,
-                'rules' => [
-                    [
-                        'type' => 'minLength',
-                        'message' => 'Invalid Groom Qualifications',
-                        'minLength' => 3
-                    ]
-                ],
             ],
             'tier' => [
                 'value' => $this->tier,
@@ -602,7 +589,7 @@ class Wedding
                         'message' => 'Invalid YouTube Live URL',
                         'validate' => function () {
                             // Replace this with your validation logic for YouTube embed URL
-                            return preg_match("/^(https?:\/\/)?(www\.)?(youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/", $this->youtube);
+                            return preg_match("/^(https?:\/\/)?(www\.)?(youtube\.com\/|youtu\.be\/)/", $this->youtube);
                         },
                     ]
                 ],
@@ -723,9 +710,9 @@ class Wedding
 
                 'music' => !empty($this->music) ? $this->music : $weddingData['music'],
 
-                'youtube' => !empty($this->youtube) ? $this->youtube : $weddingData['youtube'],
+                'youtube' => $this->youtube ?? $weddingData['youtube'],
 
-                'accommodation' => !empty($this->accommodation) ? $this->accommodation : $weddingData['accommodation'],
+                'accommodation' => $this->accommodation ?? $weddingData['accommodation'],
 
                 'travel' => !empty($this->travel) ? $this->travel : $weddingData['travel'],
 

@@ -40,7 +40,7 @@ $user = new Auth();
 				</div>
 				<?php
 			}else{
-				redirect("user/profile/");
+				redirect("dashboard/");
 
 			}	
 			
