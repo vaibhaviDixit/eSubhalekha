@@ -13,6 +13,7 @@ controller("Wedding");
 $wedding = new Wedding();
 $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
+
 ?>
 
 <head>
@@ -70,6 +71,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 					//redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/our-story");
 
 			}
+
 
 			?>
     	

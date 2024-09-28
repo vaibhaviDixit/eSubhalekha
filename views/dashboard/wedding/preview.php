@@ -1,5 +1,7 @@
 <?php
 
+locked(['user', 'host', 'manager', 'admin']);
+
 controller('Theme');
 controller("Wedding");
 controller("Gallery");

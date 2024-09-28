@@ -42,7 +42,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // verify OTP and then register
 
         $phone = $_POST["phone"];
-        $otp = $_POST["otp"];
+        
+        $otp1 = $_POST['otp1'];
+        $otp2 = $_POST['otp2'];
+        $otp3 = $_POST['otp3'];
+        $otp4 = $_POST['otp4'];
+
+        // Combine the digits into a full OTP
+        $otp = $otp1 . $otp2 . $otp3 . $otp4;
 
         $register=$user->verifyOTP($phone,$otp);
 
@@ -151,14 +158,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <strong id="phoneMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 
         <?php if(isset($_POST["action"]) && $_POST["action"] == "verifyUser"){ ?>
+      
+
+
         <div id="otpInput">
-            <label for="otp">OTP</label>
-            <input type="text" name="otp" id="otp" class="form-control" placeholder="OTP" required>
+              <label for="otp">OTP</label>
+              <div style="display: flex; gap: 10px;">
+                  <input type="text" name="otp1" maxlength="1" class="form-control otp-input" required>
+                  <input type="text" name="otp2" maxlength="1" class="form-control otp-input" required>
+                  <input type="text" name="otp3" maxlength="1" class="form-control otp-input" required>
+                  <input type="text" name="otp4" maxlength="1" class="form-control otp-input" required>
+              </div>
 
-          <strong id="otpMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
-          <br>
+              <strong id="otpMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
+              <br>
+          </div>
 
-        </div>
+
         <button class="btn btn-lg btn-primary rounded-pill" type="submit" name="action" value="registerUser">Register</button>
         <?php }else{ ?>
 
@@ -173,6 +189,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
 
   <script>
+
+
+    // for OTP block focus
+    const otpInputs = document.querySelectorAll('.otp-input');
+    
+    otpInputs.forEach((input, index) => {
+        input.addEventListener('input', () => {
+            if (input.value.length === 1 && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+        });
+    });
+
 
     let phoneError = true;
     let phone = document.querySelector("#phone");
