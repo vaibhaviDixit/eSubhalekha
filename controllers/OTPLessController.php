@@ -5,8 +5,8 @@ use Otpless\OTPLessAuth;
 
 class OTPLess{
 
-	protected $clientId="D1766V577RCSN3YBEY0454Y6MVUJFVNY";
-	protected $clientSecret="nc7nxagvxrzxu3ep5gz7ct3yyo6ohp2z";
+	protected $clientId="TPP02O4A6ORBYGU116LG7Y3GZ80TD8E2";
+	protected $clientSecret="hozq2zxv19o18bny8afdkk953z2fhzqj";
 
 	protected $orderId;
 	protected $expiry="120"; //seconds 

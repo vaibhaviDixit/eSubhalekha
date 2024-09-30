@@ -120,14 +120,14 @@ class Auth
                     setcookie("auth", $this->loginId, time() + (86400 * 365), "/");
 
                     DB::connect();
-                        $checkData = DB::select('users', '*', "phone = '$this->phone' and name IS NULL OR email IS NULL OR gender IS NULL")->fetchAll()[0];
+                        $checkData = DB::select('users', '*', "phone = '$this->phone'")->fetchAll()[0];
 
                     DB::close();
 
                     if ($checkData['name']=='' OR $checkData['email']=='' OR $checkData['gender']=='') {
                         header("Location:" . route('')."user/profile");
                     } else {
-                        header("Location:" . route(''));
+                        header("Location:" . route('dashboard'));
                     }
                     
                 } else $this->errors = "Internal Server Error";
@@ -380,9 +380,10 @@ public function verifyOTP($phone, $otp)
 
         controller('OTPLess');
         $sms = new OTPLess();
-        $message = $sms->verifyOTP($this->phone,$otp,$checkOTP['otp']);
+        $message = $sms->verifyOTP("+91".$this->phone,$otp,$checkOTP['orderId']);
+        $message=json_decode($message, true);
 
-        if ($checkOTP){
+        if ($message['success'] && isset($message['isOTPVerified']) && $message['isOTPVerified']){
             
              DB::connect();
             $updateUser = DB::update('users', $updateData, "userID = '$this->userID'");

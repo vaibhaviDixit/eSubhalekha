@@ -17,3 +17,5 @@ else if(isset($weddingData['template'])){
 	$themes = $themeController->render($weddingData['template'], $_REQUEST['type']);	
 
 }
+
+// only accessible after 100% progress done, payment

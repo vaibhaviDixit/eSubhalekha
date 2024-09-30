@@ -83,6 +83,10 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
 		}
 
+// Fetch folder names dynamically
+$themeFolders = array_filter(glob('themes/*'), 'is_dir');
+
+
 ?>
 	
 <div class="container mt-5">
@@ -92,8 +96,18 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
     <div class="col-lg-3">
       <ul class="list-group theme-list">
         <li class="list-group-item active" data-theme="All">All</li>
-        <li class="list-group-item" data-theme="sample_theme">Sample</li>
-        <li class="list-group-item" data-theme="fairytale_theme">Fairytale</li>
+
+        <?php 
+            foreach ($themeFolders as $folder) {
+                // Extract only the folder name
+                $themeName =ucwords(explode("_", basename($folder))[0]);
+        ?>
+               <li class="list-group-item" data-theme="<?php echo basename($folder); ?>"><?php echo $themeName; ?></li>
+
+        <?php
+            }
+        ?>
+
         <!-- Add more themes here -->
       </ul>
     </div>
@@ -101,70 +115,49 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
     <div class="col-lg-9">
       <!-- Theme Cards -->
         <div class="theme-cards">
-         <!--  card for Theme 1 -->
-        <div class="card theme-card" data-theme="sample_theme">
-          <div class="row g-0">
-            <div class="col-md-4 img-col">
-              <img src="<?php assets('img/template.png') ?>" class="card-img-top" alt="Theme 1 Preview">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                	<h5 class="card-title">Sample</h5>
 
-                    <span class="badge bg-secondary text-primary"><?php if($weddingData['template']=="sample_theme"){echo "Selected";} ?></span>
-                </div>
 
-                <p class="card-text">A stylish and elegant theme perfect for wedding invitations,with customizable features.</p>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <?php 
+              foreach ($themeFolders as $folder) {
+                  // Extract only the folder name
+                  $themeName =ucwords(explode("_", basename($folder))[0]);
+          ?>
+                 <!--  card for Theme 1 -->
+          <div class="card theme-card" data-theme="<?php echo basename($folder); ?>">
+            <div class="row g-0">
+              <div class="col-md-4 img-col">
+                <img src="<?php assets('img/template.png') ?>" class="card-img-top" alt="Theme 1 Preview">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="card-title"><?php echo $themeName; ?></h5>
 
-                <a href="preview?theme=sample_theme"><button class="btn btn-sm btn-outline-primary me-md-2 preview-btn">Live Preview</button></a>
+                      <span class="badge bg-secondary text-primary"><?php if($weddingData['template']=="<?php echo basename($folder); ?>"){echo "Selected";} ?></span>
+                  </div>
 
-                  <form method="post" class="p-0 m-0">
-                  	<input type="hidden" name="themeName" value="sample_theme">
-                 	 <button class="btn btn-sm btn-outline-success select-btn" type="submit" name="select">Select</button>
+                  <p class="card-text">A stylish and elegant theme perfect for wedding invitations,with customizable features.</p>
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
 
-                  </form>
+                  <a href="preview?theme=<?php echo basename($folder); ?>"><button class="btn btn-sm btn-outline-primary me-md-2 preview-btn">Live Preview</button></a>
 
+                    <form method="post" class="p-0 m-0">
+                      <input type="hidden" name="themeName" value="<?php echo basename($folder); ?>">
+                     <button class="btn btn-sm btn-outline-success select-btn" type="submit" name="select">Select</button>
+
+                    </form>
+
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <!--  card for Theme 2 -->
-        <div class="card theme-card" data-theme="fairytale_theme">
-          <div class="row g-0">
-            <div class="col-md-4 img-col">
-              <img src="<?php assets('img/template.png') ?>" class="card-img-top" alt="Theme 2 Preview">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                	<h5 class="card-title">Fairytale</h5>
 
-                    <span class="badge bg-secondary text-primary"><?php if($weddingData['template']=="fairytale_theme"){echo "Selected";} ?></span>
-                </div>
+          <?php
+              }
+          ?>
 
-                <p class="card-text">Enchanting wedding invitation theme, weaving magic and romance into every detail.</p>
-               
-
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                	<a href="preview?theme=fairytale_theme"><button class="btn btn-sm btn-outline-primary me-md-2 preview-btn">Live Preview</button></a>
-                	
-                   <form method="post" class="p-0 m-0">
-                  	<input type="hidden" name="themeName" value="fairytale_theme">
-                  
-                 	 <button class="btn btn-sm btn-outline-success select-btn" type="submit" name="select">Select</button>
-
-                  </form>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-    </div>
+         </div>
   </div>
   </div>
 </div>

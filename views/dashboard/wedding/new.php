@@ -44,6 +44,11 @@ function getImgURL($name){
 
 			if (isset($_POST['btn-submit'])) {
 
+				if(!isset($_FILES['bride']['name']) || !isset($_FILES['groom']['name'])){
+					echo '<div class="alert alert-danger"> Both Bride & Groom photos required! </div>';
+					return;
+				}
+
 				controller("AWSBucket");
 				$awsObj=new AWSBucket();
 
@@ -137,7 +142,7 @@ function getImgURL($name){
 
 			      </label>
 
-			    	<input type="file" class="form-control" id="groom" accept="image/*" name="groom" required  onchange="displayGroomImage(this)" hidden>
+			    	<input type="file" class="form-control" id="groom" accept="image/*" name="groom"  onchange="displayGroomImage(this)" hidden>
 			    </div>
 			
      	
@@ -151,7 +156,7 @@ function getImgURL($name){
 			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
 
 			      </label>
-			      <input type="file" class="form-control" id="bride" accept="image/*" name="bride" required  onchange="displayBrideImage(this)" hidden>
+			      <input type="file" class="form-control" id="bride" accept="image/*" name="bride"   onchange="displayBrideImage(this)" hidden>
 
 			    </div>
   	
@@ -164,21 +169,21 @@ function getImgURL($name){
 				<div class="mb-3 col-sm-6">
 					<label for="groomName" class="form-label">Groom Name</label>
 					<input type="text" class="form-control" id="groomName" name="groomName"
-						placeholder="Enter Groom Name" value="<?= $_REQUEST['groomName'] ?? '' ?>">
+						placeholder="Enter Groom Name" value="<?= $_REQUEST['groomName'] ?? '' ?>" >
 				</div>
 
 				<!-- Bride Name -->
 				<div class="mb-3 col-sm-6">
 					<label for="brideName" class="form-label">Bride Name</label>
 					<input type="text" class="form-control" id="brideName" name="brideName"
-						placeholder="Enter Bride Name" value="<?= $_REQUEST['brideName'] ?? '' ?>">
+						placeholder="Enter Bride Name" value="<?= $_REQUEST['brideName'] ?? '' ?>" >
 				</div>
 
 				<!-- From (Bride/Groom) -->
 				<div class="mb-3 col-sm-6">
 					<label class="form-label" for="fromRole">From</label>
 
-					<select class="form-select" id="fromRole" name="fromRole">
+					<select class="form-select" id="fromRole" name="fromRole" >
 						<option value="bride" <?= ($_REQUEST['fromRole'] == 'bride') ? 'selected' : '' ?>>Bride</option>
 						<option value="groom" <?= ($_REQUEST['fromRole'] == 'groom') ? 'selected' : '' ?>>Groom</option>
 
@@ -188,7 +193,7 @@ function getImgURL($name){
 				<!-- Language -->
 				<div class="mb-3 col-sm-6">
 					<label for="lang" class="form-label">Language</label>
-					<select class="form-select" id="lang" name="lang">
+					<select class="form-select" id="lang" name="lang" >
 						<?php foreach ($languages as $lang) {
 							?>
 							<option value="<?= $lang ?>" <?php

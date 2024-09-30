@@ -110,6 +110,16 @@ img {
   margin-top: 20px !important;
 }
 
+
+.green-tick{
+  color: green;
+}
+
+.red-tick{
+  color: red;
+}
+
+
 @media (max-width: 768px) {
   #myTable_filter input {
     margin-top: 20px !important;

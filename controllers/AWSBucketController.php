@@ -1,5 +1,5 @@
 <?php
- 
+ // errors(1);
 	require 'awss3bucket/aws-autoloader.php';
 	use Aws\S3\S3Client;
 	use Aws\S3\Exception\S3Exception;
@@ -9,22 +9,21 @@ class AWSBucket{
 
 	protected $s3;
 	protected $bucketName = 'esubhalekha-demo';
-	protected $IAM_KEY = 'AKIA3AW5RIA6AYUEMSKF';
-	protected $IAM_SECRET = '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';
 	                           
 	protected $objects="";
 
 	 public function __construct()
     {     
 
+		require('config.php');
     
         	// Connect to AWS
 			try {
 				$this->s3 = S3Client::factory(
 					array(
 						'credentials' => array(
-							'key' => $this->IAM_KEY,
-							'secret' => $this->IAM_SECRET
+							'key' => $config['IAM_KEY'],
+							'secret' => $config['IAM_SECRET']
 						),
 						'version' => 'latest',
 						'region'  => 'ap-southeast-2',

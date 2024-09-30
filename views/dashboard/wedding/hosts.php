@@ -10,6 +10,8 @@ controller("Wedding");
 $wedding = new Wedding();
 $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 $hosts = json_decode($weddingData['hosts'], true);
+
+
 ?>
 
 <head>
@@ -42,6 +44,7 @@ if (isset($_REQUEST['btn-submit'])) {
 	redirect("wedding/" . $_REQUEST['id'] ."/". $_REQUEST['lang'] ."/timeline");
 
 }
+
 	?>
     	<div class="row">
 

@@ -1,5 +1,5 @@
 <?php
-errors(1);
+// errors(1);
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
@@ -200,10 +200,7 @@ if (isset($_REQUEST['delTimeline'])) {
 
             }
 
-
         </script>
-
-
 
 
         <div class="row">
@@ -225,17 +222,20 @@ if (isset($_REQUEST['delTimeline'])) {
                                 <tr id="row<?= $i ?>" class="row">
                                     <td>
 
-                                        <button class="btn btn-danger float-end" onclick="deleteRow(<?= $i ?>)"><i
+                                     <form >
+                                            <button class="btn btn-danger float-end" onclick="this.form.submit();" name="delTimeline" value="<?= $i ?>"><i
                                                 class="bi bi-trash-fill"></i></button>
 
+                                     </form>
+                                    
 
                                         <div class="card mb-3 p-3">
                                             <div class="row">
 
                                                 <div class="mb-2 col-sm-6 col-md-4 col-lg-3">
                                                     <label for="type" class="form-label">Event</label>
-                                                    <select class="form-select" name="type[]">
-                                                        <option value="">Select Event Type</option>
+                                                    <select class="form-select" name="type[]" required>
+                                                        <option value="" disabled>Select Event Type</option>
                                                         <option value="engagement" <?php if ($timeline[$i]['type'] == 'engagement')
                                                             echo 'selected'; ?>>Engagement</option>
                                                         <option value="mehendi" <?php if ($timeline[$i]['type'] == 'mehendi')
@@ -306,6 +306,7 @@ if (isset($_REQUEST['delTimeline'])) {
                                                     <label for="eventPic<?php echo $i; ?>" class="form-label"
                                                         style="position: relative;">
                                                         Image <br>
+
                                                         <a href="<?php echo getImgURL($timeline[$i]['type']); ?>">
                                                             <img id="eventImg<?php echo $i; ?>"
                                                             src="<?php echo getImgURL($timeline[$i]['type']); ?>"
@@ -369,7 +370,7 @@ if (isset($_REQUEST['delTimeline'])) {
                                                 <div class="mb-2 col-sm-6 col-md-4 col-lg-3">
                                                     <label for="type" class="form-label">Event</label>
                                                     <select class="form-select" name="type[]">
-                                                        <option value="">Select Event Type</option>
+                                                        <option value="" disabled>Select Event Type</option>
                                                         <option value="engagement" <?php if ($timeline[$i]['type'] == 'engagement')
                                                             echo 'selected'; ?>>Engagement</option>
                                                         <option value="mehendi" <?php if ($timeline[$i]['type'] == 'mehendi')
