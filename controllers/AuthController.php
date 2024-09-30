@@ -25,7 +25,7 @@ class Auth
     protected $browser;
     protected $name;
     protected $phone;
-    protected $otp;
+    protected $orderId;
     protected $role;
     protected $status;
     protected $error;
@@ -85,7 +85,6 @@ class Auth
     {
         DB::connect();
         $this->phone = $phone;
-        // $this->otp = $otp;
         $this->userID = $this->getUserByPhone($phone)['userID'];
         DB::close();
 
@@ -96,7 +95,7 @@ class Auth
         
         // Check if user exists
         if ($loginQuery) {
-                $this->loginId = md5(sha1($this->phone) . sha1($this->otp) . sha1(time()));
+                $this->loginId = md5(sha1($this->phone). sha1(time()));
                 
 
                 $this->ip = getDevice()['ip'];
@@ -188,17 +187,17 @@ class Auth
 
     // register using OTP
 
-    public function register($phone, $otp, $role, $status = "pending")
+    public function register($phone, $orderId, $role, $status = "pending")
     {
         // Sanitize fields
         DB::connect();
         $this->phone = trim(DB::sanitize($phone));
-        $this->otp = trim(DB::sanitize($otp));
+        $this->orderId = trim(DB::sanitize($orderId));
         $this->role = trim(DB::sanitize($role));
         $this->status = trim(DB::sanitize($status));
         DB::close();
 
-        $this->userID = md5(md5($this->phone.$this->otp).md5(time().uniqid()));
+        $this->userID = md5(md5($this->phone.$this->orderId).md5(time().uniqid()));
 
         // fields array
         $fields = [
@@ -233,7 +232,7 @@ class Auth
 
             $data = array(
                 'userID' => $this->userID,
-                'otp' => $this->otp,
+                'orderId' => $this->orderId,
                 'phone' => $this->phone,
                 'role' => $this->role,
                 'status' => $this->status,
@@ -271,7 +270,6 @@ class Auth
         $sms = new OTPLess();
         $message = $sms->sendOTP("+91".$phone);
         $result = json_decode($message, true);
-        // print_r($result);
 
         if($getUser['phone']){
 
@@ -279,7 +277,7 @@ class Auth
 
           $updateData = [
               'phone' => $phone,
-              'otp'=>$result['orderId']
+              'orderId'=>$result['orderId']
           ];
 
 
@@ -296,10 +294,11 @@ class Auth
              $this->errorMsgs['sendOTP'] = 'Unable to send OTP';
           }
       }else{
-        $register = $this->register($phone,$otp,'user');   
+        $register = $this->register($phone,$result['orderId'],'user');   
           if($register){
             $this->error = false;
             $this->errorMsgs['sendOTP'] = '';
+            $this->errorMsgs['orderId'] = $result['orderId'];
           }
           else{
              $this->error = true;
@@ -322,7 +321,6 @@ public function verifyOTP($phone, $otp)
     DB::connect();
     $this->userID=$this->getUserByPhone($phone)['userID'];
     $this->phone = $phone;
-    $this->otp =$orderId;
     $this->status ='verified';
     DB::close();
 
@@ -376,10 +374,7 @@ public function verifyOTP($phone, $otp)
     } else {
 
         $updateData = [
-            'phone' => $this->phone,
-            'role' => $this->role,
             'status' => $this->status,
-            'otp'=>$this->orderId,
             'verifiedAt' => date('Y-m-d H:i:s'),
         ];
 

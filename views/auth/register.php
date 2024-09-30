@@ -1,5 +1,5 @@
 <?php
-
+// errors(1);
 $config['APP_TITLE'] = "Register | ".$config['APP_TITLE'];
 DB::connect();
 $customers = DB::select('users', '*', "status <> 'deleted'")->fetchAll();
@@ -24,9 +24,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $phone = $_POST["phone"];
 
         $sendOTP=$user->sendOTP($phone);
+        // print_r($sendOTP);
 
        if(!$sendOTP['error']){
-            $register = $user->register($phone,$otp,'user');   
+            $register = $user->register($phone,$otp,'user');  
+
             if($register){
                 $loginMsg['msg']="OTP Sent Successfully!";
                 $loginMsg['class']="success";
@@ -44,7 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $register=$user->verifyOTP($phone,$otp);
 
-         if( isset($register['phone']) || (isset($register['error']) && !$register['error'])){
+
+         if( (isset($register['status']) && $register['status']=="verified") || (isset($register['error']) && !$register['error'])){
 
             $login=$user->login($phone);
             $loginMsg['msg']="Registration Successful!";
@@ -135,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
       <?php if (isset($loginMsg['msg'])) { ?>
-        <div class="alert alert-<?php echo $loginMsg['class'];?>" role="alert">
+        <div class="alert alert-danger" role="alert">
           <?php echo $loginMsg['msg']; ?>
         </div>
       <?php } ?>

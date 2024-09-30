@@ -99,7 +99,7 @@ function getImgURL($name){
               <div class="carousel-caption">
                 <p class="text-secondary"><span class="lines">The Wedding Of</span></p>
                 <h1 class="text-primary"><?= $weddingData['groomName'] ?> & <?= $weddingData['brideName'] ?></h1>
-                <div class="d-flex justify-content-center align-items-center text-secondary gap-3" id="countdown">
+                <div class="d-flex justify-content-center align-items-center text-secondary gap-3">
                     <div>
                         <span class="days">03</span><br>
                         <span class="timerText">Days</span>
@@ -265,9 +265,9 @@ function getImgURL($name){
                             
         <div class="item ">
           <div class="card pink-border ">
-         <img src="<?php echo getImgURL($timeline[$i]['event']); ?>" class="eventImgDiv card-img-top" alt="Reception">
+         <img src="<?php echo getImgURL($timeline[$i]['type']); ?>" class="eventImgDiv card-img-top" alt="Reception">
             <div class="card-body text-center">
-              <h3 class="text-primary"><?= $timeline[$i]['event'] ?></h3>
+              <h3 class="text-primary"><?= $timeline[$i]['type'] ?></h3>
           
               <p class="card-text "><?php echo $from."<br> To <br> ".$to; ?>   </p>
               <p class="card-text"><?= $timeline[$i]['venue'] ?><br> 
@@ -328,7 +328,7 @@ function getImgURL($name){
     		for ($i = 0; $i < count($preweddingGallery); $i++){?>
 
         <div class="item ">
-          <img src="<?= $preweddingGallery[$i]['imageURL'] ?>" class="gallery-images" style="border-radius: 40px;">
+          <img src="<?= $preweddingGallery[$i]['imageURL'] ?>" class="galleyImg" style="border-radius: 40px;">
         </div>
 
     <?php 
@@ -401,18 +401,8 @@ function getImgURL($name){
     </script>
 
                 <script>
-                
                   // Set the end time for the countdown (year, month (0-indexed), day, hour, minute, second)
                   var endTime = new Date("2024-02-10T12:00:00Z").getTime();
-                    var now = new Date().getTime();
-                   // Calculate the time difference
-                    var timeDifference = endTime - now;
-
-                     // If the countdown is over, display a message
-                    if (timeDifference < 0) {
-                      clearInterval(x);
-                      document.getElementById("countdown").innerHTML = "Wedding Done!";
-                    }
 
                   // Update the countdown every second
                   var x = setInterval(function() {
@@ -421,12 +411,6 @@ function getImgURL($name){
 
                     // Calculate the time difference
                     var timeDifference = endTime - now;
-
-                     // If the countdown is over, display a message
-                    if (timeDifference < 0) {
-                      clearInterval(x);
-                      document.getElementById("countdown").innerHTML = "Wedding Done!";
-                    }
 
                     // Calculate days, hours, minutes, and seconds
                     var days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
@@ -467,7 +451,12 @@ function getImgURL($name){
                     for (var i = 0; i < secselected.length; i++) {
                           secselected[i].innerHTML = seconds;
                       }
-                   
+
+                    // If the countdown is over, display a message
+                    if (timeDifference < 0) {
+                      clearInterval(x);
+                      document.getElementById("countdown").innerHTML = "EXPIRED";
+                    }
                   }, 1000);
 
 

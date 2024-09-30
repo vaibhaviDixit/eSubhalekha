@@ -20,15 +20,10 @@ class OTPLess{
 	}
 
 	public function generateUniqueString($length = 10) {
-	    // Get the current time in microseconds
 	    $time = microtime();
-	    // Hash the time with a secure algorithm
 	    $hash = hash('sha256', $time);
-	    // Convert the hash to a base64 string to make it shorter
 	    $base64 = base64_encode($hash);
-	    // Remove any characters that are not alphanumeric
 	    $base64 = preg_replace("/[^A-Za-z0-9]/", '', $base64);
-	    // Truncate the string to the desired length
 	    $uniqueString = substr($base64, 0, $length);
 	    return $uniqueString;
 	}

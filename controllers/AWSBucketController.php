@@ -8,9 +8,9 @@
 class AWSBucket{
 
 	protected $s3;
-	protected $bucketName = 'esubhalekha';
-	protected $IAM_KEY = 'AKIA4X3FUWUEORJBSKUT';
-	protected $IAM_SECRET = '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';
+	protected $bucketName = 'esubhalekha-demo';
+	protected $IAM_KEY = 'AKIA3AW5RIA6AYUEMSKF';
+	protected $IAM_SECRET = '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';
 	                           
 	protected $objects="";
 
@@ -27,8 +27,8 @@ class AWSBucket{
 							'secret' => $this->IAM_SECRET
 						),
 						'version' => 'latest',
-						'region'  => 'ap-south-1',
-						'use_accelerate_endpoint' => true,
+						'region'  => 'ap-southeast-2',
+						'use_accelerate_endpoint' => false,
 					)
 				);
 
@@ -53,7 +53,7 @@ class AWSBucket{
 
 		// For this, I would generate a unqiue random string for the key name. But you can do whatever.
 		$name=md5(strtolower(basename($filearr[$filename]['name'])));
-		$keyName = 'test_example/'.$this->generateRandomString(10) . $name;  
+		$keyName = 'images/'.$this->generateRandomString(10) . $name;  
 		$pathInS3 = 'https://s3.ap-south-1.amazonaws.com/' . $this->bucketName . '/' . $keyName;
 
 		// Add it to S3

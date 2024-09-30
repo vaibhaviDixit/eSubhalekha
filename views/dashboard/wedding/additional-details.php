@@ -51,13 +51,14 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 				}
                 
 
-				$createWedding = $wedding->update($_REQUEST['id'],$_REQUEST['lang'],$_REQUEST);
+				$updateWedding = $wedding->update($_REQUEST['id'],$_REQUEST['lang'],$_REQUEST);
 
-				if ($createWedding['error']) {
+
+				if ($updateWedding['error']) {
 					?>
 					<div class="alert alert-danger">
 						<?php
-						foreach ($createWedding['errorMsgs'] as $msg) {
+						foreach ($updateWedding['errorMsgs'] as $msg) {
 							if (count($msg))
 								echo $msg[0] . "<br>";
 						}
@@ -65,7 +66,8 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 					</div>
 					<?php
 				} else
-					redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/our-story");
+				print_r($_REQUEST);
+					//redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/our-story");
 
 			}
 

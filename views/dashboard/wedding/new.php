@@ -1,5 +1,5 @@
 <?php
-
+// errors(1);
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
@@ -84,8 +84,6 @@ function getImgURL($name){
 				$createWedding = $wedding->create($_REQUEST);
 				$addToGalleryBride = $gallery->update($brideArray);
 				$addToGalleryGroom = $gallery->update($groomArray);
-
-
 
 				if ($createWedding['error']) {
 					?>
