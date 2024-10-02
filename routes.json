@@ -62,7 +62,7 @@
   "wedding/{id}/theme": {
     "path": "views/dashboard/wedding/theme.php"
   },
-  "wedding/{id}/checkout": {
+  "wedding/{id}/{lang}/checkout": {
     "path": "views/dashboard/wedding/checkout.php"
   },
   "wedding/{id}/billing": {
@@ -70,6 +70,9 @@
   },
   "wedding/{id}/{lang}": {
     "path": "views/dashboard/wedding/index.php"
+  },
+  "wedding/{id}/{lang}/progress": {
+    "path": "views/dashboard/wedding/progress.php"
   },
   "wedding/{id}/{lang}/basic-details": {
     "path": "views/dashboard/wedding/basic-details.php"
@@ -145,9 +148,6 @@
   },
   "account": {
     "path": "views/account/index.php"
-  },
-  "account/change-password": {
-    "path": "views/account/change-password.php"
   },
   "account/payments": {
     "path": "views/account/payments.php"

@@ -15,6 +15,7 @@ require('views/partials/dashboard/sidebar.php');
 
 <h1><?=$_REQUEST['id']?></h1>
 
+
 <?php require('views/dashboard/wedding/progress_template.php') ?>
 
 

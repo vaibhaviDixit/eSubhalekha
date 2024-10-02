@@ -1,6 +1,121 @@
 <?php
 $currentEMail = App::getUser()['email'];
 
+controller("Wedding");
+$wedding = new Wedding();
+
+
+// define array to track progress
+$hostsMissing=array();
+$ourstoryMissing=array();
+$basicDeatilsMissing=array();
+$eventsMissing=array();
+$themeMissing=array();
+$paymentMissing=array();
+
+array_push($hostsMissing,array("path"=>"hosts"));
+array_push($ourstoryMissing,array("path"=>"our-story"));
+
+array_push($basicDeatilsMissing,array("path"=>"basic-details"));
+array_push($eventsMissing,array("path"=>"timeline"));
+array_push($themeMissing,array("path"=>"theme"));
+array_push($paymentMissing, array("path"=>"checkout"));
+
+
+$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
+$hosts = json_decode($weddingData['hosts'], true);
+$story = json_decode($weddingData['story'], true);
+
+$timeline = [];
+$timeline = json_decode($weddingData['timeline'], true);
+
+if($weddingData['error']){
+  $timeline = [];
+
+}
+
+if(sizeof($timeline)<1){
+    array_push($eventsMissing, "At least one event required!" );
+}
+
+if($weddingData['groomName']==''){
+    array_push($basicDeatilsMissing,"Groom name");
+}
+if($weddingData['brideName']==''){
+    array_push($basicDeatilsMissing,"Bride name");
+}
+if($weddingData['fromRole']==''){
+    array_push($basicDeatilsMissing,"From role");
+}
+if($weddingData['lang']==''){
+    array_push($basicDeatilsMissing,"Language");
+}
+if($weddingData['weddingName']==''){
+    array_push($basicDeatilsMissing,"Wedding Name");
+}
+
+if($weddingData['template']==''){
+    array_push($themeMissing, "Theme not selected!");
+}
+
+if($hosts['brideFather']['name']==''){
+    array_push($hostsMissing,"Bride Father");
+}
+if($hosts['groomFather']['name']==''){
+    array_push($hostsMissing,"Groom Father");
+}
+if($hosts['brideMother']['name']==''){
+    array_push($hostsMissing,"Bride Mother");
+}
+if($hosts['groomMother']['name']==''){
+    array_push($hostsMissing,"Groom Mother");
+}
+if($hosts['brideTagline']==''){
+    array_push($hostsMissing,"Bride Tagline");
+}
+if($hosts['groomTagline']==''){
+    array_push($hostsMissing,"Groom Tagline");
+}
+
+
+if($story['howWeMet']==''){
+    array_push($ourstoryMissing,"How We Met");
+}
+if($story['whenWeMet']==''){
+    array_push($ourstoryMissing,"When We Met");
+}
+if($story['engagement']==''){
+    array_push($ourstoryMissing,"Engagement");
+}
+if($story['engagementYear']==''){
+    array_push($ourstoryMissing,"Engagement Year");
+}
+if($story['memorableMoments']==''){
+    array_push($ourstoryMissing,"Memorable Moments");
+}
+
+
+$tracks=array("Basic Details"=>$basicDeatilsMissing,"Hosts"=>$hostsMissing,"Events"=>$eventsMissing,
+    "Our Story"=>$ourstoryMissing,"Theme"=>$themeMissing);
+
+$completed=0;
+
+foreach ($tracks as $key => $value) {
+
+    if(count($value)==1){
+        $completed++;
+    }
+}
+
+// if other six tasks has been completed then only enable payment 
+if($completed<6){
+    array_push($paymentMissing,"Complete necessary tracks to initiate payment!");
+}
+
+
+$tracks["Payment"]=$paymentMissing;
+
+$trackPercent=($completed/sizeof($tracks))*100;
 
 ?>
 
@@ -22,9 +137,7 @@ $currentEMail = App::getUser()['email'];
 
         <li><a href="<?php echo route('user/profile'); ?>" class="dropdown-item">
             <i class="bi bi-person-fill"></i> Profile</a></li>
-
-        <li><a href="<?php echo route('admin/user/password'); ?>" class="dropdown-item">
-            <i class="bi bi-key-fill"></i> Change Password</a></li>
+            
         <li><a class="dropdown-item text-danger fw-bold mt-3" id="logout" href="<?php echo route('logout'); ?>"><i
               class="bi bi-box-arrow-left"></i> Logout</a></li>
       </ul>
@@ -47,6 +160,13 @@ $currentEMail = App::getUser()['email'];
           <strong class="ms-3 text-secondary-3">
             <?= $_REQUEST['id'] ?>
           </strong>
+
+           <a class="nav-link trackprogress" aria-current="page"
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/progress') . queryString(); ?>">
+             <i class="bi bi-sort-up-alt"></i>
+            Progress (<?php echo $completed."/".sizeof($tracks); ?>)
+          </a>
+
           <a class="nav-link basic-details" aria-current="page"
             href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/basic-details') . queryString(); ?>">
             <i class="bi bi-clipboard-data"></i>
@@ -89,11 +209,6 @@ $currentEMail = App::getUser()['email'];
             Our Story
           </a>
 
-          <a class="nav-link whatsapp" aria-current="page"
-            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/whatsapp') . queryString(); ?>">
-            <i class="bi bi-whatsapp"></i>
-            Whatsapp Setup
-          </a>
 
           <a class="nav-link theme" aria-current="page"
             href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/theme') . queryString(); ?>">
@@ -111,24 +226,12 @@ $currentEMail = App::getUser()['email'];
 
 
           <a class="nav-link checkout" aria-current="page"
-            href="<?php echo route('wedding/' . $_REQUEST['id'] .   '/checkout') . queryString(); ?>">
+            href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] .  '/checkout') . queryString(); ?>">
             <i class="bi bi-currency-rupee"></i>
             Payment
           </a>
         </li>
-        <?php
-      elseif (isset($_REQUEST['id'])):
-        ?>
-<li class="nav-item my-2">
-          <strong class="ms-3 text-secondary-3">
-            <?= $_REQUEST['id'] ?>
-          </strong>
-<a class="nav-link checkout" aria-current="page"
-            href="<?php echo route('wedding/' . $_REQUEST['id'] .   '/checkout') . queryString(); ?>">
-            <i class="bi bi-currency-rupee"></i>
-            Payment
-          </a>
-</li>
+
         <?php
       endif;
       ?>
@@ -151,6 +254,10 @@ $currentEMail = App::getUser()['email'];
 
       case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/basic-details' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/basic-details'; ?>":
         document.querySelector(".basic-details").classList.toggle("active")
+        break
+
+      case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/progress' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/progress'; ?>":
+        document.querySelector(".trackprogress").classList.toggle("active")
         break
 
       case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/our-story' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/our-story'; ?>":
@@ -177,26 +284,15 @@ $currentEMail = App::getUser()['email'];
       case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/gallery' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/gallery'; ?>":
         document.querySelector(".gallery").classList.toggle("active")
         break
-        
-      case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/whatsapp' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/whatsapp'; ?>":
-        document.querySelector(".whatsapp").classList.toggle("active")
-        break
 
-       case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/whatsapp' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/theme'; ?>":
+       case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/theme' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/theme'; ?>":
         document.querySelector(".theme").classList.toggle("active")
         break
 
-        case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/checkout' : '/wedding/' . $_REQUEST['id'] .  '/checkout'; ?>":
+        case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id']. '/' . $_REQUEST['lang'] . '/checkout' : '/wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] . '/checkout'; ?>":
         document.querySelector(".checkout").classList.toggle("active")
         break
 
-        <?php
-      elseif (isset($_REQUEST['id'])):
-        ?>
-
-case "<?php echo !empty($config['APP_SLUG']) ? '/' . $config['APP_SLUG'] . '/wedding/' . $_REQUEST['id'] . '/checkout' : '/wedding/' . $_REQUEST['id'] .  '/checkout'; ?>":
-        document.querySelector(".checkout").classList.toggle("active")
-        break
 
 
         <?php

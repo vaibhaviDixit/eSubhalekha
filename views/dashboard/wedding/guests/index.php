@@ -12,9 +12,6 @@ DB::close();
 
 sort($languages);
 
-controller("Wedding");
-$wedding = new Wedding();
-$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 $weddingID=$_REQUEST['id'];
 DB::connect();
 $guests = DB::select('guests', '*', " weddingID='$weddingID' ")->fetchAll();

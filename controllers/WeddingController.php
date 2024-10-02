@@ -672,6 +672,7 @@ class Wedding
                     "engagement" => str_replace("\r\n", "<br>", $data['engagement']),
                     "engagementYear" => str_replace("\r\n", "<br>", $data['engagementYear']),
                     "memorableMoments" => str_replace("\r\n", "<br>", $data['memorableMoments']),
+                    "display" => $data['display'],
                 ];
             }
 
@@ -730,6 +731,14 @@ class Wedding
 
                 'updatedAt' => date('Y-m-d H:i:s'),
             ];
+
+
+
+            if(sizeof($data['timeline']) == 0){
+                $this->timeline = [];
+                $updateData['timeline'] = [];
+            }
+
             //return $updateData;
             // Update data into the 'weddings' table
             DB::connect();

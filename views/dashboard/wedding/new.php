@@ -36,7 +36,6 @@ function getImgURL($name){
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
 	<h1 class="h2">Create Wedding</h1>
 
-
 		<form method="post" id="form" name="createWedding" class="form-wedding" enctype="multipart/form-data">
 
 			<?php
@@ -44,13 +43,14 @@ function getImgURL($name){
 
 			if (isset($_POST['btn-submit'])) {
 
-				if(!isset($_FILES['bride']['name']) || !isset($_FILES['groom']['name'])){
-					echo '<div class="alert alert-danger"> Both Bride & Groom photos required! </div>';
-					return;
+
+
+				if($_FILES['bride']['name'] == '' || $_FILES['groom']['name'] == '' ){
+					echo '<script> alert("Both Bride & Groom photos required!");window.location.href=window.location.href; </script>';
 				}
 
 				controller("AWSBucket");
-				$awsObj=new AWSBucket();
+				$awsObj = new AWSBucket();
 
 				$_REQUEST['host'] = App::getUser()['userID'];
 				$groomArray=array();
@@ -67,8 +67,8 @@ function getImgURL($name){
 					}
 					else{					
 						$brideArray['imageURL'] = $uploadedURL['url'];	
-						$brideArray['imageName']='bride';
-						$brideArray['type']='bride';
+						$brideArray['imageName'] = 'bride';
+						$brideArray['type'] = 'bride';
 					}
 					
 				}
@@ -81,8 +81,8 @@ function getImgURL($name){
 					}
 					else{					
 						$groomArray['imageURL'] = $uploadedURL['url'];	
-						$groomArray['imageName']='groom';
-						$groomArray['type']='groom';
+						$groomArray['imageName'] = 'groom';
+						$groomArray['type'] = 'groom';
 					}
 				}
 
@@ -163,6 +163,8 @@ function getImgURL($name){
      </div>
 		
 
+
+
 			<div class="row">
 
 				<!-- Groom Name -->
@@ -215,8 +217,6 @@ function getImgURL($name){
 				</div>
 
 
-
-
 				<!-- Wedding ID -->
 				<div class="mb-3 col-sm-6">
 					<label for="weddingID" class="form-label">Wedding ID</label>
@@ -226,12 +226,45 @@ function getImgURL($name){
 			</div>
 
 			<!-- Submit Button -->
-			<button type="submit" name="btn-submit" id="submit-btn" class="btn btn-primary">Create Wedding</button>
+			<button type="submit" name="btn-submit" id="submit-btn" class="btn btn-primary" disabled>Create Wedding</button>
 		</form>
 
 	</div>
 
 	<script>
+
+		// Get the form elements
+	    const groomName = document.getElementById('groomName');
+	    const brideName = document.getElementById('brideName');
+	    const fromRole = document.getElementById('fromRole');
+	    const lang = document.getElementById('lang');
+	    const weddingName = document.getElementById('weddingName');
+	    const weddingID = document.getElementById('weddingID');
+	    const groomImage = document.getElementById('groom');
+	    const brideImage = document.getElementById('bride');
+	    const submitBtn = document.getElementById('submit-btn');
+
+
+	    function validateForm() {
+        if (groomName.value && brideName.value && fromRole.value && lang.value && weddingName.value && weddingID.value && groomImage.files.length > 0 && brideImage.files.length > 0) {
+            submitBtn.disabled = false; 
+	        } else {
+	            submitBtn.disabled = true;
+	        }
+	    }
+
+	    // Add event listeners to check the form on input
+	    groomName.addEventListener('input', validateForm);
+	    brideName.addEventListener('input', validateForm);
+	    fromRole.addEventListener('change', validateForm);
+	    lang.addEventListener('change', validateForm);
+	    weddingName.addEventListener('input', validateForm);
+	    weddingID.addEventListener('input', validateForm);
+	    groomImage.addEventListener('change', validateForm);
+	    brideImage.addEventListener('change', validateForm);
+
+
+
 		let weddings = []
 		<?php
 		foreach ($weddings as $wedding) {

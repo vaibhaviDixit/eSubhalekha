@@ -8,9 +8,6 @@ DB::connect();
 $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
 DB::close();
 
-controller("Wedding");
-$wedding = new Wedding();
-$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
 $required = "required";
 
@@ -24,6 +21,15 @@ $timeline = json_decode($weddingData['timeline'], true);
 controller("Gallery");
 $gallery = new Gallery();
 
+// Initialize an empty array to store the 'type' values
+$types = [];
+
+// Loop through the multidimensional array and extract 'type'
+foreach ($timeline as $event) {
+    if (isset($event['type'])) {
+        $types[] = $event['type'];
+    }
+}
 
 
 function getImgURL($name)
@@ -81,6 +87,7 @@ if (isset($_REQUEST['delTimeline'])) {
     <form id="form" method="post" enctype="multipart/form-data">
         <?php
 
+
         if (isset($_POST['btn-submit'])) {
 
             controller("AWSBucket");
@@ -118,7 +125,7 @@ if (isset($_REQUEST['delTimeline'])) {
                         $eventImgArray[$i] = [
                             'weddingID' => $_REQUEST['id'],
                             'imageURL' => $uploadedURL['url'],
-                            'imageName' => $_REQUEST['event'][$i].$_REQUEST['type'][$i],
+                            'imageName' => $_REQUEST['type'][$i],
                             'type' => 'event'
                         ];
                     }
@@ -218,13 +225,15 @@ if (isset($_REQUEST['delTimeline'])) {
                         <?php
                         if ($timeline != null):
                             for ($i = 0; $i < count($timeline); $i++):
+                            
                                 ?>
+
                                 <tr id="row<?= $i ?>" class="row">
                                     <td>
 
                                      <form >
                                             <button class="btn btn-danger float-end" onclick="this.form.submit();" name="delTimeline" value="<?= $i ?>"><i
-                                                class="bi bi-trash-fill"></i></button>
+                                                class="bi bi-trash-fill"> </i></button>
 
                                      </form>
                                     
@@ -236,20 +245,27 @@ if (isset($_REQUEST['delTimeline'])) {
                                                     <label for="type" class="form-label">Event</label>
                                                     <select class="form-select" name="type[]" required>
                                                         <option value="" disabled>Select Event Type</option>
+
                                                         <option value="engagement" <?php if ($timeline[$i]['type'] == 'engagement')
-                                                            echo 'selected'; ?>>Engagement</option>
+                                                            echo 'selected'; if(in_array('engagement', $types)){ echo 'disabled'; }  ?>>Engagement</option>
                                                         <option value="mehendi" <?php if ($timeline[$i]['type'] == 'mehendi')
-                                                            echo 'selected'; ?>>Mehendi</option>
+                                                            echo 'selected'; if(in_array('mehendi', $types)){ echo 'disabled'; } ?>>Mehendi</option>
+
                                                         <option value="sangeet" <?php if ($timeline[$i]['type'] == 'sangeet')
-                                                            echo 'selected'; ?>>Sangeet</option>
+                                                            echo 'selected'; if(in_array('sangeet', $types)){ echo 'disabled'; } ?>>Sangeet</option>
+
                                                         <option value="baraat" <?php if ($timeline[$i]['type'] == 'baraat')
-                                                            echo 'selected'; ?>>Baraat</option>
+                                                            echo 'selected'; if(in_array('baraat', $types)){ echo 'disabled'; } ?>>Baraat</option>
+
                                                         <option value="haldi" <?php if ($timeline[$i]['type'] == 'haldi')
-                                                            echo 'selected'; ?>>Haldi</option>
+                                                            echo 'selected'; if(in_array('haldi', $types)){ echo 'disabled'; } ?>>Haldi</option>
+
                                                         <option value="reception" <?php if ($timeline[$i]['type'] == 'reception')
-                                                            echo 'selected'; ?>>Reception</option>
+                                                            echo 'selected'; if(in_array('reception', $types)){ echo 'disabled'; } ?>>Reception</option>
+
                                                         <option value="muhurt" <?php if ($timeline[$i]['type'] == 'muhurt')
-                                                            echo 'selected'; ?>>Muhurt</option>
+                                                            echo 'selected'; if(in_array('muhurt', $types)){ echo 'disabled'; } ?>>Muhurt</option>
+
                                                         <option value="other" <?php if ($timeline[$i]['type'] == 'other')
                                                             echo 'selected'; ?>>Other</option>
                                                     </select>
@@ -372,19 +388,19 @@ if (isset($_REQUEST['delTimeline'])) {
                                                     <select class="form-select" name="type[]">
                                                         <option value="" disabled>Select Event Type</option>
                                                         <option value="engagement" <?php if ($timeline[$i]['type'] == 'engagement')
-                                                            echo 'selected'; ?>>Engagement</option>
+                                                            echo 'selected'; if(in_array('engagement', $types)){ echo 'disabled'; } ?>>Engagement</option>
                                                         <option value="mehendi" <?php if ($timeline[$i]['type'] == 'mehendi')
-                                                            echo 'selected'; ?>>Mehendi</option>
+                                                            echo 'selected'; if(in_array('mehendi', $types)){ echo 'disabled'; } ?>>Mehendi</option>
                                                         <option value="sangeet" <?php if ($timeline[$i]['type'] == 'sangeet')
-                                                            echo 'selected'; ?>>Sangeet</option>
+                                                            echo 'selected'; if(in_array('sangeet', $types)){ echo 'disabled'; } ?>>Sangeet</option>
                                                         <option value="baraat" <?php if ($timeline[$i]['type'] == 'baraat')
-                                                            echo 'selected'; ?>>Baraat</option>
+                                                            echo 'selected'; if(in_array('baraat', $types)){ echo 'disabled'; } ?>>Baraat</option>
                                                         <option value="haldi" <?php if ($timeline[$i]['type'] == 'haldi')
-                                                            echo 'selected'; ?>>Haldi</option>
+                                                            echo 'selected'; if(in_array('haldi', $types)){ echo 'disabled'; } ?>>Haldi</option>
                                                         <option value="reception" <?php if ($timeline[$i]['type'] == 'reception')
-                                                            echo 'selected'; ?>>Reception</option>
+                                                            echo 'selected'; if(in_array('reception', $types)){ echo 'disabled'; } ?>>Reception</option>
                                                         <option value="muhurt" <?php if ($timeline[$i]['type'] == 'muhurt')
-                                                            echo 'selected'; ?>>Muhurt</option>
+                                                            echo 'selected'; if(in_array('muhurt', $types)){ echo 'disabled'; } ?>>Muhurt</option>
                                                         <option value="other" <?php if ($timeline[$i]['type'] == 'other')
                                                             echo 'selected'; ?>>Other</option>
                                                     </select>

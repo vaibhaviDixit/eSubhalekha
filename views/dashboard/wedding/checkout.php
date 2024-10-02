@@ -1,12 +1,9 @@
 <?php
+// errors(1);
+
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
-
-controller("Wedding");
-$wedding = new Wedding();
-$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
-$story = json_decode($weddingData['story'], true);
 
 // Set the plan details
 $planName = "Standard";

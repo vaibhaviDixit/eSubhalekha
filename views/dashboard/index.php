@@ -1,4 +1,5 @@
 <?php
+// errors(1);
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
@@ -6,20 +7,20 @@ require('views/partials/dashboard/sidebar.php');
 $suerID = App::getUser()['userID'];
 if(App::getUser()['role'] == "admin"){
     DB::connect();
-    $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
+    $weddings = DB::select('weddings', '*', "")->fetchAll();
     DB::close();
 }elseif(App::getUser()['role'] == "manager"){
     DB::connect();
-    $weddings = DB::select('weddings', '*', "lang = 'en' and manager = '$suerID'")->fetchAll();
+    $weddings = DB::select('weddings', '*', " manager = '$suerID'")->fetchAll();
     DB::close();
 }elseif(App::getUser()['role'] == "partner"){
     DB::connect();
-    $weddings = DB::select('weddings', '*', "lang = 'en' and partner = '$suerID'")->fetchAll();
+    $weddings = DB::select('weddings', '*', " partner = '$suerID'")->fetchAll();
     DB::close();
 }
 else{
     DB::connect();
-    $weddings = DB::select('weddings', '*', "lang = 'en' and host = '$suerID'")->fetchAll();
+    $weddings = DB::select('weddings', '*', " host = '$suerID'")->fetchAll();
     DB::close();
 }
 

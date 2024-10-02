@@ -1,0 +1,9 @@
+{
+  "themeName": "Fairytale",
+  "themePrice": 100.00,
+  "displayImages": [
+    "img/banner.jpg",
+    "img/image2.jpg"
+  ],
+  "isTrending": true
+}

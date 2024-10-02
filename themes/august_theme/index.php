@@ -193,15 +193,15 @@ function getImgURL($name)
     <div class="w-full h-full">
       <div class="w-full hero relative flex justify-center items-center overflow-hidden">
         <div class="absolute top-[400px] left-0 w-[160px] lg:w-[250px] overflow-hidden">
-          <img class="aos w-full" src="<?php echo route("themes/august/assets/images/decor_left.png") ?>" alt="" />
+          <img class="aos w-full" src="<?php echo route("themes/august/assets/img/decor_left.png") ?>" alt="" />
         </div>
         <div class="absolute top-[100px] right-0 w-[160px] lg:w-[250px] overflow-hidden">
-          <img class="aos w-full" src="<?php echo route("themes/august/assets/images/decor_right.png") ?>" alt="" />
+          <img class="aos w-full" src="<?php echo route("themes/august/assets/img/decor_right.png") ?>" alt="" />
         </div>
         <div class="w-[70%] max-w-[300px] lg:max-w-xl relative flex flex-col gap-[80px] mb-[100px]">
           <div id="decor-image"
             class="absolute top-[50%] right-[50%] lg:right-[55%] translate-x-[50%] -translate-y-[50%] w-[250px] lg:w-[450px] overflow-hidden">
-            <img class="w-full" src="<?php echo route("themes/august/assets/images/decor_middle.png") ?>" alt="" />
+            <img class="w-full" src="<?php echo route("themes/august/assets/img/decor_middle.png") ?>" alt="" />
           </div>
           <div id="bride-name" class="aos w-full text-left text-5xl sm:text-6xl lg:text-7xl text-[#DA2E78]">
             <p><?php echo removeLastWord($weddingData['brideName']) ?></p>
@@ -347,7 +347,7 @@ function getImgURL($name)
         <div
           class="w-[800px] sm:w-[1200px] lg:w-full h-[400px] absolute -bottom-[80px] sm:bottom-0 lg:-bottom-[60px] right-0">
           <img class="w-full translate-y-[10%] lg:-translate-y-[20%]"
-            src="<?php echo route("themes/august/assets/images/vector1.png") ?>" alt="" />
+            src="<?php echo route("themes/august/assets/img/vector1.png") ?>" alt="" />
         </div>
       </div>
     </div>
@@ -545,7 +545,7 @@ function getImgURL($name)
               <div
                 class="h-[70px] w-[70px] rounded-full sm:h-[90px] sm:w-[90px] relative overflow-hidden px-1 py-1 bg-[#FAEFE1]">
                 <div class="w-full h-full bg-[#FAEFE1] rounded-full overflow-hidden">
-                  <img src="./assets/images/BrideAndGroom.png" class="object-cover w-full" alt="" />
+                  <img src="./assets/img/BrideAndGroom.png" class="object-cover w-full" alt="" />
                 </div>
               </div>
               <div
@@ -562,7 +562,7 @@ function getImgURL($name)
               <div
                 class="h-[70px] w-[70px] rounded-full sm:h-[90px] sm:w-[90px] relative overflow-hidden px-1 py-1 bg-[#FAEFE1]">
                 <div class="w-full h-full bg-[#FAEFE1] rounded-full overflow-hidden">
-                  <img src="./assets/images/BrideAndGroom.png" class="object-cover w-full" alt="" />
+                  <img src="./assets/img/BrideAndGroom.png" class="object-cover w-full" alt="" />
                 </div>
               </div>
               <div
@@ -581,7 +581,7 @@ function getImgURL($name)
               <div
                 class="h-[70px] w-[70px] rounded-full sm:h-[90px] sm:w-[90px] relative overflow-hidden px-1 py-1 bg-[#FAEFE1]">
                 <div class="w-full h-full bg-[#FAEFE1] rounded-full overflow-hidden">
-                  <img src="./assets/images/BrideAndGroom.png" class="object-cover w-full" alt="" />
+                  <img src="./assets/img/BrideAndGroom.png" class="object-cover w-full" alt="" />
                 </div>
               </div>
               <div
@@ -700,7 +700,7 @@ function getImgURL($name)
               <i
                 class="bx bx-right-arrow-alt absolute -right-[20px] text-[100pt] leading-tight -rotate-45 -translate-y-[25%] text-[#FFFFFF]"></i>
               <img class="w-full h-full object-cover"
-                src="<?php echo route("themes/august/assets/images/venue.jpg"); ?>" alt="" />
+                src="<?php echo route("themes/august/assets/img/venue.jpg"); ?>" alt="" />
             </div>
           </div>
           <p class="w-full max-w-[300px] mt-2 sm:pt-[50px] text-left font-light text-s">

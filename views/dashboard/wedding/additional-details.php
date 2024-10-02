@@ -8,10 +8,6 @@ DB::connect();
 $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
 DB::close();
 
-controller("Wedding");
-
-$wedding = new Wedding();
-$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
 
 ?>
@@ -21,7 +17,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 </head>
 <!--Main Start-->
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
-    <h1 class="h2">Additional Details</h1>
+    <h1 class="h2">Additional Details (Optional)</h1>
 
      <div>
      	
@@ -67,8 +63,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 					</div>
 					<?php
 				} else
-				print_r($_REQUEST);
-					//redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/our-story");
+					redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang']."/our-story");
 
 			}
 
@@ -78,7 +73,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
     <div class="row">
     		<!-- Groom Qualifications -->
 			<div class="mb-3 col-6">
-				<label for="groomQualifications" class="form-label">Groom Qualifications (Optional)</label>
+				<label for="groomQualifications" class="form-label">Groom Qualifications</label>
 				<input type="text" class="form-control" id="groomQualifications" name="groomQualifications"
 					placeholder="B.Tech"
 					value="<?= $_REQUEST['groomQualifications'] ?? $weddingData['groomQualifications'] ?>">
@@ -86,7 +81,7 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
 			<!-- Bride Qualifications -->
 			<div class="mb-3 col-6">
-				<label for="brideQualifications" class="form-label">Bride Qualifications (Optional)</label>
+				<label for="brideQualifications" class="form-label">Bride Qualifications </label>
 				<input type="text" class="form-control" id="brideQualifications" name="brideQualifications"
 					placeholder="B.Tech"
 					value="<?= $_REQUEST['brideQualifications'] ?? $weddingData['brideQualifications'] ?>">
@@ -94,14 +89,14 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
 			<!-- Groom Bio -->
 			<div class="mb-3 col-sm-6">
-				<label for="groomBio" class="form-label">Groom Bio (Optional)</label>
+				<label for="groomBio" class="form-label">Groom Bio </label>
 				<textarea class="form-control" id="groomBio" name="groomBio" placeholder="Enter Groom Bio"
 					rows="3"><?= $_REQUEST['groomBio'] ?? $weddingData['groomBio'] ?></textarea>
 			</div>
 
 			<!-- Bride Bio -->
 			<div class="mb-3 col-sm-6">
-				<label for="brideBio" class="form-label">Bride Bio (Optional)</label>
+				<label for="brideBio" class="form-label">Bride Bio </label>
 				<textarea class="form-control" id="brideBio" name="brideBio" placeholder="Enter bride Bio"
 					rows="3"><?= $_REQUEST['brideBio'] ?? $weddingData['brideBio'] ?></textarea>
 			</div>

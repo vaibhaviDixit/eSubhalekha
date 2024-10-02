@@ -11,11 +11,8 @@ DB::close();
 
 sort($languages);
 
-controller("Wedding");
 controller("Gallery");
 
-$wedding = new Wedding();
-$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 $story = json_decode($weddingData['story'], true);
 
 

@@ -4,15 +4,19 @@ require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
 
 
-controller("Wedding");
-$wedding = new Wedding();
-$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 $story = json_decode($weddingData['story'], true);
 
 
 ?>
 
 <head>
+
+<style type="text/css">
+	.form-check-input:checked {
+ 		background-color: var(--color-primary-1) !important;
+ 		border-color: var(--color-primary-1) !important;
+	}
+</style>
 
 </head>
 <!--Main Start-->
@@ -22,6 +26,14 @@ $story = json_decode($weddingData['story'], true);
 
 		<?php
 		if (isset($_POST['btn-submit'])) {
+
+
+			if(isset($_REQUEST['display'])){
+				$_REQUEST['display'] = 'true';
+			}else{
+				$_REQUEST['display'] = 'false';
+			}
+
 			$updateWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
 
 			if ($updateWedding['error']) {
@@ -98,11 +110,19 @@ $story = json_decode($weddingData['story'], true);
 			</div>
 
 			<!-- Memorable Moments -->
-			<div class="mb-3 col-12">
+			<div class="mb-3 col-8">
 				<label for="memorableMoments" class="form-label">Memorable Moments</label>
 				<textarea class="form-control" id="memorableMoments" name="memorableMoments"
 					placeholder="Add any sweet memorable moments you like to share"
 					rows="3"><?= $_REQUEST['memorableMoments'] ?? str_replace("<br>", "\r\n", $story['memorableMoments']) ?></textarea>
+			</div>
+
+			<!-- show toggle -->
+			<div class="mb-3 col-4">
+                 
+				<label for="display" class="form-check-label d-block"> Display </label>
+				<input class="form-check-input" type="checkbox" id="display" name="display" <?php if($_REQUEST['display'] == true){ echo "checked"; } ?> >
+
 			</div>
 
 
@@ -125,31 +145,6 @@ $story = json_decode($weddingData['story'], true);
 		}
 		?>
 
-		function generateWeddingID(groomName, brideName) {
-			let weddingID = groomName + "Weds" + brideName;
-
-			if (weddings.includes(weddingID)) {
-				weddingID = groomName + "-Weds-" + brideName;
-			}
-
-			return weddingID;
-		}
-
-		function updateWeddingID() {
-			const groomName = document.querySelector('#groomName').value.trim();
-			const brideName = document.querySelector('#brideName').value.trim();
-			const weddingIDField = document.querySelector('#weddingID');
-
-			if (groomName.length && brideName.length) {
-				const newWeddingID = generateWeddingID(groomName, brideName);
-				weddingIDField.value = newWeddingID;
-			} else weddingIDField.value = "";
-		}
-
-		document.querySelector('#groomName').addEventListener('focusout', updateWeddingID);
-		document.querySelector('#brideName').addEventListener('focusout', updateWeddingID);
-		document.querySelector('#groomName').addEventListener('keyup', updateWeddingID);
-		document.querySelector('#brideName').addEventListener('keyup', updateWeddingID);
 	</script>
 </main>
 

@@ -1,0 +1,9 @@
+{
+  "themeName": "August",
+  "themePrice": 150.00,
+  "displayImages": [
+    "img/event1.png",
+    "img/image2.jpg"
+  ],
+  "isTrending": true
+}
