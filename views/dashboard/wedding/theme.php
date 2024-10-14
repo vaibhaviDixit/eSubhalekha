@@ -25,26 +25,31 @@ require('views/partials/dashboard/sidebar.php');
 	
 		if (isset($_POST['select'])) {
 
-			$_REQUEST['template']=$_REQUEST['themeName'];
+      if($isPaymentDone){
+        echo '<div class="alert alert-danger alert-dismissible fade show"> Unable to change Theme! Payment already done. <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+      }else{
 
-			$updateWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
+          $_REQUEST['template']=$_REQUEST['themeName'];
 
-			if ($updateWedding['error']) {
-				?>
-				<div class="alert alert-danger">
-					<?php
-					foreach ($updateWedding['errorMsgs'] as $msg) {
-						if (count($msg))
-							echo $msg[0] . "<br>";
-					}
-					?>
-				</div>
-				<?php
-			}else{
-				redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang'] . "/theme");
+          $updateWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
 
-			} 
+          if ($updateWedding['error']) {
+            ?>
+            <div class="alert alert-danger">
+              <?php
+              foreach ($updateWedding['errorMsgs'] as $msg) {
+                if (count($msg))
+                  echo $msg[0] . "<br>";
+              }
+              ?>
+            </div>
+            <?php
+          }else{
+            redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang'] . "/theme");
 
+          } 
+
+      }
 
 		}
 
@@ -66,10 +71,10 @@ $themeFolders = array_filter(glob('themes/*'), 'is_dir');
             // Extract only the folder name
             $themeDetails = [];
             $themeName = ucwords(explode("_", basename($folder))[0]);
-            $themeDetails = json_decode(file_get_contents('themes/'.basename($folder).'/details.json'), true);
+            $themeDetails = json_decode(file_get_contents('themes/'.basename($folder).'/manifest.json'), true);
     ?>
     <!-- Card for Each Theme -->
-    <div class="col-md-4 mb-4">
+    <div class="col-lg-4 col-md-6 col-sm-3 mb-4 ">
       <div class="card theme-card text-center position-relative" style="overflow: hidden;">
         <!-- Badge for Discount or Trending -->
         <?php if ($themeDetails['isTrending']) { ?>
@@ -84,17 +89,35 @@ $themeFolders = array_filter(glob('themes/*'), 'is_dir');
           <!-- Theme Name -->
           <h5 class="card-title"><?php echo $themeName; ?></h5>
           <!-- Theme Price -->
-          <p class="card-text text-muted">Price: $<?php echo number_format($themeDetails['themePrice'], 2); ?></p>
+          <dt class="card-text text-muted">Price: <?php echo number_format($themeDetails['themePrice'], 2); ?></dt>
         
           <!-- Preview and Select Buttons -->
-          <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+          <div class="d-flex justify-content-center">
             <!-- Live Preview Button -->
-            <a href="preview?theme=<?php echo basename($folder); ?>" class="btn btn-sm btn-outline-primary preview-btn"> Preview</a>
-
+            <a target="_blank" href="<?php echo route("wedding/RahulWedsNita/en/preview?theme=".basename($folder)); ?>" class="btn btn-sm btn-primary preview-btn text-light"> Preview </a>
             <!-- Select Button -->
             <form method="post" class="p-0 m-0">
               <input type="hidden" name="themeName" value="<?php echo basename($folder); ?>">
-              <button class="btn btn-sm btn-outline-success select-btn" type="submit" name="select">Select</button>
+
+              <?php 
+
+                  if($weddingData['template'] == basename($folder) ){
+              ?>
+
+                <button class="btn btn-sm select-btn btn-success" type="submit" name="select" >Selected</button>
+
+              <?php
+
+                  }else{
+              ?>
+                <button class="btn btn-sm select-btn btn-success" type="submit" name="select" >Select</button>
+
+              <?php
+
+                  }
+
+               ?>
+              
             </form>
           </div>
         </div>

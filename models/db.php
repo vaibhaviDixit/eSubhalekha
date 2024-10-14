@@ -58,19 +58,53 @@ class DB
      *
      * @return int The number of rows affected by the update operation.
      */
+
+    // public static function update($table, $data, $where)
+    // {
+    //     $set = "";
+    //     foreach ($data as $column => $value) {
+    //         if($value != null) $set .= "$column = '$value', ";
+    //     }
+    //     $set = rtrim($set, ", ");
+    //     $query = "UPDATE $table SET $set WHERE $where";
+    //     echo $query;
+    //     $statement = self::$connection->prepare($query);
+    //     $statement->execute();
+
+    //     return $statement->rowCount();
+    // }
+
+
+    // handling nulls while updating
     public static function update($table, $data, $where)
     {
-        $set = "";
-        foreach ($data as $column => $value) {
-            if($value != null) $set .= "$column = '$value', ";
-        }
-        $set = rtrim($set, ", ");
-        $query = "UPDATE $table SET $set WHERE $where";
-        $statement = self::$connection->prepare($query);
-        $statement->execute();
+        $set = [];
+        $params = [];
 
+        // Construct the SET part of the query and bind the parameters
+        foreach ($data as $column => $value) {
+            if ($value === null) {
+                $set[] = "$column = NULL"; // If value is null, set it as NULL
+            } else {
+                $set[] = "$column = :$column"; // Use parameterized queries for other values
+                $params[":$column"] = $value; // Bind the value to the parameter
+            }
+        }
+
+        $setString = implode(", ", $set); // Join the set parts with commas
+        $query = "UPDATE $table SET $setString WHERE $where";
+
+        // Debug: output the query for checking
+        // echo $query;
+
+        // Prepare and execute the query using a prepared statement
+        $statement = self::$connection->prepare($query);
+        $statement->execute($params);
+
+        // Return the number of affected rows
         return $statement->rowCount();
     }
+
 
     /**
      * Deletes data from the specified table based on the given condition.

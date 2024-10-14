@@ -48,7 +48,7 @@ $story = json_decode($weddingData['story'], true);
 				</div>
 				<?php
 			} else
-				redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang'] . "/whatsapp");
+				redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang'] . "/theme");
 
 		}
 
@@ -118,17 +118,14 @@ $story = json_decode($weddingData['story'], true);
 			</div>
 
 			<!-- show toggle -->
-			<div class="mb-3 col-4">
+			<div class="mb-3 col-4 form-check form-switch" style="padding-left: 1em !important;">
                  
 				<label for="display" class="form-check-label d-block"> Display </label>
-				<input class="form-check-input" type="checkbox" id="display" name="display" <?php if($_REQUEST['display'] == true){ echo "checked"; } ?> >
+				<input class="form-check-input" type="checkbox" role="switch" id="display" name="display" <?php if($story['display'] == 'true'){ echo "checked"; } ?> style="margin-left: 0 !important;">
 
 			</div>
 
-
-
 		</div>
-
 
 
 		<!-- Submit Button -->

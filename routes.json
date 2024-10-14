@@ -33,7 +33,7 @@
     "path": "views/terms.php"
   },
   "themes": {
-    "path": "views/themes/index.php"
+    "path": "views/dashboard/themes.php"
   },
   "themes/{category}": {
     "path": "views/themes/category.php"
@@ -47,7 +47,13 @@
   "login": {
     "path" : "views/auth/login.php"
   },
+  "login/{role}": {
+    "path" : "views/auth/login.php"
+  },
   "register": {
+    "path": "views/auth/register.php"
+  },
+  "register/{role}": {
     "path": "views/auth/register.php"
   },
   "verify": {
@@ -61,6 +67,12 @@
   },
   "wedding/{id}/theme": {
     "path": "views/dashboard/wedding/theme.php"
+  },
+  "wedding/{id}/{lang}/upload": {
+    "path": "views/dashboard/wedding/uploader.php"
+  },
+  "wedding/{id}/{lang}/payment": {
+    "path": "views/dashboard/wedding/paymentProcess.php"
   },
   "wedding/{id}/{lang}/checkout": {
     "path": "views/dashboard/wedding/checkout.php"
@@ -118,6 +130,15 @@
   },
   "user/profile": {
     "path": "views/account/profile.php"
+  },
+  "partner/profile": {
+    "path": "views/account/partnerProfile.php"
+  },
+  "partner/dashboard": {
+    "path": "views/dashboard/partnerDash.php"
+  },
+  "receipt/{id}/{lang}": {
+    "path": "views/dashboard/wedding/receipt.php"
   },
   "{id}/{lang}": {
     "path": "views/wedding.php"

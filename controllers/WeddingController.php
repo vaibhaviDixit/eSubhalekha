@@ -414,7 +414,7 @@ class Wedding
 
     // Update operation
     
-    public function update($weddingID, $lang, array $data)
+    public function update($weddingID, $lang, array $data,$events='false')
     {
 
         // Sanitize and assign values
@@ -733,10 +733,9 @@ class Wedding
             ];
 
 
-
-            if(sizeof($data['timeline']) == 0){
-                $this->timeline = [];
-                $updateData['timeline'] = [];
+            if($events == 'true' && empty($this->timeline)){
+                $this->timeline = null;
+                $updateData['timeline'] =null;
             }
 
             //return $updateData;

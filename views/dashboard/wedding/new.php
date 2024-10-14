@@ -1,5 +1,6 @@
 <?php
-// errors(1);
+
+//errors(1);
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
@@ -9,25 +10,6 @@ DB::close();
 
 
 sort($languages);
-controller("Wedding");
-$wedding = new Wedding();
-
-
-controller("Gallery");
-$gallery = new Gallery();
-
-function getImgURL($name){
-	$gallery = new Gallery();
-	$row=$gallery->getGalleryImg($_REQUEST['id'],$name);
-	
-	if($row['imageURL']){
-		return $row['imageURL'];
-	}
-	else{
-		return false;
-	}
-	
-}
 
 ?>
 
@@ -44,51 +26,14 @@ function getImgURL($name){
 			if (isset($_POST['btn-submit'])) {
 
 
-
-				if($_FILES['bride']['name'] == '' || $_FILES['groom']['name'] == '' ){
-					echo '<script> alert("Both Bride & Groom photos required!");window.location.href=window.location.href; </script>';
-				}
-
 				controller("AWSBucket");
 				$awsObj = new AWSBucket();
 
 				$_REQUEST['host'] = App::getUser()['userID'];
-				$groomArray=array();
-				$brideArray=array();
+			
 
-				$groomArray['weddingID']=$_REQUEST['weddingID'];
-				$brideArray['weddingID']=$_REQUEST['weddingID'];
-
-				// upload bride img to aws bucket
-				if(isset($_FILES['bride']['name'])){
-					$uploadedURL = $awsObj->uploadToAWS($_FILES,'bride');
-					if($uploadedURL['error']){
-						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
-					}
-					else{					
-						$brideArray['imageURL'] = $uploadedURL['url'];	
-						$brideArray['imageName'] = 'bride';
-						$brideArray['type'] = 'bride';
-					}
-					
-				}
-
-				 // upload groom img to aws bucket
-				if(isset($_FILES['groom']['name'])){
-					$uploadedURL = $awsObj->uploadToAWS($_FILES,'groom');
-					if($uploadedURL['error']){
-						echo '<div class="alert alert-danger">'.$uploadedURL['errorMsg'].'</div>';
-					}
-					else{					
-						$groomArray['imageURL'] = $uploadedURL['url'];	
-						$groomArray['imageName'] = 'groom';
-						$groomArray['type'] = 'groom';
-					}
-				}
-
+			
 				$createWedding = $wedding->create($_REQUEST);
-				$addToGalleryBride = $gallery->update($brideArray);
-				$addToGalleryGroom = $gallery->update($groomArray);
 
 				if ($createWedding['error']) {
 					?>
@@ -129,41 +74,6 @@ function getImgURL($name){
 			}
 
 			?>
-     <div class="row text-center">
-
-     		<!-- groom pic -->
-			    <div class="col-sm-6">
-			      <label for="groom" class="form-label" style="position: relative;">
-
-			      	Groom Photo<br>
-			      	    <img id="groomImage" src="<?php assets('img/upload.png'); ?>" alt="Groom Image" class="rounded-circle" style="width: 150px; height: 150px;">
-
-			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
-
-			      </label>
-
-			    	<input type="file" class="form-control" id="groom" accept="image/*" name="groom"  onchange="displayGroomImage(this)" hidden>
-			    </div>
-			
-     	
-     	<!--  bride pic -->
-			    <div class="col-sm-6">
-			      <label for="bride" class="form-label" style="position: relative;">
-
-			      	Bride Photo<br>
-			      	    <img id="brideImage" src="<?php assets('img/upload.png'); ?>" alt="Bride Image" class="rounded-circle" style="width: 150px; height: 150px;">
-
-			      	    <span class="btn btn-sm btn-secondary capture"><i class="fas fa-camera"></i></span>
-
-			      </label>
-			      <input type="file" class="form-control" id="bride" accept="image/*" name="bride"   onchange="displayBrideImage(this)" hidden>
-
-			    </div>
-  	
-     </div>
-		
-
-
 
 			<div class="row">
 
@@ -202,7 +112,7 @@ function getImgURL($name){
 							  if ($_REQUEST['lang'] == $lang)
 								  echo 'selected';
 							  elseif ($lang == 'en')
-								  echo 'selected' ?>>
+								  echo 'selected' ?> >
 								<?= Locale::getDisplayLanguage($lang, "en") ?>
 							</option>
 							<?php
@@ -240,13 +150,11 @@ function getImgURL($name){
 	    const lang = document.getElementById('lang');
 	    const weddingName = document.getElementById('weddingName');
 	    const weddingID = document.getElementById('weddingID');
-	    const groomImage = document.getElementById('groom');
-	    const brideImage = document.getElementById('bride');
 	    const submitBtn = document.getElementById('submit-btn');
 
 
 	    function validateForm() {
-        if (groomName.value && brideName.value && fromRole.value && lang.value && weddingName.value && weddingID.value && groomImage.files.length > 0 && brideImage.files.length > 0) {
+        if (groomName.value && brideName.value && fromRole.value && lang.value && weddingName.value && weddingID.value ) {
             submitBtn.disabled = false; 
 	        } else {
 	            submitBtn.disabled = true;
@@ -260,8 +168,6 @@ function getImgURL($name){
 	    lang.addEventListener('change', validateForm);
 	    weddingName.addEventListener('input', validateForm);
 	    weddingID.addEventListener('input', validateForm);
-	    groomImage.addEventListener('change', validateForm);
-	    brideImage.addEventListener('change', validateForm);
 
 
 
@@ -303,40 +209,9 @@ function getImgURL($name){
 		document.querySelector('#groomName').addEventListener('keyup', updateWeddingID);
 		document.querySelector('#brideName').addEventListener('keyup', updateWeddingID);
   			
-  			//display bride img
-			function displayBrideImage(input) {
-			  const file = input.files[0];
+  		
 
-			  if (file) {
-			    const reader = new FileReader();
-			    
-			    reader.onload = function (e) {
-			      document.getElementById('brideImage').src = e.target.result;
-
-			    };
-
-			    reader.readAsDataURL(file);
-			  }
-			  
-			}
-
-			// display groom img
-			function displayGroomImage(input) {
-
-			  const file = input.files[0];
-
-			  if (file) {
-			    const reader = new FileReader();
-
-			    reader.onload = function (e) {
-			      document.getElementById('groomImage').src =e.target.result;
-
-			    };
-
-			    reader.readAsDataURL(file);
-			  }
-
-			}
+	
 
   		
 	</script>

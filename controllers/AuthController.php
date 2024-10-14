@@ -12,6 +12,7 @@
  * @package GraphenePHP
  * @version 2.0.0
  */
+
 class Auth
 {
     protected $db;
@@ -123,11 +124,16 @@ class Auth
                         $checkData = DB::select('users', '*', "phone = '$this->phone'")->fetchAll()[0];
 
                     DB::close();
-
-                    if ($checkData['name']=='' OR $checkData['email']=='' OR $checkData['gender']=='') {
-                        header("Location:" . route('')."user/profile");
-                    } else {
-                        header("Location:" . route('dashboard'));
+                    print_r($checkData);
+                    if($checkData['role'] == 'partner'){ 
+                        header("Location:" . route('')."partner/profile");
+                    }
+                    else{
+                         if ($checkData['name']=='' OR $checkData['email']=='' OR $checkData['gender']=='') {
+                            header("Location:" . route('')."user/profile");
+                        } else {
+                            header("Location:" . route('dashboard'));
+                        }
                     }
                     
                 } else $this->errors = "Internal Server Error";
@@ -139,10 +145,10 @@ class Auth
     }
 
 
-    public function checkPhone($phone, $role)
+    public function checkPhone($phone)
     {
         DB::connect();
-        $result = DB::select('users', '*', "phone = '$phone' and role = '$role' and status <> 'deleted'")->fetchAll();
+        $result = DB::select('users', '*', "phone = '$phone'  and status <> 'deleted'")->fetchAll();
         DB::close();
         return count($result);
     }
@@ -216,7 +222,7 @@ class Auth
                         'type' => 'custom',
                         'message' => 'Phone already in use',
                         'validate' => function () {
-                            return !($this->checkPhone($this->phone, $this->role));
+                            return !($this->checkPhone($this->phone));
                         },
                     ],
                 ]
@@ -245,8 +251,19 @@ class Auth
             DB::close();
 
             if ($createUser) {
-                $this->error = false;
-                $this->errorMsgs['createUser'] = '';
+                if($this->role == 'partner'){
+                    controller("partners");
+                    $partner = new Partners();
+                    $createPartner = $partner->create($this->userID);
+                    if($createPartner){
+                        $this->error = false;
+                        $this->errorMsgs['createUser'] = '';
+                    }
+
+                }else{
+                    $this->error = false;
+                    $this->errorMsgs['createUser'] = '';
+                }
             } else {
                 $this->error = true;
                 $this->errorMsgs['createUser'] = 'User account creation failed';
@@ -262,7 +279,7 @@ class Auth
     }
 
     // Send OTP
-    public function sendOTP($phone){
+    public function sendOTP($phone,$role){
 
         $getUser=$this->getUserByPhone($phone);
 
@@ -294,7 +311,7 @@ class Auth
              $this->errorMsgs['sendOTP'] = 'Unable to send OTP';
           }
       }else{
-        $register = $this->register($phone,$result['orderId'],'user');   
+        $register = $this->register($phone,$result['orderId'],$role);   
           if($register){
             $this->error = false;
             $this->errorMsgs['sendOTP'] = '';
@@ -359,7 +376,7 @@ public function verifyOTP($phone, $otp)
                         'type' => 'custom',
                         'message' => 'Phone already in use',
                         'validate' => function () {
-                            return !($this->checkPhone($this->phone, $this->role));
+                            return ($this->checkPhone($this->phone));
                         },
                     ],
                 ]
@@ -383,9 +400,10 @@ public function verifyOTP($phone, $otp)
         $message = $sms->verifyOTP("+91".$this->phone,$otp,$checkOTP['orderId']);
         $message=json_decode($message, true);
 
+
         if ($message['success'] && isset($message['isOTPVerified']) && $message['isOTPVerified']){
             
-             DB::connect();
+            DB::connect();
             $updateUser = DB::update('users', $updateData, "userID = '$this->userID'");
             DB::close();
 
@@ -401,7 +419,7 @@ public function verifyOTP($phone, $otp)
         else{
             return [
                     'error' => true,
-                    'errorMsgs' => ['updateUser' => 'Verification Failed!'],
+                    'errorMsgs' => ['otp' => 'Invalid OTP!'],
                 ];
         }
         

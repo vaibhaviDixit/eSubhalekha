@@ -18,9 +18,6 @@ if ($weddingData['timeline']) {
 $timeline = [];
 $timeline = json_decode($weddingData['timeline'], true);
 
-controller("Gallery");
-$gallery = new Gallery();
-
 // Initialize an empty array to store the 'type' values
 $types = [];
 
@@ -31,19 +28,6 @@ foreach ($timeline as $event) {
     }
 }
 
-
-function getImgURL($name)
-{
-    $gallery = new Gallery();
-    $row = $gallery->getGalleryImg($_REQUEST['id'], $name);
-
-    if ($row['imageURL']) {
-        return $row['imageURL'];
-    } else {
-        return false;
-    }
-
-}
 if (isset($_REQUEST['delTimeline'])) {
 
     controller("AWSBucket");
@@ -57,6 +41,7 @@ if (isset($_REQUEST['delTimeline'])) {
     $_REQUEST['timeline'] = $timeline;
     $createWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
 
+
     if (!$createWedding['error']) {
         $gallery = new Gallery();
         $getrow = $gallery->deleteByURL($_REQUEST['id'], $imgurl);
@@ -65,11 +50,14 @@ if (isset($_REQUEST['delTimeline'])) {
             $awsObj = new AWSBucket();
             $awsObj->deleteFromAWS($imgurl);
 
+            $_SESSION['alert_message'] = "Deleted Successfully";
 
-            echo "<script>alert('Deleted Successfully'); window.history.back(); window.location.reload(true); </script>";
+            echo "<script> window.history.back(); window.location.reload(true); </script>";
         }
     } else {
-        echo "<script>alert('Failed to delete');window.history.back(); window.location.reload(true);  </script>";
+        $_SESSION['alert_message'] = "Failed to delete";
+
+        echo "<script> window.history.back(); window.location.reload(true);  </script>";
     }
 
 }
@@ -86,6 +74,11 @@ if (isset($_REQUEST['delTimeline'])) {
 
     <form id="form" method="post" enctype="multipart/form-data">
         <?php
+
+        if (isset($_SESSION['alert_message'])) {
+            echo "<div class='alert alert-success'>" . $_SESSION['alert_message'] . "</div>";
+            unset($_SESSION['alert_message']);
+        }
 
 
         if (isset($_POST['btn-submit'])) {
@@ -149,7 +142,7 @@ if (isset($_REQUEST['delTimeline'])) {
 
             $_REQUEST['timeline'] = $timeline;
 
-            $createWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
+            $createWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST,"true");
 
             $addToGalleryEvents = array();
 

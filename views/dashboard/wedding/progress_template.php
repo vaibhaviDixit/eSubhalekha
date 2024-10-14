@@ -16,8 +16,9 @@
             <div class="accordion" id="progressAccordion">
 
                 <?php 
-
+                    
                     foreach ($tracks as $key => $value) {
+
                 ?>
                 <!-- Accordion 1 -->
                 <div class="accordion-item">
@@ -68,9 +69,18 @@
                                     <?php 
 
                                         if($key=="Payment" && count($value)>1){
+                                            if($completed == (sizeof($tracks)-1) ){
+                                     ?>
+                                            <a class="btn btn-sm btn-primary" href="<?php echo route('wedding/' . $_REQUEST['id'] . '/' . $_REQUEST['lang'] .  '/checkout') . queryString(); ?>">Continue</a>
+
+                                     <?php
+                                            }else{
+
+
                                     ?>
                                         <a class="btn btn-sm btn-primary disabled" >Continue</a>
                                     <?php
+                                            }
                                         }else{
                                     ?>
 

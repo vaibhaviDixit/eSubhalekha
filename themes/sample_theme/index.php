@@ -1,30 +1,26 @@
 <?php 
+
 // errors(1);
 
+if(!isset($_REQUEST['theme'])){
 
-$wedding = new Wedding();
-$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
+    $wedding = new Wedding();
+    $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
-$story = json_decode($weddingData['story'], true);
-$timeline = json_decode($weddingData['timeline'], true);
+    $story = json_decode($weddingData['story'], true);
+    $timeline = json_decode($weddingData['timeline'], true);
 
-$gallery = new Gallery();
-$eventsGallery=$gallery->getEventGallery($_REQUEST['id']);
-$preweddingGallery=$gallery->getPreWedGallery($_REQUEST['id']);
+    $gallery = new Gallery();
+    $eventsGallery=$gallery->getEventGallery($_REQUEST['id']);
+    $preweddingGallery=$gallery->getPreWedGallery($_REQUEST['id']);
 
-function getImgURL($name){
-	$gallery = new Gallery();
-	$row=$gallery->getGalleryImg($_REQUEST['id'],$name);
 
-	if($row['imageURL']){
-		return $row['imageURL'];
-	}
-	else{
-		return false;
-	}
-	
+}else{
+    include("themes/dummy.php");
+
 }
 
+$weddingData['weddingDate']="24 Aug 2025";
 
 ?>
 <!DOCTYPE html>
@@ -36,10 +32,90 @@ function getImgURL($name){
         max-height: 100vh !important;
     }
 
-</style>
+        .loading_container {
+      width: 100vw;
+      height: 100vh;
+      background-color: transparent;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
 
+    .bg_container {
+      width: 100vw;
+      height: 100vh;
+      background-color: #86363B;
+      transform-origin: center;
+      transform: scaleX(0);
+      animation: bg_div_animation 900ms ease-in-out forwards;
+      position: absolute;
+      top: 0;
+      right: 0;
+
+    }
+
+    .logo {
+      width: 320px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      transform-origin: center;
+      transform: translate(50%, 50%);
+      animation: logo_animation 2s forwards;
+
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+
+    }
+
+    @keyframes bg_div_animation {
+      0% {
+        transform: scaleX(0.1);
+      }
+
+      100% {
+        transform: scaleX(1);
+      }
+    }
+
+    @keyframes logo_animation {
+      0% {
+        transform: scale(0.2);
+        opacity: 0%;
+      }
+
+      40% {
+        transform: scale(0.2);
+        opacity: 0%;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 100%;
+      }
+    }
+
+</style>
+<!-- loading component starts here  -->
+<div class="loading_container">
+  <div class="bg_container">
+  </div>
+  <div class="logo">
+    <img src="<?php assets("img/eSubhalekhaIcon.png") ?>" alt="">
+  </div>
+  <div class="spinner-border text-white" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<!-- loading component ends here  -->
 <body>
-    <div id="app" class="">
+    <div id="app" class="main">
         <!-- main content here -->
 
 
@@ -91,40 +167,90 @@ function getImgURL($name){
     <!-- Modal ends -->
 
           <!-- Hero start -->
-        <section class="container-fluid" id="heroSection">
-               
-          <div id="heroCarousel" class="owl-carousel owl-theme">
-            <!-- Slide 1 -->
-            <div class="item" style="background-image: url('https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg');">
-              <div class="carousel-caption">
-                <p class="text-secondary"><span class="lines">The Wedding Of</span></p>
-                <h1 class="text-primary"><?= $weddingData['groomName'] ?> & <?= $weddingData['brideName'] ?></h1>
-                <div class="d-flex justify-content-center align-items-center text-secondary gap-3">
-                    <div>
-                        <span class="days">03</span><br>
-                        <span class="timerText">Days</span>
-                    </div>
-                     <div>
-                        <span class="hours">05</span><br>
-                        <span class="timerText">Hrs</span>
-                    </div>
-                     <div>
-                        <span class="min">15</span><br>
-                        <span class="timerText">Mins</span>
-                    </div>
-                     <div>
-                        <span class="sec">57</span><br>
-                        <span class="timerText">Sec</span>
-                    </div>
-                    
-                </div>
+<!-- Hero start -->
+<section class="container-fluid" id="heroSection">
+    <div> 
+      <!-- class="owl-carousel owl-theme"> -->
+        <?php
+        if (getImgURL('hero')) {
+            $mediaURL = getImgURL('hero');
+            $headers = get_headers($mediaURL, 1);
 
+            if (isset($headers['Content-Type'])) {
+                $contentType = $headers['Content-Type'];
+
+                // If it's a video
+                if (strpos($contentType, 'video') !== false) {
+                    echo '
+                    <div class="" style="">
+                        <!-- Video as a background -->
+                        <video autoplay loop muted style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                            <source src="' . $mediaURL . '" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+
+                        <!-- Overlay content -->
+                        <div class="text-center" style="position: relative; z-index: 1; display: flex; flex-direction: column;
+                            justify-content: center; align-items: center; height: 100vh;">
+                            <p class="text-secondary"><span class="lines">The Wedding Of</span></p>
+                            <h1 class="text-primary">' . $weddingData['groomName'] . ' & ' . $weddingData['brideName'] . '</h1>
+                            <div class="d-flex justify-content-center align-items-center text-secondary gap-3" id="countdown">
+                                <div>
+                                    <span class="days">03</span><br>
+                                    <span class="timerText">Days</span>
+                                </div>
+                                <div>
+                                    <span class="hours">05</span><br>
+                                    <span class="timerText">Hrs</span>
+                                </div>
+                                <div>
+                                    <span class="min">15</span><br>
+                                    <span class="timerText">Mins</span>
+                                </div>
+                                <div>
+                                    <span class="sec">57</span><br>
+                                    <span class="timerText">Sec</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>';
+                }
+              elseif (strpos($contentType, 'image') !== false) {
+              ?>
+
+               <!-- For image background -->
+              <div class="" style="background-image: url('<?php if(getImgURL('hero')){ echo getImgURL('hero'); }else{ echo assets('img/hero.png'); } ?>'); background-size: cover; background-position: center; height: 100vh;  display: flex; justify-content: center;  align-items: center;">
+                  <div class="text-center">
+                      <p class="text-secondary"><span class="lines">The Wedding Of</span></p>
+                      <h1 class="text-primary"><?= $weddingData['groomName'] ?> & <?= $weddingData['brideName'] ?></h1>
+                      <div class="d-flex justify-content-center align-items-center text-secondary gap-3" id="countdown">
+                          <div>
+                              <span class="days">03</span><br>
+                              <span class="timerText">Days</span>
+                          </div>
+                          <div>
+                              <span class="hours">05</span><br>
+                              <span class="timerText">Hrs</span>
+                          </div>
+                          <div>
+                              <span class="min">15</span><br>
+                              <span class="timerText">Mins</span>
+                          </div>
+                          <div>
+                              <span class="sec">57</span><br>
+                              <span class="timerText">Sec</span>
+                          </div>
+                      </div>
+                  </div>
               </div>
-            </div>
+              <?php
+            }
+          }
+        }
+        ?>
+    </div>
+</section>
 
-           
-          </div>
-        </section>
         <!-- Hero end -->
 
  <?php require('nav.php'); ?>
@@ -202,6 +328,9 @@ function getImgURL($name){
 
 
  <!-- Our story start -->
+ <?php 
+    if($story['display'] == 'true'){
+ ?>
         <section class="container" id="ourStorySection">
 
             <h1 class="section-head">Our Story</h1>
@@ -242,32 +371,30 @@ function getImgURL($name){
                     </div>
                 </div>
             </div>
-
-
         </section>
+      <?php   } ?>
         <!--  our story ends -->
 
 
     <!-- Events start -->
     <section class="container mt-2" id="eventsSection">
 
-      <h1 class="section-head">Events</h1>
+      <h1 class="section-head">Events -</h1>
 
-
-      <div id="eventsCarousel" class="owl-carousel owl-theme mt-5">
- <?php if ($timeline != null){
+        <div id="eventsCarousel" class="owl-carousel owl-theme mt-5">
+            <?php if ($timeline != null){
                             for ($i = 0; $i < count($timeline); $i++){
-                            	$datetimeObj1 = new DateTime($timeline[$i]['startTime']);
-                            	$datetimeObj2 = new DateTime($timeline[$i]['endTime']);
-                            	$from=$datetimeObj1->format("d-m-Y")." ".$datetimeObj1->format("H:i");
-                            	$to=$datetimeObj2->format("d-m-Y")." ".$datetimeObj2->format("H:i");
+                              $datetimeObj1 = new DateTime($timeline[$i]['startTime']);
+                              $datetimeObj2 = new DateTime($timeline[$i]['endTime']);
+                              $from=$datetimeObj1->format("d-m-Y")." ".$datetimeObj1->format("H:i");
+                              $to=$datetimeObj2->format("d-m-Y")." ".$datetimeObj2->format("H:i");
                                 ?>
                             
-        <div class="item ">
+        <div class="item">
           <div class="card pink-border ">
          <img src="<?php echo getImgURL($timeline[$i]['type']); ?>" class="eventImgDiv card-img-top" alt="Reception">
             <div class="card-body text-center">
-              <h3 class="text-primary"><?= $timeline[$i]['type'] ?></h3>
+              <h3 class="text-primary"><?= ucwords($timeline[$i]['type']); ?></h3>
           
               <p class="card-text "><?php echo $from."<br> To <br> ".$to; ?>   </p>
               <p class="card-text"><?= $timeline[$i]['venue'] ?><br> 
@@ -281,7 +408,6 @@ function getImgURL($name){
 
 
       </div>
-
 
     </section>
     <!-- Events ends -->
@@ -321,21 +447,40 @@ function getImgURL($name){
 
       <h1 class="section-head">Gallery</h1>
 
+
       <div id="galleryCarousel" class="owl-carousel owl-theme mt-5">
 
 	<?php 
 		if (!$preweddingGallery['error']){
-    		for ($i = 0; $i < count($preweddingGallery); $i++){?>
+    		for ($i = 0; $i < count($preweddingGallery); $i++){
+                          $headers = get_headers($preweddingGallery[$i]['imageURL'], 1);
+                          if (isset($headers['Content-Type']) && strpos($headers['Content-Type'], 'image') !== false){
+                  ?>
 
-        <div class="item ">
-          <img src="<?= $preweddingGallery[$i]['imageURL'] ?>" class="galleyImg" style="border-radius: 40px;">
-        </div>
+                   <div class="item ">
+                    <img src="<?= $preweddingGallery[$i]['imageURL'] ?>" class="galleyImg" style="border-radius: 40px;">
+                  </div>
+                                                                                                                                             
+                    <?php 
 
-    <?php 
-            }
-        }
-    ?>
+                      } // image type ends
+                      elseif (isset($headers['Content-Type']) && strpos($headers['Content-Type'], 'video') !== false) {
+                    ?>
 
+                      <div class="item">
+                        <video controls style="object-fit: cover; width:-webkit-fill-available; ">
+                        <source src="<?= $preweddingGallery[$i]['imageURL'] ?>" type="video/mp4">
+                              Your browser does not support the video tag.
+                        </video>
+                      </div>
+
+                    <?php 
+                      }// video type ends
+
+                         } // for ends
+                       } // if ends
+                     
+                    ?>
 
       </div>
     </section>
@@ -349,115 +494,86 @@ function getImgURL($name){
     <script src="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/owl.carousel.min.js"></script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function(){
-        // Activate Owl Carousel
-        $('#heroCarousel').owlCarousel({
-          loop: true,
-          margin: 10,
-          nav: false,
-          dots: false,
-          items: 1,
-          autoplay: true,
-          autoplayTimeout: 3000, // Set your preferred autoplay timeout
-          autoplayHoverPause: true
-        });
+    
+    $(document).ready(function(){
+      $('#eventsCarousel').owlCarousel({
+        loop: true,
+        margin: 25,
+        nav: false,
+        autoplay: 1000,
+        responsive: {
+          0: { items: 1 },
+          600: { items: 2 },
+          1000: { items: 3 }
+        }
+      });
+      
+      $('#galleryCarousel').owlCarousel({
+        loop: false,
+        margin: 15,
+        nav: false,
+        autoplay: false,
+        responsive: {
+          0: { items: 1 },
+          600: { items: 2 },
+          1000: { items: 4 }
+        }
       });
 
-       $('#eventsCarousel').owlCarousel({
-      loop: false,
-      margin: 25,
-      nav: false,
-      autoplay: false,
-      responsive: {
-        0: {
-          items: 1
-        },
-        600: {
-          items: 2
-        },
-        1000: {
-          items: 3
-        }
-      }
-    })
-    $('#galleryCarousel').owlCarousel({
-      loop: false,
-      margin: 15,
-      nav: false,
-      autoplay: false,
-      responsive: {
-        0: {
-          items: 1
-        },
-        600: {
-          items: 2
-        },
-        1000: {
-          items: 4
-        }
-      }
-    })
+    });
 
-    </script>
+              // Set the end time for the countdown (year, month (0-indexed), day, hour, minute, second)
+              var endTime = new Date("2024-02-10T12:00:00Z").getTime();
 
-                <script>
-                  // Set the end time for the countdown (year, month (0-indexed), day, hour, minute, second)
-                  var endTime = new Date("2024-02-10T12:00:00Z").getTime();
+              // Update the countdown every second
+              var x = setInterval(function() {
+                // Get the current time
+                var now = new Date().getTime();
 
-                  // Update the countdown every second
-                  var x = setInterval(function() {
-                    // Get the current time
-                    var now = new Date().getTime();
+                // Calculate the time difference
+                var timeDifference = endTime - now;
 
-                    // Calculate the time difference
-                    var timeDifference = endTime - now;
+                // If the countdown is over, display a message and stop the countdown
+                if (timeDifference < 0) {
+                  clearInterval(x);
+                  document.getElementById("countdown").innerHTML = "EXPIRED";
+                  return;
+                }
 
-                    // Calculate days, hours, minutes, and seconds
-                    var days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-                    var hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-                    var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+                // Calculate days, hours, minutes, and seconds
+                var days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-                    if(days<10){
-                        days="0"+days;
-                    }
-                     if(hours<10){
-                        hours="0"+hours;
-                    }
-                     if(minutes<10){
-                        minutes="0"+minutes;
-                    }
-                     if(seconds<10){
-                        seconds="0"+seconds;
-                    }
+                // Add leading zeros if necessary
+                if (days < 10) days = "0" + days;
+                if (hours < 10) hours = "0" + hours;
+                if (minutes < 10) minutes = "0" + minutes;
+                if (seconds < 10) seconds = "0" + seconds;
 
-                    // Display the countdown
-                   let daysselcted= document.querySelectorAll(".days");
-                      for (var i = 0; i < daysselcted.length; i++) {
-                          daysselcted[i].innerHTML = days;
-                      }
+                // Display the countdown on all matching elements
+                let daysSelected = document.querySelectorAll(".days");
+                for (var i = 0; i < daysSelected.length; i++) {
+                  daysSelected[i].innerHTML = days;
+                }
 
-                    let hoursselected=document.querySelectorAll(".hours");
-                    for (var i = 0; i < hoursselected.length; i++) {
-                          hoursselected[i].innerHTML = hours;
-                      }
+                let hoursSelected = document.querySelectorAll(".hours");
+                for (var i = 0; i < hoursSelected.length; i++) {
+                  hoursSelected[i].innerHTML = hours;
+                }
 
-                    let minselected=document.querySelectorAll(".min");
-                    for (var i = 0; i < minselected.length; i++) {
-                          minselected[i].innerHTML = minutes;
-                      }
+                let minSelected = document.querySelectorAll(".min");
+                for (var i = 0; i < minSelected.length; i++) {
+                  minSelected[i].innerHTML = minutes;
+                }
 
-                    let secselected= document.querySelectorAll(".sec");
-                    for (var i = 0; i < secselected.length; i++) {
-                          secselected[i].innerHTML = seconds;
-                      }
+                let secSelected = document.querySelectorAll(".sec");
+                for (var i = 0; i < secSelected.length; i++) {
+                  secSelected[i].innerHTML = seconds;
+                }
 
-                    // If the countdown is over, display a message
-                    if (timeDifference < 0) {
-                      clearInterval(x);
-                      document.getElementById("countdown").innerHTML = "EXPIRED";
-                    }
-                  }, 1000);
+              }, 1000);
 
 
                 $(document).ready(function() {
@@ -483,6 +599,18 @@ function getImgURL($name){
 
                 </script>
 
+<script>
+  loader = document.querySelector(".loading_container")
+  body = document.querySelector(".main")
+  body.classList.add('d-none')
+
+  window.addEventListener("load", function () {
+    setTimeout(function () {
+      loader.classList.add('d-none')
+      body.classList.remove('d-none')
+    }, 3000);
+  });
+</script>
 
 
 </body>
