@@ -66,7 +66,7 @@ $user = new Auth();
 
 		<!-- Email -->
 		<div class="mb-3 col-sm-6">
-			<label for="email" class="form-label">Email</label>
+			<label for="email" class="form-label">Email (optional)</label>
 			<input type="text" class="form-control" id="email" name="email"
 				placeholder="Enter Email" value="<?= $currentUser['email'] ?>">
 		</div>

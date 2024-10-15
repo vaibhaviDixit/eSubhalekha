@@ -1,52 +1,17 @@
 <?php
+// errors(1);
+
 locked(['user', 'host', 'manager', 'admin']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
 
-
-controller("Wedding");
-$wedding = new Wedding();
-$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
 ?>
 
 <head>
 
 <style>
-     /* Custom styles */
-    .theme-list {
-      overflow-y: auto;
-      max-height: 80vh;
-    }
-    .theme-card {
-      margin-bottom: 20px;
-    }
-    .theme-card img {
-      max-width: 200px;
-      height: auto;
-      float: left;
-      margin-right: 20px;
-    }
-
-    /* Hide by default */
-    .theme-card.hidden {
-      display: none;
-    }
-
-    button{
-    	border: 1px solid !important;
-    }
-    li{
-    	cursor: pointer;
-    }
-
-    .img-col{
-    	display: flex;
-    	align-items: center;
-    }
-    .card-text{
-    	font-size: 16px;
-    }
+   
 
   </style>
 
@@ -60,26 +25,31 @@ $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 	
 		if (isset($_POST['select'])) {
 
-			$_REQUEST['template']=$_REQUEST['themeName'];
+      if($isPaymentDone){
+        echo '<div class="alert alert-danger alert-dismissible fade show"> Unable to change Theme! Payment already done. <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+      }else{
 
-			$updateWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
+          $_REQUEST['template']=$_REQUEST['themeName'];
 
-			if ($updateWedding['error']) {
-				?>
-				<div class="alert alert-danger">
-					<?php
-					foreach ($updateWedding['errorMsgs'] as $msg) {
-						if (count($msg))
-							echo $msg[0] . "<br>";
-					}
-					?>
-				</div>
-				<?php
-			}else{
-				redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang'] . "/theme");
+          $updateWedding = $wedding->update($_REQUEST['id'], $_REQUEST['lang'], $_REQUEST);
 
-			} 
+          if ($updateWedding['error']) {
+            ?>
+            <div class="alert alert-danger">
+              <?php
+              foreach ($updateWedding['errorMsgs'] as $msg) {
+                if (count($msg))
+                  echo $msg[0] . "<br>";
+              }
+              ?>
+            </div>
+            <?php
+          }else{
+            redirect("wedding/" . $_REQUEST['id'] . "/" . $_REQUEST['lang'] . "/theme");
 
+          } 
+
+      }
 
 		}
 
@@ -90,77 +60,92 @@ $themeFolders = array_filter(glob('themes/*'), 'is_dir');
 ?>
 	
 <div class="container mt-5">
+ 
+<!-- Theme Preview -->
+<div class="theme-container">
+  <!-- Theme Cards -->
   <div class="row">
-		  <div class="row">
-    <!-- Theme List -->
-    <div class="col-lg-3">
-      <ul class="list-group theme-list">
-        <li class="list-group-item active" data-theme="All">All</li>
 
-        <?php 
-            foreach ($themeFolders as $folder) {
-                // Extract only the folder name
-                $themeName =ucwords(explode("_", basename($folder))[0]);
-        ?>
-               <li class="list-group-item" data-theme="<?php echo basename($folder); ?>"><?php echo $themeName; ?></li>
+    <?php 
+        foreach ($themeFolders as $folder) {
+            // Extract only the folder name
+            $themeDetails = [];
+            $themeName = ucwords(explode("_", basename($folder))[0]);
+            $themeDetails = json_decode(file_get_contents('themes/'.basename($folder).'/manifest.json'), true);
+    ?>
+    <!-- Card for Each Theme -->
+    <div class="col-lg-4 col-md-6 col-sm-3 mb-4 ">
+      <div class="card theme-card text-center position-relative" style="overflow: hidden;">
+        <!-- Badge for Discount or Trending -->
+        <?php if ($themeDetails['isTrending']) { ?>
+          <span class="badge bg-danger position-absolute top-0 end-0 m-2">Trending</span>
+        <?php } ?>
+        
+        <!-- Theme Image with Fixed Height and Responsiveness -->
+        <img src="<?php themeAssets(basename($folder),$themeDetails['displayImages'][0]); ?>" class="card-img-top theme-image" alt="Theme Preview">
 
-        <?php
-            }
-        ?>
+        <!-- Card Body -->
+        <div class="card-body">
+          <!-- Theme Name -->
+          <h5 class="card-title"><?php echo $themeName; ?></h5>
+          <!-- Theme Price -->
+          <dt class="card-text text-muted">Price: <?php echo number_format($themeDetails['themePrice'], 2); ?></dt>
+        
+          <!-- Preview and Select Buttons -->
+          <div class="d-flex justify-content-center">
+            <!-- Live Preview Button -->
+            <a target="_blank" href="<?php echo route("wedding/RahulWedsNita/en/preview?theme=".basename($folder)); ?>" class="btn btn-sm btn-primary preview-btn text-light"> Preview </a>
+            <!-- Select Button -->
+            <form method="post" class="p-0 m-0">
+              <input type="hidden" name="themeName" value="<?php echo basename($folder); ?>">
 
-        <!-- Add more themes here -->
-      </ul>
-    </div>
-    <!-- Theme Preview -->
-    <div class="col-lg-9">
-      <!-- Theme Cards -->
-        <div class="theme-cards">
+              <?php 
 
+                  if($weddingData['template'] == basename($folder) ){
+              ?>
 
-          <?php 
-              foreach ($themeFolders as $folder) {
-                  // Extract only the folder name
-                  $themeName =ucwords(explode("_", basename($folder))[0]);
-          ?>
-                 <!--  card for Theme 1 -->
-          <div class="card theme-card" data-theme="<?php echo basename($folder); ?>">
-            <div class="row g-0">
-              <div class="col-md-4 img-col">
-                <img src="<?php assets('img/template.png') ?>" class="card-img-top" alt="Theme 1 Preview">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <div class="d-flex align-items-center justify-content-between">
-                    <h5 class="card-title"><?php echo $themeName; ?></h5>
+                <button class="btn btn-sm select-btn btn-success" type="submit" name="select" >Selected</button>
 
-                      <span class="badge bg-secondary text-primary"><?php if($weddingData['template']=="<?php echo basename($folder); ?>"){echo "Selected";} ?></span>
-                  </div>
+              <?php
 
-                  <p class="card-text">A stylish and elegant theme perfect for wedding invitations,with customizable features.</p>
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  }else{
+              ?>
+                <button class="btn btn-sm select-btn btn-success" type="submit" name="select" >Select</button>
 
-                  <a href="preview?theme=<?php echo basename($folder); ?>"><button class="btn btn-sm btn-outline-primary me-md-2 preview-btn">Live Preview</button></a>
+              <?php
 
-                    <form method="post" class="p-0 m-0">
-                      <input type="hidden" name="themeName" value="<?php echo basename($folder); ?>">
-                     <button class="btn btn-sm btn-outline-success select-btn" type="submit" name="select">Select</button>
+                  }
 
-                    </form>
-
-                  </div>
-                </div>
-              </div>
-            </div>
+               ?>
+              
+            </form>
           </div>
-
-          <?php
-              }
-          ?>
-
-         </div>
-  </div>
+        </div>
+      </div>
+    </div>
+    <?php
+        }
+    ?>
+    
   </div>
 </div>
+
+<style>
+  .theme-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+
+  /* Ensure the card is responsive */
+  @media (max-width: 768px) {
+    .theme-image {
+      height: 200px; 
+    }
+  }
+</style>
+
+
 
 </main>
 

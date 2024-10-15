@@ -6,9 +6,6 @@ require('views/partials/dashboard/sidebar.php');
 // current user id
 $userID=App::getUser()['email'];
 
-controller("Wedding");
-$wedding = new Wedding();
-$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 $hosts = json_decode($weddingData['hosts'], true);
 
 

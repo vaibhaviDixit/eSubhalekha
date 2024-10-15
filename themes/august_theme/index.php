@@ -1,42 +1,23 @@
 <?php
-require("config.php");
-// errors(1);
 
+if(!isset($_REQUEST['theme'])){
 
-$wedding = new Wedding();
-$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
+    $wedding = new Wedding();
+    $weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 
-$story = json_decode($weddingData['story'], true);
-$timeline = json_decode($weddingData['timeline'], true);
+    $story = json_decode($weddingData['story'], true);
+    $timeline = json_decode($weddingData['timeline'], true);
 
-$gallery = new Gallery();
-$eventsGallery = $gallery->getEventGallery($_REQUEST['id']);
-$preweddingGallery = $gallery->getPreWedGallery($_REQUEST['id']);
+    $gallery = new Gallery();
+    $eventsGallery=$gallery->getEventGallery($_REQUEST['id']);
+    $preweddingGallery=$gallery->getPreWedGallery($_REQUEST['id']);
 
-$hosts = json_decode($weddingData['hosts'], true);
-
-$events = json_decode($weddingData['timeline'], true);
-
-$muhurt = array_filter($events, function($event) {
-  return $event['type'] === 'muhurt';
-});
-
-if (!empty($muhurt)) {
-  $muhurt = reset($muhurt);
-}
-function getImgURL($name)
-{
-  $gallery = new Gallery();
-  $row = $gallery->getGalleryImg($_REQUEST['id'], $name);
-
-  if ($row['imageURL']) {
-    return $row['imageURL'];
-  } else {
-    return false;
-  }
+}else{
+    include("themes/dummy.php");
 
 }
 
+$weddingData['weddingDate']="24 Aug 2025";
 
 ?>
 <!DOCTYPE html>
@@ -46,7 +27,7 @@ function getImgURL($name)
 
 <head>
 
-  <link rel="stylesheet" href="<?php echo route("themes/august/assets/index.css") ?>" />
+  <link rel="stylesheet" href="<?php echo route("themes/august_theme/assets/index.css") ?>" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
   <link rel="stylesheet"
@@ -67,7 +48,7 @@ function getImgURL($name)
   <style>
     @font-face {
       font-family: 'KyivTypeSans';
-      src: url('<?php echo route("themes/august/assets/fonts/kyiv-type-sans/KyivTypeSans-VarGX.ttf") ?>') format('truetype');
+      src: url('<?php echo route("themes/august_theme/assets/fonts/kyiv-type-sans/KyivTypeSans-VarGX.ttf") ?>') format('truetype');
       font-weight: normal;
       font-style: normal;
     }
@@ -172,7 +153,7 @@ function getImgURL($name)
   <div class="bg_container">
   </div>
   <div class="logo">
-    <img src="<?php assets("img/eSubhalekha.com.png") ?>" alt="">
+    <img src="<?php assets("img/eSubhalekhaIcon.png") ?>" alt="">
   </div>
   <div class="spinner-border text-white" role="status">
     <span class="visually-hidden">Loading...</span>
@@ -181,6 +162,7 @@ function getImgURL($name)
 <!-- loading component ends here  -->
 
 <body class="w-screen relative bg-[#F7F2EA] h-auto overflow-x-hidden text-[#FFFFFF]">
+
 
 
   <div class="main">
@@ -193,15 +175,15 @@ function getImgURL($name)
     <div class="w-full h-full">
       <div class="w-full hero relative flex justify-center items-center overflow-hidden">
         <div class="absolute top-[400px] left-0 w-[160px] lg:w-[250px] overflow-hidden">
-          <img class="aos w-full" src="<?php echo route("themes/august/assets/images/decor_left.png") ?>" alt="" />
+          <img class="aos w-full" src="<?php echo route("themes/august_theme/assets/images/decor_left.png") ?>" alt="" />
         </div>
         <div class="absolute top-[100px] right-0 w-[160px] lg:w-[250px] overflow-hidden">
-          <img class="aos w-full" src="<?php echo route("themes/august/assets/images/decor_right.png") ?>" alt="" />
+          <img class="aos w-full" src="<?php echo route("themes/august_theme/assets/images/decor_right.png") ?>" alt="" />
         </div>
         <div class="w-[70%] max-w-[300px] lg:max-w-xl relative flex flex-col gap-[80px] mb-[100px]">
           <div id="decor-image"
             class="absolute top-[50%] right-[50%] lg:right-[55%] translate-x-[50%] -translate-y-[50%] w-[250px] lg:w-[450px] overflow-hidden">
-            <img class="w-full" src="<?php echo route("themes/august/assets/images/decor_middle.png") ?>" alt="" />
+            <img class="w-full" src="<?php echo route("themes/august_theme/assets/images/decor_middle.png") ?>" alt="" />
           </div>
           <div id="bride-name" class="aos w-full text-left text-5xl sm:text-6xl lg:text-7xl text-[#DA2E78]">
             <p><?php echo removeLastWord($weddingData['brideName']) ?></p>
@@ -247,7 +229,7 @@ function getImgURL($name)
 
           <script>
             function updateCountdown() {
-              var weddingDate = new Date("<?= $muhurt['startTime']?>");
+              var weddingDate = new Date("<?= $muhurt['startTime'] = "2024-08-23T16:00"?>");
               var currentDate = new Date();
                 var timeDifference = weddingDate - currentDate;
                 timeDifference = Math.max(timeDifference, 0);
@@ -347,7 +329,7 @@ function getImgURL($name)
         <div
           class="w-[800px] sm:w-[1200px] lg:w-full h-[400px] absolute -bottom-[80px] sm:bottom-0 lg:-bottom-[60px] right-0">
           <img class="w-full translate-y-[10%] lg:-translate-y-[20%]"
-            src="<?php echo route("themes/august/assets/images/vector1.png") ?>" alt="" />
+            src="<?php echo route("themes/august_theme/assets/images/vector1.png") ?>" alt="" />
         </div>
       </div>
     </div>
@@ -389,10 +371,10 @@ function getImgURL($name)
             </div>
           </div>
           <div class="max-w-[270px] flex flex-col justify-start items-center mt-3">
-            <p class="aos text-md text-[#DA2E78] text-right text-xl w-full">
+            <p class="aos text-md text-[#DA2E78] text-left text-xl w-full">
               <?php echo $weddingData['groomName'] ?>
             </p>
-            <p class="aos text-xs text-[#6B6B6B] text-right text-xl w-full">
+            <p class="aos text-xs text-[#6B6B6B] text-left">
               <?php echo $hosts['groomTagline']; ?> <b>Sri
                 <?php echo $hosts['groomFather']['name']; ?></b> and
               <b>Srimathi
@@ -614,7 +596,7 @@ function getImgURL($name)
 
               <div
                 class="px-3 py-1 border rounded-l-full rounded-r-full text-xs active:scale-90 duration-300 ease-in-out focus:outline-none active:outline-none">
-                <?php echo $event['event'] ?? $event['type'] ?>
+                <?php echo (empty($event['event'])) ? $event['type'] : $event['event']; ?>
               </div>
               <?php
             }
@@ -645,10 +627,10 @@ function getImgURL($name)
                 </button>
                 <div
                   class="w-full h-[350px] bg-white mt-[4px] border border-[rgb(255,255,255,.1)] rounded-[20px] overflow-hidden">
-                  <img class="w-full h-full object-cover" src="<?php echo getImgURL($event['event']) ?>" alt="" />
+                  <img class="w-full h-full object-cover" src="<?php echo getImgURL($event['type']) ?>" alt="" />
                 </div>
                 <div class="w-full flex flex-col justify-between items-stretch py-auto px-[12px] mt-2">
-                  <h1 class="text-3xl text-[#FF006E]"><?php echo $event['event'] ?? $event['type'] ?></h1>
+                  <h1 class="text-3xl text-[#FF006E]"><?php echo (empty($event['event'])) ? $event['event'] : $event['event']; ?></h1>
                   <h2 class="text-sm font-light text-[#A20000] pl-1">
 
                     <?php echo date('g:i A', strtotime($event['startTime'])) . " - " . date('g:i A', strtotime($event['endTime'])); ?>
@@ -700,7 +682,7 @@ function getImgURL($name)
               <i
                 class="bx bx-right-arrow-alt absolute -right-[20px] text-[100pt] leading-tight -rotate-45 -translate-y-[25%] text-[#FFFFFF]"></i>
               <img class="w-full h-full object-cover"
-                src="<?php echo route("themes/august/assets/images/venue.jpg"); ?>" alt="" />
+                src="<?php echo route("themes/august_theme/assets/images/venue.jpg"); ?>" alt="" />
             </div>
           </div>
           <p class="w-full max-w-[300px] mt-2 sm:pt-[50px] text-left font-light text-s">

@@ -414,7 +414,7 @@ class Wedding
 
     // Update operation
     
-    public function update($weddingID, $lang, array $data)
+    public function update($weddingID, $lang, array $data,$events='false')
     {
 
         // Sanitize and assign values
@@ -672,6 +672,7 @@ class Wedding
                     "engagement" => str_replace("\r\n", "<br>", $data['engagement']),
                     "engagementYear" => str_replace("\r\n", "<br>", $data['engagementYear']),
                     "memorableMoments" => str_replace("\r\n", "<br>", $data['memorableMoments']),
+                    "display" => $data['display'],
                 ];
             }
 
@@ -730,6 +731,13 @@ class Wedding
 
                 'updatedAt' => date('Y-m-d H:i:s'),
             ];
+
+
+            if($events == 'true' && empty($this->timeline)){
+                $this->timeline = null;
+                $updateData['timeline'] =null;
+            }
+
             //return $updateData;
             // Update data into the 'weddings' table
             DB::connect();

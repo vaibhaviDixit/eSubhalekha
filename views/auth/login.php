@@ -2,6 +2,13 @@
 // errors(1);
 $config['APP_TITLE'] = "Login | ".$config['APP_TITLE'];
 
+$roleLogin = "user";
+
+if(isset($_REQUEST['role'])){
+  $roleLogin = $_REQUEST['role'];
+}
+
+
 DB::connect();
 $customers = DB::select('users', '*', "status <> 'deleted'")->fetchAll();
 DB::close();
@@ -24,11 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // send otp to user
         $phone = $_POST["phone"];
 
-        $sendOTP=$user->sendOTP($phone);
+        $sendOTP=$user->sendOTP($phone,$roleLogin);
 
        if(!$sendOTP['error']){
 
-            $register = $user->register($phone,$otp,'user');
+            $register = $user->register($phone,$otp,$roleLogin);
 
             if($register){
                 $loginMsg['msg']="OTP Sent Successfully!";
@@ -63,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
         }
         else{
-            $loginMsg['msg']="Login Failed!";
+            $loginMsg['msg']=$register['errorMsgs']['otp'];
             $loginMsg['class']="danger";
         }
 
@@ -138,7 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
       <?php } ?>
       <?php if (isset($loginMsg['msg'])) { ?>
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-<?php echo $loginMsg['class']; ?>" role="alert">
           <?php echo $loginMsg['msg']; ?>
         </div>
       <?php } ?>
@@ -151,15 +158,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <strong id="phoneMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
 
-        <?php if(isset($_POST["action"]) && $_POST["action"] == "verifyUser"){ ?>
+        <?php if((isset($_POST["action"]) && $_POST["action"] == "verifyUser") || $register['errorMsgs']['otp'] ){ ?>
         
           <div id="otpInput">
               <label for="otp">OTP</label>
               <div style="display: flex; gap: 10px;">
-                  <input type="text" name="otp1" maxlength="1" class="form-control otp-input" required>
-                  <input type="text" name="otp2" maxlength="1" class="form-control otp-input" required>
-                  <input type="text" name="otp3" maxlength="1" class="form-control otp-input" required>
-                  <input type="text" name="otp4" maxlength="1" class="form-control otp-input" required>
+                  <input type="number" name="otp1" maxlength="1" class="form-control otp-input" required>
+                  <input type="number" name="otp2" maxlength="1" class="form-control otp-input" required>
+                  <input type="number" name="otp3" maxlength="1" class="form-control otp-input" required>
+                  <input type="number" name="otp4" maxlength="1" class="form-control otp-input" required>
               </div>
 
               <strong id="otpMsg" class="text-danger errorMsg my-2 fw-bolder"></strong>
@@ -187,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <script>
 
 
-    // for OTP block focus
+    // for OTP block focus, prev-next 
     const otpInputs = document.querySelectorAll('.otp-input');
     
     otpInputs.forEach((input, index) => {
@@ -196,6 +203,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 otpInputs[index + 1].focus();
             }
         });
+
+        input.addEventListener('keydown', (e) => {
+            // Move to the next field on number input
+            if (e.key >= 0 && e.key <= 9 && input.value.length === 1) {
+                e.preventDefault();
+                if (index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+            }
+            // Backspace key functionality to move to the previous field
+            else if (e.key === 'Backspace' && input.value === '') {
+                if (index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            }
+        });
+
+        // Automatically focus the next input after typing
+        input.addEventListener('input', () => {
+            if (input.value.length === 1 && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+        });
+
     });
 
     let phoneError = true;
@@ -271,7 +302,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
     }
      
-
   </script>
 
 </body>

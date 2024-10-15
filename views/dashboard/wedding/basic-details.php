@@ -11,26 +11,7 @@ DB::close();
 
 sort($languages);
 
-controller("Wedding");
-controller("Gallery");
-
-$wedding = new Wedding();
-$weddingData = $wedding->getWedding($_REQUEST['id'], $_REQUEST['lang']);
 $story = json_decode($weddingData['story'], true);
-
-
-function getImgURL($name){
-	$gallery = new Gallery();
-	$row=$gallery->getGalleryImg($_REQUEST['id'],$name);
-	
-	if($row['imageURL']){
-		return $row['imageURL'];
-	}
-	else{
-		return false;
-	}
-	
-}
 
 
 ?>

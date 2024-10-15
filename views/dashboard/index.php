@@ -1,25 +1,26 @@
 <?php
-locked(['user', 'host', 'manager', 'admin']);
+// errors(1);
+locked(['user', 'host', 'manager', 'admin','partner']);
 require('views/partials/dashboard/head.php');
 require('views/partials/dashboard/sidebar.php');
 
 $suerID = App::getUser()['userID'];
 if(App::getUser()['role'] == "admin"){
     DB::connect();
-    $weddings = DB::select('weddings', '*', "lang = 'en'")->fetchAll();
+    $weddings = DB::select('weddings', '*', "")->fetchAll();
     DB::close();
 }elseif(App::getUser()['role'] == "manager"){
     DB::connect();
-    $weddings = DB::select('weddings', '*', "lang = 'en' and manager = '$suerID'")->fetchAll();
+    $weddings = DB::select('weddings', '*', " manager = '$suerID'")->fetchAll();
     DB::close();
 }elseif(App::getUser()['role'] == "partner"){
     DB::connect();
-    $weddings = DB::select('weddings', '*', "lang = 'en' and partner = '$suerID'")->fetchAll();
+    $weddings = DB::select('weddings', '*', " partner = '$suerID'")->fetchAll();
     DB::close();
 }
 else{
     DB::connect();
-    $weddings = DB::select('weddings', '*', "lang = 'en' and host = '$suerID'")->fetchAll();
+    $weddings = DB::select('weddings', '*', " host = '$suerID'")->fetchAll();
     DB::close();
 }
 
@@ -62,6 +63,8 @@ else{
     <h1 class="h2">All Weddings</h1>
     <div class="text-end"><a class="btn btn-primary btn-sm" href="<?php echo route('wedding/new'); ?>?back=dashboard">
             Add Wedding <i class="bi bi-plus-circle"></i></a></div>
+    <div class="text-start"><a class="btn btn-primary btn-sm" href="<?php echo route('themes'); ?>?back=dashboard">
+            <i class="bi bi-image-fill"></i> Themes & Templates</a></div>
     <div class="table-responsive mb-5">
         <table id="myTable" class="table table-striped table-sm">
             <thead>
