@@ -2,7 +2,6 @@
 
 errors(1);
 
-$themeDetails = json_decode(file_get_contents('themes/august_theme/details.json'), true);
 // print_r($themeDetails);
 
 // controller('Theme');
@@ -13,23 +12,41 @@ $themeDetails = json_decode(file_get_contents('themes/august_theme/details.json'
 // Call the getThemes method
 // $themes = $themeController->render('fairytale_theme', $_REQUEST['type']);
 
-controller("AWSBucket");
-$awsObj=new AWSBucket();
-// print_r(expression)
-
 
 
    // Path to mPDF autoload file
-   require_once __DIR__ . '/../controllers/vendor/autoload.php';
+   // require_once __DIR__ . '/../controllers/vendor/autoload.php';
 
-   // Check if mPDF class is loaded
-   if (!class_exists('Mpdf\Mpdf')) {
-       die('mPDF class not found. Check if mPDF is installed.');
-   }
+   // // Check if mPDF class is loaded
+   // if (!class_exists('Mpdf\Mpdf')) {
+   //     die('mPDF class not found. Check if mPDF is installed.');
+   // }
 
-   use Mpdf\Mpdf;
+   // use Mpdf\Mpdf;
    
-   // Create a new mPDF instance
-   $mpdf = new Mpdf();
+   // // Create a new mPDF instance
+   // $mpdf = new Mpdf();
 
    // Your PDF generation logic here
+
+// require_once(__DIR__ . '/../vendor/tecnickcom/tcpdf/tcpdf.php');
+
+
+// // create new PDF document
+// $pdf = new TCPDF();
+
+
+// // add a page
+// $pdf->AddPage();
+
+// // set font
+// $pdf->SetFont('helvetica', '', 12);
+
+// // add some text
+// $html = '<h1>Welcome to TCPDF!</h1>';
+// $pdf->writeHTML($html, true, false, true, false, '');
+
+// // output the PDF (force download)
+// $pdf->Output('sample.pdf', 'D');
+
+
